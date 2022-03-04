@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+	<ul th:fragment="NFSSideMenu" class="v-menu">
+		<li class="menu-title">General</li>
+		<li><a th:href="@{'/nfs/pf/list'}"><span
+				class="mif-books icon fg-cyan"></span> Portfolio</a></li>
+		<li><a th:href="@{'/nfs/exitometer'}"><span
+				class="mif-meter icon fg-cyan"></span> Exitometer</a></li>
+		<li><a href="#"><span class="mif-cabinet icon fg-cyan"></span>
+				Trade Journal</a></li>
+		<li class="menu-title">Actions</li>
+		<li><a th:href="@{'/nfs/start'}"><span
+				class="mif-sync-problem icon fg-cyan"></span> Generate Proposal</a></li>
+		<li><a th:href="@{'/nfs/rebal_incI'}"><span
+				class="mif-balance-scale icon fg-cyan"></span> Rebalance/ Invest
+				More</a></li>
+
+		<li class="menu-title">Charts</li>
+		<li><a href="#"><span class="mif-chart-dots icon fg-cyan"></span>
+				SMA Plot</a></li>
+	</ul>
+
+</body>
+</html>

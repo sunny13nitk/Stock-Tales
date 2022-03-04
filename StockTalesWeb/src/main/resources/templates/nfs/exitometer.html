@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<div th:replace="fragments/header :: STHeader"></div>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script type="text/javascript"
+	src="https://www.gstatic.com/charts/loader.js"></script>
+</head>
+<body>
+
+
+	<!-- Header div - Start  -->
+	<div class="head-bar pos-absolute bg-transparent fg-darkteal text-bold">
+
+		<div class="cell-11">
+			<label style="margin-left: 5px; font-weight: bold; font-size: 1.3em">
+				<img th:src="@{/images/nfs.png}" src="../../static/images/nfs.png"
+				width="45" height="40" style="margin-left: 5px; margin-right: 10px">
+				NFS: Need for Speed !!!
+			</label>
+
+
+		</div>
+		<div class="cell-1">
+			<a href="#" class="button steel rounded outline"
+				style="border: none;" th:href="@{/}" role="button"> <span
+				class="mif-home  mif-3x"></span>
+			</a>
+		</div>
+
+	</div>
+
+	<!-- Header div - End  -->
+
+	<!-- Content Row - Starts -->
+	<div class="grid" style="margin-top: 40px">
+		<div class="row">
+			<div class="cell-2">
+				<div th:replace="fragments/NFSMenu :: NFSSideMenu"></div>
+			</div>
+
+
+			<div class="cell-10">
+
+				<!-- P&L/Exit Cells- Starts -->
+				<div class="row" th:if="${nfsExitSS.pfExitScrips.size() >0 }">
+
+					<!-- P&L/Exit Cells -->
+					<div class="colspan-4 " style="padding: 0px">
+
+						<div class="card" style="padding-top: -30px">
+
+							<div class="row flex-align-end">
+
+								<div class="info-button bg-white fg-red bd-red small"
+									style="margin: 20px">
+									<span class="mif-bell mif-2x fg-red" style="margin-left: 4px">
+									</span><label
+										style="color: #E84C5B; font-weight: bold; font-size: 1.7em; margin-left: 8px; margin-top: 5px"
+										th:text="${nfsExitSS.pfExitScrips.size()}"> </label> <span
+										style="color: #E84C5B; font-weight: bold; font-size: 1.55em; margin-left: 4px; margin-bottom: 4px">Exits!</span>
+
+									<a href="https://in.tradingview.com/chart/" th:target="_blank"
+										class="button rounded outline"
+										style="border: none; align-content: top;"> <img
+										th:src="@{/images/tv.png}" src="../../static/images/tv.png"
+										width="35" height="75"
+										style="margin-left: 5px; margin-bottom: 5px">
+									</a>
+
+
+
+								</div>
+
+							</div>
+
+							<div class="row flex-align-end">
+								<div class="colspan-12">
+									<blockquote class="right-side" style="margin-right: 15px">
+
+										<div class="row flex-align-end">
+											<div class="cell flex-align-end">
+												<span th:if="${nfsExitSS.plExitAmnt > 0}"
+													class="mif-thumbs-up mif-2x fg-darkGreen"></span> <span
+													th:if="${nfsExitSS.plExitAmnt <= 0}"
+													class="mif-thumbs-down mif-2x fg-darkRed"></span> <label
+													th:if="${nfsExitSS.plExitAmnt > 0}"
+													style="color: #51ae78; font-weight: bold; font-size: 1.65em; margin-left: 7px"
+													th:text="${nfsExitSS.plExitAmnt}"> </label> <label
+													th:if="${nfsExitSS.plExitAmnt <= 0}"
+													style="color: #E84C5B; font-weight: bold; font-size: 1.65em; margin-left: 7px"
+													th:text="${nfsExitSS.plExitAmnt}"> </label>
+											</div>
+
+										</div>
+										<span style="color: #337ABF; font-weight: medium;">Nett.
+											P&L (Rs.)</span>
+
+									</blockquote>
+								</div>
+							</div>
+
+							<div class="row flex-align-end">
+								<div class="colspan-12">
+									<blockquote class="right-side" style="margin-right: 15px">
+
+										<div class="row flex-align-end">
+											<div class="cell flex-align-end">
+												<span th:if="${nfsExitSS.plExitPer > 0}"
+													class="mif-thumbs-up mif-2x fg-darkGreen"></span> <span
+													th:if="${nfsExitSS.plExitPer <= 0}"
+													class="mif-thumbs-down mif-2x fg-darkRed"></span> <label
+													th:if="${nfsExitSS.plExitPer > 0}"
+													style="color: #51ae78; font-weight: bold; font-size: 1.65em; margin-left: 7px"
+													th:text="${nfsExitSS.plExitPer}"> </label> <span
+													th:if="${nfsExitSS.plExitPer > 0}"
+													style="color: #51ae78; font-weight: bold; font-size: 1.45em;">
+													%</span> <label th:if="${nfsExitSS.plExitPer < 0}"
+													style="color: #E84C5B; font-weight: bold; font-size: 1.65em; margin-left: 7px"
+													th:text="${nfsExitSS.plExitPer}"> </label> <span
+													th:if="${nfsExitSS.plExitPer< 0}"
+													style="color: #E84C5B; font-weight: bold; font-size: 1.45em;">
+													%</span>
+											</div>
+
+										</div>
+										<span style="color: #337ABF; font-weight: medium;">Nett.
+											P&L (Rs.)</span>
+
+									</blockquote>
+								</div>
+							</div>
+
+
+						</div>
+
+
+					</div>
+
+					<!-- Exits List -->
+					<div class="colspan-4">
+
+						<div class="row-flex flex-justify-center">
+							<div class="card" style="margin-top: 40px;">
+
+								<div class="row"
+									style="padding-top: -10px; padding-left: 10px; padding-right: 10px; padding-bottom: 10px">
+
+									<table class="table compact striped">
+										<thead>
+											<tr>
+												<th style="text-align: center;">Scrip Name</th>
+												<th style="text-align: center;">P/L %</th>
+												<th style="text-align: center;">P/L Amount (Rs.)</th>
+
+											</tr>
+										</thead>
+										<tbody>
+											<tr th:each="nfsExit : ${nfsExitSS.pfExitScrips}">
+												<td style="text-align: center; font-weight: bolder;"
+													th:text="${nfsExit.scCode}">LargeCap</td>
+
+												<td style="text-align: center;"
+													th:if="${nfsExit.plPer} >= 0">
+													<!-- Positive Factor  --> <span
+													class="mif-arrow-drop-up mif-x fg-green"><label
+														style="color: green; font-weight: bolder;"
+														th:text="${nfsExit.plPer}">14.3</label></span>
+
+												</td>
+
+												<td style="text-align: center;" th:if="${nfsExit.plPer} < 0">
+													<!-- Positive Factor  --> <span
+													class="mif-arrow-drop-down mif-x fg-red"><label
+														style="color: red; font-weight: bolder;"
+														th:text="${nfsExit.plPer}">14.3</label></span>
+
+												</td>
+
+
+												<td style="text-align: center;"
+													th:if="${nfsExit.plAmnt} >= 0">
+													<!-- Positive Factor  --> <span
+													class="mif-arrow-drop-up mif-x fg-green"><label
+														style="color: green; font-weight: bolder;"
+														th:text="${nfsExit.plAmnt}">14.3</label></span>
+
+												</td>
+
+												<td style="text-align: center;"
+													th:if="${nfsExit.plAmnt} < 0">
+													<!-- Positive Factor  --> <span
+													class="mif-arrow-drop-down mif-x fg-red"><label
+														style="color: red; font-weight: bolder;"
+														th:text="${nfsExit.plAmnt}">14.3</label></span>
+
+												</td>
+
+											</tr>
+										</tbody>
+									</table>
+
+								</div>
+							</div>
+						</div>
+
+
+					</div>
+
+					<!-- Exits List - Ends -->
+
+					<!-- Incremental Inv. Rebal -->
+					<div class="colspan-4">
+
+						<form th:object="${alloc}" th:action="@{/nfs/pf/rebal}"
+							method="post">
+							<input type="hidden" th:field="*{newPF}" /> <input type="hidden"
+								th:field="*{exisProp}" />
+
+
+							<div class="colspan-10 offset-1"
+								style="margin-top: 35px; margin-bottom: 10px;">
+								<label>Incremental Investment </label> <input
+									class="metro-input" type="text" data-role="input"
+									data-prepend="<span style = 'padding-top:0px' class='mif-inr mif-2x'></span>"
+									data-append="<span style = 'padding-top:30px'>0.00</span>"
+									title="" th:field="*{incInvestment}" /> <small
+									class="text-muted">Incremental Investment (if Any)</small>
+							</div>
+
+
+							<div style="margin-top: 10px; margin-bottom: 10px;">
+								<button class="button rounded"
+									style="background-color: #38CA9F; color: white; margin-top: 5px; margin-left: 200px; margin-bottom: 10px">
+									<span class="mif-balance-scale" style="margin-left: 0px">
+									</span> <span style="margin-left: 3px">Re-Balance</span>
+								</button>
+
+							</div>
+						</form>
+
+
+					</div>
+
+					<!-- Incremental Inv. Rebal : Ends-->
+
+				</div>
+				<!-- P&L/Exit Cells - End -->
+
+				<div class="row flex-align-center" style="padding: 5px">
+					<div class="info-box" id="info-box-1" data-role="infobox">
+						<span class="button square closer"></span>
+						<div class="info-box-content">
+
+							<span class="mif-inr mif-2x fg-red" style="margin-left: 4px">
+							</span><label
+								style="color: #E84C5B; font-weight: bold; font-size: 1.7em; margin-left: 8px; margin-top: 5px"
+								th:text="${nfsExitSS.maxLossStr}"> </label>
+							<div>
+								<label
+									style="color: #E84C5B; font-weight: bold; font-size: 1.1em; margin-left: 8px; margin-top: 5px"
+									th:text="${nfsExitSS.maxLossPer}"> </label> <span
+									style="color: #E84C5B; font-weight: bold; font-size: 1.1em; margin-left: -2px; margin-top: 5px">%
+									of Capital Invested </span>
+
+							</div>
+
+							<h6 style="color: #E84C5B;">Maximum Loss on Whole PF.
+								Hitting Exits Currently!</h6>
+
+						</div>
+					</div>
+					<div class="">
+						<button class="button rounded secondary"
+							onclick="$('#info-box-1').data('infobox').open()">Worst
+							Case Scenario!</button>
+					</div>
+				</div>
+
+
+				<!-- Table Row  -->
+				<div class="row flex-align-center" style="padding: 5px">
+					<div class="cell-md-auto">
+						<table class="table compact striped table-border row-hover "
+							id="t-inspector" data-role="table" data-show-search="true"
+							data-show-rows-steps="false"
+							data-table-search-title="Search By Scrip Code :"
+							data-search-min-length="1" data-search-threshold="300"
+							data-rows="-1" data-search-fields="scCode"
+							data-horizontal-scroll="true" data-thousand-separator=",">
+							<thead>
+								<tr>
+
+									<th data-name="scCode" align="center"
+										class="sortable-column sort-asc">Scrip</th>
+
+									<th data-name="priceIncl" class="sortable-column "
+										data-format="number" data-cls-column=" text-center">PPU</th>
+
+									<th data-name="priceCmp" class="sortable-column"
+										data-format="number" data-cls-column=" text-center">CMP</th>
+
+									<th data-name="priceExit" class="sortable-column "
+										data-format="number" data-cls-column=" text-center">Exit
+										Price</th>
+
+
+									<th data-name="cmpExitDelta" data-sortable="true"
+										class="sortable-column " data-format="float"
+										data-cls-column=" text-center">CMP/Exit Delta</th>
+
+									<th data-name="plExit" data-sortable="true"
+										class="sortable-column " data-format="float"
+										data-cls-column=" text-center">Exit P/L (%)</th>
+
+
+
+								</tr>
+							</thead>
+							<tbody>
+
+
+								<tr th:each="holding : ${nfsExitSS.pfExitsSMAList}">
+									<td th:text="${holding.scCode}"></td>
+
+
+									<td th:text="${holding.priceIncl}"></td>
+
+									<td th:text="${holding.priceCmp}"></td>
+
+
+									<td th:text="${holding.priceExit}"></td>
+
+									<td th:text="${holding.cmpExitDelta}"></td>
+
+									<td th:text="${holding.plExit}"></td>
+
+
+
+								</tr>
+
+							</tbody>
+						</table>
+					</div>
+
+				</div>
+
+
+
+
+
+
+			</div>
+
+
+
+
+		</div>
+	</div>
+
+
+
+	<script th:inline="javascript">
+            var pf_data = /*[[${chartData}]]*/'noValue';
+         
+
+            $(document).ready(function() {
+               google.charts.load('current', {
+                  packages : [ 'corechart', 'bar']
+               });
+               google.charts.setOnLoadCallback(drawDonutChart);
+               //google.charts.setOnLoadCallback(drawBarChart);
+
+            });
+            
+   function drawBarChart() 
+   {
+
+                var data = new google.visualization.DataTable();
+               
+                data.addColumn('string', 'MCap');
+            data.addColumn('number', 'Allocation');
+
+            
+            var dataArray = [];
+
+               $.each(pf_data, function(i, obj) {
+                  dataArray.push([ obj.sector, obj.alloc ]);
+               });
+
+               data.addRows(dataArray);
+               
+               
+            
+
+               /*
+               In case Data labels are needed on Bar Chart - Not working on combo*/
+               var view = new google.visualization.DataView(data);
+               
+               view.setColumns([ 0, 1, {
+                  calc : "stringify",
+                  sourceColumn : 1,
+                  type : "string",
+                  role : "annotation"
+               }],
+                
+               
+               );
+
+               var options = {
+                  width : 270,
+                  height : 270,
+                  margin : 20,
+                  pointSize : 5,
+
+                  colors : [ '#7998C5', '#C8819E', '#8ABC67' ],
+                  legend : 'none',
+                  
+                    hAxis : {
+                     
+                     viewWindow : 
+                     {
+                        min : [ 7, 30, 0 ],
+                        max : [ 17, 30, 0 ]
+                     },
+                     textStyle:
+                     { 
+                       color: '#698AFF',
+                       fontName: 'Calibri',
+                       fontSize: 12,
+                       bold: true
+                      }
+                     
+                  },
+                  
+                  vAxis : {
+                     
+                     viewWindow : 
+                     {
+                        min : [ 7, 30, 0 ],
+                        max : [ 17, 30, 0 ]
+                     },
+                     textStyle:
+                     { 
+                       color: '#698AFF',
+                       fontName: 'Calibri',
+                       fontSize: 12,
+                       bold: true
+                      }
+                     
+                  }
+                  
+                  
+                  
+               };
+               var chartPEAvg = new google.visualization.BarChart(
+                     document.getElementById('chart_pf'));
+        
+               
+               //In case of Data points enabled on chart series
+               chartPEAvg.draw(view, options);
+            }   
+            
+
+       function drawDonutChart ()
+             
+             {
+
+               var data = new google.visualization.DataTable();
+
+               data.addColumn('string', 'MCap');
+               data.addColumn('number', 'Allocation');
+
+            
+               var dataArray = [];
+
+               $.each(pf_data, function(i, obj) {
+                  dataArray.push([ obj.sector, obj.alloc ]);
+               });
+
+               data.addRows(dataArray);
+               
+                     var options = {
+                                     width : 290,
+                                     height : 300,
+                                     title: 'Portfolio Spread by MCap',
+                                     titleTextStyle: {
+                                                         color: '#486590',
+                                                         fontSize: 14
+                                                       
+                                                      },
+                                     colors : [ '#7998C5', '#C8819E', '#8ABC67' ],
+                                     legend : 'none',
+                                     pieHole: 0.4
+                          };
+               
+
+               
+               var chartRev = new google.visualization.PieChart(document
+                     .getElementById('chart_pf'));
+               chartRev.draw(data, options);
+
+            } 
+         </script>
+
+	<!-- Charts - ENDS -->
+
+
+	<!-- Metro 4 -->
+	<script src="https://cdn.metroui.org.ua/v4.3.2/js/metro.min.js"></script>
+
+</body>
+</html>

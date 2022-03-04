@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<div th:replace="fragments/header :: STHeader"></div>
+
+</head>
+<body>
+
+   <div style="height: 800px;">
+      <div data-role="navview" data-compact="md" data-expand="false"
+         data-active-state="true">
+         <div th:replace="fragments/navbar :: STNavbar"></div>
+
+
+
+         <div class="navview-content pl-4-md pr-4-md">
+
+            <div class="grid">
+
+               <div th:replace="fragments/brand :: STBrand"></div>
+
+               <!-- your Code Starts from Here  -->
+
+               <div class="grid" style="padding: 20px">
+
+
+
+                  <!-- Top Row - Starts -->
+                  <div class="row">
+
+                     <div class="colspan-9 " style="margin-left: 10px">
+                        <h3 style="color: #4465a1">Sector Specific
+                           Field Pools</h3>
+                     </div>
+
+                     <!-- Create Strategy Button - Col Start -->
+                     <div class="colspan-2"
+                        style="margin-left: 20px; margin-top: 30px">
+
+
+                        <a href="#" class="button alert rounded outline"
+                           th:href="@{/fpconfig/newSecConfig}"
+                           role="button" data-role="hint"
+                           data-hint-position="bottom"
+                           data-cls-hint="bg-Lightgreen fg-black"
+                           data-hint-text="Create New Sector Specific Field Pools Configuration">
+                           <span class="mif-add icon"
+                           style="margin-left: 0px"></span> <span
+                           style="margin-left: 3px">New Config.</span>
+
+
+                        </a>
+
+
+                     </div>
+                     <!-- Create Strategy Button - Col End -->
+
+
+
+                  </div>
+                  <!-- Top Row - Ends Current Selected Scrips Row --Starts -->
+
+                  <div class="colspan-11 offset-1 ">
+
+                     <!-- Table Row - Starts  -->
+
+
+                     <div class="row">
+                        <!--   Here goes your table -->
+
+                        <table
+                           class="table striped compact table-border row-hover mt-4"
+                           data-show-search="true"
+                           data-table-search-title="Search By Sector :"
+                           data-show-rows-steps="false" id="t-inspector"
+                           data-showPagination="false" data-role="table"
+                           data-search-min-length="1"
+                           data-search-threshold="300"
+                           data-search-fields="sector"
+                           data-horizontal-scroll="true" data-rows="-1"
+                           data-info-wrapper=".my-info-wrapper"
+                           data-thousand-separator=","
+                           data-pagination-wrapper=".my-pagination-wrapper">
+
+                           <thead>
+                              <tr>
+
+                                 <th data-name="sector"
+                                    data-cls-column="text-center">Sector</th>
+
+                                 <th data-cls-column="text-center">Field
+                                    Pool Entity - Qualified Name</th>
+
+
+                                 <th data-cls-column="text-center">Service
+                                    Bean Name</th>
+
+
+                              </tr>
+                           </thead>
+
+
+
+
+                           <tr th:each="cfg : ${cfgs}">
+                              <td><a
+                                 th:href="@{'/fpconfig/cfg/' + ${cfg.fpid}}"
+                                 th:text="${cfg.sector}"> </a></td>
+
+                              <td th:text="${cfg.fPoolEntityQName}"></td>
+
+                              <td th:text="${cfg.srvbean}"></td>
+
+
+                           </tr>
+
+                        </table>
+
+
+                     </div>
+
+                     <!--Table Row - Ends  -->
+
+
+
+
+
+                  </div>
+
+               </div>
+
+
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <!-- Metro 4 -->
+   <script src="https://cdn.metroui.org.ua/v4.3.2/js/metro.min.js"></script>
+</body>
+</html>

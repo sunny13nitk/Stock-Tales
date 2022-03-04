@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+<title>Stock Tales - Login Page</title>
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport"
+   content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<!-- Metro 4 -->
+<link rel="stylesheet"
+   href="https://cdn.metroui.org.ua/v4.3.2/css/metro-all.min.css">
+<style>
+.login-form {
+		width: 380px;
+		height: auto;
+		top: 50%;
+		margin-top: 160px;
+		background-color: #EEE6F2
+}
+</style>
+</head>
+
+<body class="h-vh-100 bg-white">
+
+   <div>
+
+
+      <!-- Login Form -->
+      <form th:action="@{/authenticateTheUser}" method="POST"
+         class="login-form  p-6 mx-auto border bd-default win-shadow"
+         data-on-error-form="invalidForm"
+         data-on-validate-form="validateForm">
+
+         <!-- Place for messages: error, alert etc ... -->
+         <div class="form-group">
+            <div class="col-xs-15">
+               <div>
+
+                  <!-- Check for login error -->
+
+                  <div th:if="${param.error}">
+
+                     <div
+                        class="alert alert-danger col-xs-offset-1 col-xs-10">
+                        Invalid username and password.</div>
+
+                  </div>
+
+                  <!-- Check for logout -->
+
+                  <div th:if="${param.logout}">
+
+                     <div
+                        class="alert alert-success col-xs-offset-1 col-xs-10">
+                        You have been logged out.</div>
+
+                  </div>
+
+               </div>
+            </div>
+         </div>
+
+
+         <span class="mif-vpn-lock mif-4x place-right fg-mauve"
+            style="margin-top: -10px;"></span>
+         <h2 class="text-light">Login to Stock Tales</h2>
+         <hr class="thin mt-4 mb-4 bg-white">
+         <div class="form-group">
+            <input type="text" data-role="input" name="username"
+               placeholder="username"
+               data-prepend="<span class='mif-user'>">
+         </div>
+         <div class="form-group">
+            <input type="password" data-role="input" name="password"
+               data-prepend="<span class='mif-key'>"
+               placeholder="Enter your password..."
+               data-validate="required minlength=6">
+         </div>
+         <div class="form-group mt-10">
+
+            <button class="button" type="submit"
+               style="background-color: #C3A6F7; color: black">Logon</button>
+
+            <a th:href="@{/register}" class="button"
+               style="background-color: #E7D2F1; color: black">
+               Register New User </a>
+
+
+         </div>
+
+
+
+
+
+
+      </form>
+
+
+   </div>
+   <!-- Metro 4 -->
+   <script src="https://cdn.metroui.org.ua/v4.3.2/js/metro.min.js"></script>
+   <script>
+				function invalidForm() {
+					var form = $(this);
+					form.addClass("ani-ring");
+					setTimeout(function() {
+						form.removeClass("ani-ring");
+					}, 1000);
+				}
+
+				function validateForm() {
+					$(".login-form").animate({
+						opacity : 0
+					});
+				}
+			</script>
+
+
+   <script src="https://cdn.metroui.org.ua/v4.3.2/js/metro.min.js"></script>
+
+
+</body>
+</html>

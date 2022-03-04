@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<div th:replace="fragments/header :: STHeader"></div>
+
+</head>
+<body>
+
+   <div style="min-height: 600px; overflow: hidden;">
+      <div data-role="navview" data-compact="md" data-expand="false"
+         data-active-state="true">
+         <div th:replace="fragments/navbar :: STNavbar"></div>
+
+
+
+         <div class="navview-content pl-4-md pr-4-md">
+
+            <div class="grid">
+
+               <div th:replace="fragments/brand :: STBrand"></div>
+
+               <div class="grid" style="padding: 20px">
+
+                  <!--Top Row - Starts  -->
+                  <div class="row">
+
+                     <div class="colspan-11 " style="margin-left: 10px">
+
+                        <h3 style="color: #4465a1">
+                           <span class="mif-balance-scale"
+                              style="margin-right: 10px"></span>
+                           Strategy Re-balancing DashBoard
+                        </h3>
+                     </div>
+
+
+
+                  </div>
+                  <!--Top Row - Ends  -->
+
+
+                  <!--Error Messages Row - Starts -->
+
+                  <div class="col-xs-15">
+                     <div th:if="${formError != null}">
+
+                        <!-- Check for Form error -->
+
+                        <div class="remark alert"
+                           style="padding-top: 10px; margin: 2px">
+                           <label th:text="'Error -  ' + ${formError}"></label>
+                        </div>
+                     </div>
+                  </div>
+
+
+                  <div class="col-xs-15">
+                     <div th:if="${formSucc != null}">
+
+
+                        <div class="remark success"
+                           style="padding-top: 10px; margin: 2px">
+                           <label th:text=" ${formSucc}"></label>
+                        </div>
+
+
+
+                     </div>
+                  </div>
+
+                  <!--Error Messages Row - Ends -->
+
+
+
+                  <!-- Current Selected Scrips Row --Starts -->
+
+                  <div class="colspan-12 ">
+
+
+
+                     <!-- Heading -->
+                     <div class="colspan-9 offset -2">
+                        <h6 style="color: #4465a1">Allocations in
+                           Current Selection</h6>
+                     </div>
+
+
+
+
+                     <!-- Table Row - Starts -->
+                     <div class="colspan-12">
+                        <div class="row">
+                           <form method="post"
+                              th:action="@{/stratergy/rebal_staging_1}"
+                              th:object="${scStagingList}">
+
+
+                              <!-- Here goes your table -->
+
+                              <table
+                                 class="table subcompact striped table-border row-hover mt-4"
+                                 data-show-search="false"
+                                 data-show-rows-steps="false"
+                                 id="t-inspector"
+                                 data-showPagination="false"
+                                 data-role="table"
+                                 data-horizontal-scroll="true"
+                                 data-rows="-1"
+                                 data-info-wrapper=".my-info-wrapper"
+                                 data-thousand-separator=","
+                                 data-pagination-wrapper=".my-pagination-wrapper">
+
+                                 <thead>
+                                    <tr>
+
+                                       <th
+                                          class="sortable-column sort-asc">Scrip
+                                          Code</th>
+
+                                       <th
+                                          class="sortable-column sort-asc">ED
+                                          Score</th>
+
+                                       <th data-cls-column="text-center"
+                                          data-size="140">MoS</th>
+
+
+                                       <th data-format="number"
+                                          data-cls-column=" text-center">ED
+                                          Score - MoS</th>
+
+                                       <th data-format="number"
+                                          data-cls-column=" text-center">UPH</th>
+
+                                       <th data-format="number"
+                                          data-cls-column=" text-center">Strength
+                                          Score</th>
+
+                                       <th data-format="number"
+                                          data-size="100"
+                                          data-cls-column=" text-center">CMP</th>
+
+                                       <th data-format="number"
+                                          data-cls-column=" text-center">Curr.
+                                          PE</th>
+
+
+                                       <th data-format="number"
+                                          data-cls-column=" text-center">Wtd.
+                                          PE</th>
+
+                                       <th data-format="number"
+                                          data-cls-column=" text-center">5
+                                          Yr. Price</th>
+
+                                       <th data-format="number"
+                                          data-cls-column=" bg-cyan fg-white text-center">5
+                                          Yr. CAGR</th>
+
+                                       <th data-format="number"
+                                          data-size="70"
+                                          data-cls-column=" text-center">Proposed
+                                          Allocation</th>
+
+
+
+                                    </tr>
+                                 </thead>
+
+
+
+
+                                 <tr
+                                    th:each="scAllocI , stat :  *{scAllocations} ">
+                                    <td><input type="hidden"
+                                       th:field="*{scAllocations[__${stat.index}__].scCode}" />
+                                       <a
+                                       th:href="@{'/scrips/edrc/' + ${scAllocI.scCode}}"
+                                       th:text="${scAllocI.scCode}"></a></td>
+
+                                    <td><span
+                                       th:text="${scAllocI.EDSCcoreB4MoS}"></span>
+                                       <input type="hidden"
+                                       th:field="*{scAllocations[__${stat.index}__].EDSCcoreB4MoS}" />
+                                    <td><input type="text"
+                                       data-role="spinner"
+                                       class="input-small alert metro-input"
+                                       data-step=".10" data-fixed="2"
+                                       data-min-value="0"
+                                       data-max-value="1"
+                                       data-cls-spinner-button="fg-white"
+                                       data-cls-spinner-button-plus="bg-red"
+                                       data-cls-spinner-button-minus="bg-green"
+                                       th:field="*{scAllocations[__${stat.index}__].MoS}" /></td>
+
+
+                                    <td><span
+                                       th:text="${scAllocI.EDScore}"></span>
+                                       <input type="hidden"
+                                       th:field="*{scAllocations[__${stat.index}__].EDScore}" />
+                                    <td><span
+                                       th:text="${scAllocI.UPH}"></span>
+                                       <input type="hidden"
+                                       th:field="*{scAllocations[__${stat.index}__].UPH}" />
+                                    <td><span
+                                       th:text="${scAllocI.strengthScore}"></span>
+                                       <input type="hidden"
+                                       th:field="*{scAllocations[__${stat.index}__].strengthScore}" />
+                                    <td><input type="text"
+                                       class="input-small alert metro-input"
+                                       th:field="*{scAllocations[__${stat.index}__].CMP}"></td>
+
+                                    <td><span
+                                       th:text="${scAllocI.currPE}"></span>
+                                       <input type="hidden"
+                                       th:field="*{scAllocations[__${stat.index}__].currPE}" />
+                                    <td><span
+                                       th:text="${scAllocI.weightedPE}"></span>
+                                       <input type="hidden"
+                                       th:field="*{scAllocations[__${stat.index}__].weightedPE}" />
+                                    <td><span
+                                       th:text="${scAllocI.price5Yr}"></span>
+                                       <input type="hidden"
+                                       th:field="*{scAllocations[__${stat.index}__].price5Yr}" />
+                                    <td><span
+                                       th:text="${scAllocI.ret5YrCAGR}"></span>
+                                       <input type="hidden"
+                                       th:field="*{scAllocations[__${stat.index}__].ret5YrCAGR}" />
+                                    <td><input type="text"
+                                       class="input-small alert metro-input"
+                                       th:field="*{scAllocations[__${stat.index}__].allocation}"></td>
+
+
+
+                                 </tr>
+
+                              </table>
+
+                              <div class="colspan-3 offset-9">
+                                 <div class="form-group"
+                                    style="margin-top: 10px">
+
+                                    <button
+                                       class="button yellow rounded"
+                                       type="submit" name="action"
+                                       value="refresh">
+                                       <span class="mif-refresh"></span>
+                                       Refresh
+                                    </button>
+
+
+                                    <button class="button alert rounded"
+                                       type="submit" name="action"
+                                       value="validProc">
+                                       <span class="mif-checkmark"></span>
+                                       Validate & Proceed
+                                    </button>
+
+                                 </div>
+
+                              </div>
+
+                           </form>
+
+                        </div>
+
+                     </div>
+                     <!-- Table Row - Ends -->
+
+
+
+                  </div>
+                  <!-- Current Selected Scrips Row --Ends -->
+
+
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <!-- Metro 4 -->
+   <script src="https://cdn.metroui.org.ua/v4.3.2/js/metro.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<div th:replace="fragments/header :: STHeader"></div>
+
+</head>
+<body>
+
+   <div class="grid" style="margin: 20px">
+
+      <!-- Top Row - Starts -->
+      <div class="row">
+
+         <div class="colspan-2" style="margin-top: -10px">
+            <h5 style="margin-left: 40px;">
+               <img th:src="@{/images/dice.png}"
+                  src="../../static/images/dice.png" width="40"
+                  height="40"
+                  style="margin-left: 5px; margin-right: 10px">
+               Stock Tales
+            </h5>
+
+         </div>
+         <!--ICOn - Ends -->
+
+         <!-- Text -->
+         <div class="colspan-7" style="margin-left: 30px">
+            <h4 style="font-weight: medium; color: #4465a1">
+               Quick Edit Journal Entry for - <span
+                  style="color: #B1365B" th:text="${scJP.scCode}"></span>
+            </h4>
+         </div>
+         <!-- Text  -->
+
+
+
+
+         <!--Buttons - Start  -->
+         <div class="colspan-1"
+            style="margin-top: 13px; margin-left: 120px">
+            <a href="#" class="button secondary cycle outline"
+               th:href="@{'/'}" role="button" data-role="hint"
+               data-hint-position="right"
+               data-cls-hint="bg-white fg-black" data-hint-text="Home">
+               <span class="mif-home icon" style="margin-left: 0px"></span>
+            </a>
+
+         </div>
+
+         <!--Buttons - End -->
+
+      </div>
+      <!-- Top Row - Ends -->
+
+
+      <!-- Content Row - Starts -->
+
+      <div class="row">
+
+         <div class="colspan-12">
+
+            <!-- Form - Starts -->
+
+            <form th:object="${scJP}"
+               th:action="@{'/scJournal/editSave'}" method="post">
+
+               <!-- Place for messages: error, alert etc ... -->
+               <div class="form-group">
+                  <div class="col-xs-15">
+                     <div th:if="${formError != null}">
+
+                        <!-- Check for Form error -->
+
+                        <div class="remark alert"
+                           style="padding-top: 10px; margin: 2px">
+                           <label th:text="'ERROR : ' + ${formError}"></label>
+                        </div>
+                     </div>
+                  </div>
+
+                  <div class="col-xs-15">
+                     <div th:if="${formSucc != null}">
+
+
+                        <div class="remark success"
+                           style="padding-top: 10px; margin: 2px">
+                           <label th:text=" ${formSucc}"></label>
+                        </div>
+
+
+
+                     </div>
+                  </div>
+               </div>
+
+               <!--Hidden  ID & Scrip Code & Previous Tags field to be passed on to   -->
+               <input type="hidden" th:field="*{id}" /> <input
+                  type="hidden" th:field="*{scCode}" /> <input
+                  type="hidden" th:field="*{prevTags}" />
+
+
+               <!--  Image & Notes Row Starts  -->
+               <div class="mx-auto" data-role="panel"
+                  style="margin-top: 5px"
+                  data-title-caption="Image and Notes"
+                  data-title-icon="<span class='mif-file-picture'></span>"
+                  data-collapsible="true" data-cls-panel="shadow-3"
+                  data-cls-title="bg-lightRed fg-white"
+                  data-cls-title-icon="bg-white fg-red"
+                  data-cls-collapse-toggle="bg-darkRed fg-white marker-light  ">
+
+
+                  <div th:if="${je.image != null}">
+                     <div class="img-container drop-shadow">
+                        <img
+                           th:src="@{/scJournal/image/{id} (id=${je.id})}">
+                     </div>
+
+                  </div>
+
+
+
+
+                  <!-- Tags Row- Starts -->
+
+                  <div class="row">
+
+                     <!--Category Heading - Starts  -->
+                     <h4
+                        style="font-weight: medium; margin-left: 50px; margin-top: 50px; color: #4465a1"
+                        th:text="${je.category}"></h4>
+                     <!--Category Heading - Ends  -->
+
+                     <h6 class="text-upper"
+                        style="color: #393736; background-color: #eff2f3; padding: 15px; padding-left: 20px; margin-left: 20px; margin-right: 10px">
+                        <span style="color: #393736; margin-left: 10px"
+                           class="mif-tags"></span> <strong
+                           style="margin-left: 10px" th:text="${je.tag}">
+                        </strong>
+                     </h6>
+
+                  </div>
+
+                  <div class="row">
+                     <div class="cell-md-1">
+                        <h2 class="fg-grayMouse"
+                           style="margin: 10px; margin-top: 20px">1:n</h2>
+                     </div>
+
+                     <div class="cell-md-5" th:if="${tags != null}">
+                        <label class="fg-mauve"> Tag(s) - Choose
+                           From Current</label> <span style="margin: 5px"
+                           class="text-small"> - which are not a
+                           part of Tags as Above </span><select name="tag"
+                           data-role="select" multiple th:field="*{tag}"
+                           data-cls-option="fg-grayMouse"
+                           data-cls-selected-item="bg-teal fg-white"
+                           data-cls-selected-item-remover="bg-darkTeal fg-white">
+
+
+                           <option th:each="tag : ${tags}"
+                              th:value="${tag}" th:selected="${tag}"
+                              th:text="${tag}"></option>
+
+                        </select>
+
+                     </div>
+
+                     <div class="cell-md-6">
+                        <label class="fg-mauve"><strong>OR/AND
+                        </strong> (Add New) Tag(s) - Tag your Observations </label> <span
+                           style="margin: 30px" class="text-small">
+                           Use <kbd>,</kbd> to add tags
+                        </span> <input type="text" data-role="taginput"
+                           th:field="*{tagOther}"
+                           data-random-color="true">
+
+
+                     </div>
+
+                     <div class="col-md-12 form-group">
+                        <p class="fg-mauve" id="chars-counter">Length-
+                           0 char(s)</p>
+                        <textarea data-role="textarea"
+                           data-auto-size="true"
+                           data-chars-counter="#chars-counter"
+                           style="width: 1300px; min-height: 500px"
+                           data-chars-counter-template="Length- $1 char(s)"
+                           th:field="*{notes}"></textarea>
+                     </div>
+
+
+                  </div>
+                  <!-- Tag Row - Ends -->
+
+
+               </div>
+               <!--  Image & Notes Row Ends  -->
+
+
+               <div class="d-flex flex-row-r"
+                  style="margin-top: 30px; margin-bottom: 50px;">
+                  <button class="button rounded yellow" data-role="hint"
+                     data-hint-position="left" data-cls-hint="fg-black"
+                     data-hint-text="Save Journal entry">
+                     <span class="mif-floppy-disk"
+                        style="margin-left: 0px"> </span> <span
+                        style="margin-left: 3px">Save</span>
+                  </button>
+
+               </div>
+
+            </form>
+
+         </div>
+      </div>
+
+
+      <!-- Content Row - Ends -->
+
+   </div>
+
+   <!-- Metro 4 -->
+   <script src="https://cdn.metroui.org.ua/v4.3.2/js/metro.min.js"></script>
+</body>
+</html>

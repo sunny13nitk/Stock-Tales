@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<div th:replace="fragments/header :: STHeader"></div>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script type="text/javascript"
+	src="https://www.gstatic.com/charts/loader.js"></script>
+</head>
+<body>
+
+	<div th:replace="fragments/IDS_FG :: IDSMenu"></div>
+
+	<div style="margin-top: 40px">
+		<div id="overview">
+			<div class="frame"
+				style="padding: 10px; height: 470px; overflow: auto;">
+				<div class="row flex-align-center">
+					<div class="colspan-8" style="margin-left: 10px">
+						<h6 style="color: #CE313C">
+							<span class="mif-air" style="margin-right: 5px"></span> Latest
+							Volatility Profile(s) based on Last 1 Year Scrip Price
+							Movement(s) - For Current Schema.
+						</h6>
+					</div>
+
+					<!--Actions  -->
+					<div class="colspan-2" style="margin-left: 10px">
+
+						<!-- Trading View - Begin -->
+						<a href="https://in.tradingview.com/chart/" th:target="_blank"
+							class="button rounded outline"
+							style="border: none; align-content: top;"> <img
+							th:src="@{/images/tv.png}" src="../../static/images/tv.png"
+							width="35" height="95" data-role="hint"
+							data-hint-position="below" data-cls-hint="fg-black bg-white"
+							data-hint-text="Trading View - Price Charts"
+							style="margin-left: 5px; margin-bottom: 5px">
+						</a>
+						<!-- Trading View - End -->
+
+						<!-- Help Button - Begin -->
+						<a href="#" class="button secondary cycle outline"
+							style="margin-left: 10px"
+							onclick="$('#info-box-2').data('infobox').open()" role="button"
+							data-role="hint" data-hint-position="below"
+							data-cls-hint="fg-black bg-white"
+							data-hint-text="Understanding Volatility Profiles Calculations ?">
+							<span class="mif-help" style="margin-left: 0px"></span>
+						</a>
+						<!-- Help Button - End -->
+
+						<div class="row flex-justify-left">
+							<div class="info-box" id="info-box-2" data-role="infobox"
+								data-width=1100 data-height=1400>
+								<span class="button square closer"></span>
+								<div class="info-box-content">
+
+									<p>
+										<strong>Computation of Scrip's Volatility Profile and
+											Score(s).</strong>
+									</p>
+
+									<div class="remark success">
+										<p>
+											Volatility Profiles are calculated as per <strong>last
+												1 year Scrips Price Movement.</strong> <strong>Number of
+												times a scrip breaks </strong> its 18(SMA1), 45(SMA2), 80(SMA3) and
+											170(SMA4) are recorded for a Scrip and based on this the
+											total Volatility Score for the Scip is computed as per the <strong>Individual
+												SMA Breach Weights</strong> associated to each of these SMA
+											durations. According to the pre-configured <strong>Volatility
+												Range(s)</strong> the Volatility Profile of the Scrip is thus
+											determined. Deployments/Proposals are finally generated on
+											demand based on <strong>Deployment Schema.</strong>
+									</div>
+
+									<div class="row flex-justify-center" style="margin-top: -20px">
+										<div class="cell-4">
+											<div class="remark yellow">
+												<p>
+													<strong>Individual SMA Breach Weights</strong>
+												</p>
+												<table class="table  table-border compact striped">
+													<thead>
+														<tr>
+															<th style="text-align: center;">SMA1</th>
+															<th style="text-align: center;">SMA2</th>
+															<th style="text-align: center;">SMA3</th>
+															<th style="text-align: center;">SMA4</th>
+
+														</tr>
+													</thead>
+													<tbody>
+														<tr th:each="wt : ${smaWts}">
+
+															<td style="text-align: center"><span
+																class=" tally alert" th:text="${wt.wtsma1}"></span></td>
+															<td style="text-align: center"><span
+																class=" tally info" th:text="${wt.wtsma2}"></span></td>
+															<td style="text-align: center"><span
+																class=" tally warning" th:text="${wt.wtsma3}"></span></td>
+															<td style="text-align: center"><span
+																class=" tally success" th:text="${wt.wtsma4}"></span></td>
+
+
+														</tr>
+													</tbody>
+												</table>
+
+											</div>
+										</div>
+										<div class="cell-4">
+											<div class="remark yellow">
+												<p>
+													<strong>Volatility Range(s)</strong>
+												</p>
+												<table class="table  table-border compact striped">
+													<thead>
+														<tr>
+															<th style="text-align: center;">Profile</th>
+															<th style="text-align: center;">Min'm Score</th>
+															<th style="text-align: center;">Max'm Score</th>
+
+														</tr>
+													</thead>
+													<tbody>
+														<tr th:each="range : ${vpRange}">
+
+															<td style="text-align: center"><span
+																class=" tally secondary" th:text="${range.profile}"></span></td>
+															<td style="text-align: center"><span
+																class=" tally alert" th:text="${range.scoremin}"></span></td>
+															<td style="text-align: center"><span
+																class=" tally success" th:text="${range.scoremax}"></span></td>
+
+														</tr>
+													</tbody>
+												</table>
+
+											</div>
+										</div>
+
+										<div class="cell-4">
+											<div class="remark yellow">
+												<p>
+													<strong>Deployment Schema</strong>
+												</p>
+												<table class="table  table-border compact striped">
+													<thead>
+														<tr>
+															<th style="text-align: center;">Profile</th>
+															<th style="text-align: center;">SMA1 Dep</th>
+															<th style="text-align: center;">SMA2 Dep</th>
+															<th style="text-align: center;">SMA3 Dep</th>
+															<th style="text-align: center;">SMA4 Dep</th>
+
+														</tr>
+													</thead>
+													<tbody>
+														<tr th:each="dep : ${vpDeps}">
+
+															<td style="text-align: center"><span
+																class=" tally secondary" th:text="${dep.profile}"></span></td>
+															<td style="text-align: center"><span
+																class=" tally alert" th:text="${dep.sma1dep}"></span></td>
+															<td style="text-align: center"><span
+																class=" tally info" th:text="${dep.sma2dep}"></span></td>
+															<td style="text-align: center"><span
+																class=" tally warning" th:text="${dep.sma3dep}"></span></td>
+															<td style="text-align: center"><span
+																class=" tally success" th:text="${dep.sma4dep}"></span></td>
+
+
+														</tr>
+													</tbody>
+												</table>
+
+											</div>
+										</div>
+
+
+
+									</div>
+
+
+
+
+
+
+								</div>
+							</div>
+						</div>
+
+
+
+					</div>
+
+				</div>
+
+				<div class="row flex-align-center" style="margin-top: -17px">
+					<div class="cell-8">
+						<div class="row"
+							style="padding-top: -20px; padding-left: 10px; padding-right: 10px; padding-bottom: 10px">
+
+							<table class="table  table-border compact striped">
+								<thead>
+									<tr>
+										<th style="text-align: center;">Scrip</th>
+										<th style="text-align: center;"># SMA1</th>
+										<th style="text-align: center;"># SMA2</th>
+										<th style="text-align: center;"># SMA3</th>
+										<th style="text-align: center;"># SMA4</th>
+										<th style="text-align: center;">Score</th>
+										<th style="text-align: center;">VP</th>
+
+
+
+
+
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="vpItem : ${vp}">
+
+										<td
+											style="text-align: center; color: #000000; font-weight: bold; font-size: 200"
+											th:text="${vpItem.sccode}"></td>
+										<td
+											style="text-align: center;; color: #DE0C77; font-weight: bold; font-size: 200"
+											th:text="${vpItem.sma1breaches}"></td>
+
+										<td
+											style="text-align: center;; color: #4089BD; font-weight: bold;"
+											th:text="${vpItem.sma2breaches}"></td>
+										<td
+											style="text-align: center; color: #9DA91D; font-weight: bold;"
+											th:text="${vpItem.sma3breaches}"></td>
+
+										<td
+											style="text-align: center; color: #39A331; font-weight: bold;"
+											th:text="${vpItem.sma4breaches}"></td>
+
+
+
+										<td style="text-align: center"><span class=" tally alert"
+											th:text="${vpItem.volscore}"></span></td>
+
+
+										<td style="text-align: center"><span
+											class=" tally success" th:text="${vpItem.volprofile}"></span></td>
+
+
+									</tr>
+								</tbody>
+							</table>
+
+						</div>
+					</div>
+
+					<div class="cell-4">
+
+						<div class="row"
+							style="padding-top: -20px; padding-left: 10px; padding-right: 10px; padding-bottom: 10px">
+
+							<table class="table  table-border compact striped">
+								<thead>
+									<tr>
+										<th style="text-align: center;">Cl. Price</th>
+										<th style="text-align: center;">SMA1</th>
+										<th style="text-align: center;">SMA2</th>
+										<th style="text-align: center;">SMA3</th>
+										<th style="text-align: center;">SMA4</th>
+
+
+
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="sma : ${smaList}">
+
+										<td style="text-align: center"><span class=" tally"
+											th:text="${sma.closePrice}"></span></td>
+										<td style="text-align: center"><span
+											class=" tally yellow" th:text="${sma.SMAI1}"></span></td>
+										<td style="text-align: center"><span
+											class=" tally primary" th:text="${sma.SMAI2}"></span></td>
+										<td style="text-align: center"><span
+											class=" tally secondary" th:text="${sma.SMAI3}"></span></td>
+										<td style="text-align: center"><span
+											class=" tally success" th:text="${sma.SMAI4}"></span></td>
+
+
+									</tr>
+								</tbody>
+							</table>
+
+						</div>
+
+
+					</div>
+
+
+
+				</div>
+
+			</div>
+
+
+		</div>
+	</div>
+
+
+	<!-- Metro 4 -->
+	<script src="https://cdn.metroui.org.ua/v4.3.2/js/metro.min.js"></script>
+</body>
+</html>

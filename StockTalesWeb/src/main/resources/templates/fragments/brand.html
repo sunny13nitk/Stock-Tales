@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+	<div th:fragment="STBrand" class="row">
+		<div class="colspan-5 bg-white fg-red">
+
+			<h2 style="margin-left: 15px;">
+				<img th:src="@{/images/dice.png}" src="../../static/images/dice.png"
+					width="60" height="60" style="margin-left: 5px;"> Stock Tales
+			</h2>
+		</div>
+		<div class="colspan-3" style="margin-top: 20px; margin-left: 40px">
+
+
+
+			<div class="info-button bg-red fg-white bd-red small">
+				</span> <a th:href="@{/qnav/site}" class="info"> Site Section</a> <a
+					th:href="@{/qnav/navwithParam}" class="info">Scrip</a>
+
+			</div>
+			<a href="#" class="button alert cycle outline"
+				style="margin-left: 20px" th:href="@{/tracker/test}" role="button">
+				<span class="mif-finder" style="margin-left: 0px"></span>
+			</a> <a href="#" class="button alert cycle outline"
+				style="margin-left: 10px" th:href="@{/nfs/launch}" role="button">
+				<span class="mif-space-shuttle" style="margin-left: 0px"></span>
+			</a><a href="#" class="button alert cycle outline"
+				style="margin-left: 10px" th:href="@{/ids/launch}" role="button">
+				<span class="mif-safari" style="margin-left: 0px"></span>
+			</a>
+		</div>
+
+
+
+
+
+
+		<div class="colspan-2  bg-white fg-red align-end"
+			style="margin-top: 15px; margin-left: 30px">
+			<small> <img th:src="@{/images/bicycle.png}"
+				src="../../static/images/bicycle.png" width="30" height="30"
+				style="margin-right: 10px;"> : by FunProjects
+			</small>
+
+		</div>
+
+		<!-- Add a logout button -->
+		<form th:action="@{/logout}" method="POST" style="margin-top: 10px">
+
+			<button class="button alert outline cycle" data-role="hint"
+				data-hint-position="right" data-cls-hint="fg-red bg-white"
+				data-hint-text="Logout">
+				<span class="mif-switch"></span>
+			</button>
+
+
+
+		</form>
+
+
+
+	</div>
+</body>
+</html>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ClassDiagram>
+    <Class name="stocktales.usersPF.model.Holding" x="849" y="360">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Association
+            destinationClassName="stocktales.usersPF.model.HoldingItem"
+            endpointName="holdingItem" kind="Simple"/>
+        <Association
+            destinationClassName="stocktales.usersPF.model.UserStrategy"
+            endpointName="userStrategy" kind="Simple"/>
+        <Communication destinationClassName="stocktales.usersPF.model.HoldingItem"/>
+    </Class>
+    <Class name="stocktales.usersPF.model.HoldingItem" x="510" y="619">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Association
+            destinationClassName="stocktales.usersPF.model.Holding"
+            endpointName="holdingHeader" kind="Simple"/>
+    </Class>
+    <Class name="stocktales.usersPF.model.Broker" x="82" y="414">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+    <Class name="stocktales.usersPF.model.UserPFConfig" x="69" y="81">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Association
+            destinationClassName="stocktales.usersPF.model.UserStrategy"
+            endpointName="userStrategies" kind="Simple"/>
+        <Communication destinationClassName="stocktales.usersPF.model.UserStrategy"/>
+    </Class>
+    <Class name="stocktales.usersPF.model.UserStrategy" x="840" y="157">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Association
+            destinationClassName="stocktales.usersPF.model.Holding"
+            endpointName="holdings" kind="Simple"/>
+        <Association
+            destinationClassName="stocktales.usersPF.model.UserPFConfig"
+            endpointName="userpfconfig" kind="Simple"/>
+        <Communication destinationClassName="stocktales.usersPF.model.Holding"/>
+    </Class>
+</ClassDiagram>

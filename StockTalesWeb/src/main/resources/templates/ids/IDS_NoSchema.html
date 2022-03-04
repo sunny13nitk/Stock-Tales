@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<div th:replace="fragments/header :: STHeader"></div>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script type="text/javascript"
+	src="https://www.gstatic.com/charts/loader.js"></script>
+</head>
+<body>
+
+	<div th:replace="fragments/IDS_FG :: IDSMenu"></div>
+
+	<div style="margin-top: 112px">
+		<div id="overview">
+			<div class="frame"
+				style="padding: 10px; height: 470px; overflow: auto;">
+
+				<!-- No Schema Exists -->
+				<div>
+					<div class="row flex-justify-center">
+						<div class="cell-1">
+							<span style="margin-top: -20px"
+								class="mif-database mif-8x fg-cyan"></span>
+						</div>
+
+						<div class="cell-9">
+							<h3 style="color: #4465a1">No Schema Exists for Deployment!
+								Create one from below to proceed..</h3>
+						</div>
+
+					</div>
+
+					<div class="row flex-justify-end"
+						style="padding-right: 50px; padding-top: 5px; padding-bottom: 20px">
+						<a href="#" class="command-button success rounded outline"
+							th:href="@{/ids/newSchema}" role="button"> <span
+							class="mif-create-new-folder mif-4x icon"></span> <span
+							class="caption"> Create Schema <small>Add Scrips,
+									Select weights and deploy</small>
+						</span></a>
+
+
+					</div>
+
+
+
+				</div>
+
+
+
+
+
+
+
+			</div>
+
+
+		</div>
+	</div>
+	</div>
+
+
+	<!-- Metro 4 -->
+	<script src="https://cdn.metroui.org.ua/v4.3.2/js/metro.min.js"></script>
+</body>
+</html>

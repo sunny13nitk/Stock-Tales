@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<div th:replace="fragments/header :: STHeader"></div>
+
+</head>
+<body>
+
+
+   <div class="grid">
+
+      <!-- Top Row - Starts -->
+
+      <div class="colspan-1 offset-10" style="margin-top: 10px;">
+         <a href="#" class="button alert cycle outline" th:href="@{'/'}"
+            role="button" data-role="hint" data-hint-position="right"
+            data-cls-hint="bg-white fg-black" data-hint-text="Home">
+            <span class="mif-home icon" style="margin-left: 0px"></span>
+         </a>
+
+      </div>
+
+      <div class="row" style="margin-top: 90px">
+
+         <!--ICOn - Starts -->
+         <div class="colspan -1 offset-5">
+
+            <span class="mif-dice mif-9x fg-red"></span>
+
+         </div>
+         <!--ICOn - Ends -->
+      </div>
+
+      <!--<!-- Top Row - Ends -->
+      <div class="row">
+         <div class="colspan-11 offset-1">
+
+            <!-- Place for messages: error, alert etc ... -->
+
+            <div class="form-group">
+               <div class="col-xs-15">
+                  <div th:if="${formError != null}">
+
+                     <!-- Check for Form error -->
+
+                     <div class="remark alert"
+                        style="padding-top: 10px; margin: 2px">
+                        <label th:text="'ERROR : ' + ${formError}"></label>
+                     </div>
+                  </div>
+               </div>
+
+               <div class="col-xs-15">
+                  <div th:if="${formSucc != null}">
+
+
+                     <div class="remark success"
+                        style="padding-top: 10px; margin: 2px">
+                        <label th:text=" ${formSucc}"></label>
+                     </div>
+
+
+
+                  </div>
+               </div>
+            </div>
+
+            <!-- Place for messages: error, alert etc ... -->
+
+            <form th:object="${searchTerm}"
+               th:action="@{/finder/processNav}" method="post">
+
+               <div class="row">
+
+                  <div class="colspan-11">
+                     <!-- <input type="text" data-role="materialinput"
+                        class="metro-input input-large"
+                        th:field="*{stext}" placeholder="I want to"
+                        data-icon="<span class='mif-search'>"
+                        style="color: red; background: white"
+                        data-cls-line="bg-red" data-cls-label="fg-red"
+                        data-cls-icon="fg-darkRed" data-history="true"> -->
+
+
+                     <input type="text" data-role="input"
+                        class="metro-input input-large"
+                        data-search-button="true" th:field="*{stext}"
+                        placeholder="I want to" data-history="true">
+
+                     <p style="margin-top: 8px; color: darkMauve"
+                        class="text-small">
+                        Just type in SearchTerm and press
+                        <kbd>Enter</kbd>
+                        key to trigger.
+                     </p>
+                  </div>
+
+               </div>
+            </form>
+         </div>
+      </div>
+      <!-- Text  -->
+
+   </div>
+
+
+
+
+
+
+
+   </div>
+
+
+
+   <!-- Metro 4 -->
+   <script src="https://cdn.metroui.org.ua/v4.3.2/js/metro.min.js"></script>
+</body>
+</html>

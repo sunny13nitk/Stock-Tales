@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<div th:replace="fragments/header :: STHeader"></div>
+
+</head>
+<body>
+
+   <div class="grid" style="margin: 20px">
+
+      <!-- Top Row - Starts -->
+      <div class="row">
+
+         <div class="colspan-2" style="margin-top: -10px">
+            <h5 style="margin-left: 40px;">
+               <img th:src="@{/images/dice.png}"
+                  src="../../static/images/dice.png" width="40"
+                  height="40"
+                  style="margin-left: 5px; margin-right: 10px">
+               Stock Tales
+            </h5>
+
+         </div>
+         <!--ICOn - Ends -->
+
+         <!-- Text -->
+         <div class="colspan-6 offset-1">
+
+            <h4 style="font-weight: medium; color: #4465a1">
+               Journal Log for - <span style="color: #B1365B"
+                  th:text="${scCode}"></span>
+            </h4>
+
+
+
+            <blockquote class="right-side" th:if="${snippet != null}">
+               <h6 style="color: #000058">
+
+                  <span th:text="${stats.lastEntryDate}"></span> <small><cite>
+                        <span style="color: black">Last Update</span>
+                  </cite> </small> <span th:text="${stats.numEntries}"></span> <small><cite>
+                        <span style="color: black">Entries</span>
+                  </cite> </small>
+
+               </h6>
+            </blockquote>
+
+
+            <blockquote class="right-side" th:if="${filter != null}">
+               <h6 style="color: #000058">
+
+                  <span th:text="${filter.placeholder}"></span> <small><cite>
+                        <span style="color: black"> :Filter
+                           Criteria</span>
+                  </cite> </small> <span th:text="${filter.numEntries}"></span> <small><cite>
+                        <span style="color: black">Entries</span>
+                  </cite> </small>
+
+               </h6>
+            </blockquote>
+
+
+         </div>
+         <!-- Text  -->
+
+         <!--Buttons - Start  -->
+         <div class="colspan-2">
+
+            <div class="multi-action">
+               <button
+                  class="action-button rotate-minus bg-red fg-white"
+                  onclick="$(this).toggleClass('active')"
+                  data-role="hint"
+                  data-hint-text="Click to View Actions"
+                  data-cls-hint="bg-red fg-white drop-shadow"
+                  data-hint-position="top">
+                  <span class="icon"><span class="mif-plus"></span></span>
+               </button>
+               <ul class="actions drop-right">
+
+
+                  <li class="bg-orange"><a th:href="@{/}"
+                     data-role="hint" data-hint-text="Home"
+                     data-cls-hint="bg-orange fg-white drop-shadow"
+                     data-hint-position="bottom"><span
+                        class="mif-home"></span></a></li>
+
+
+                  <li class="bg-blue"><a
+                     th:href="@{/scJournalM/ovw/{scCode}(scCode=${scCode})}"
+                     data-role="hint" data-hint-text="Journal Overview"
+                     data-cls-hint="bg-cyan fg-white drop-shadow"
+                     data-hint-position="bottom"><span
+                        class="mif-satellite"></span></a></li>
+
+                  <li class="bg-steel"><a
+                     th:href="@{/scJournalM/new/{scCode}(scCode=${scCode})}"
+                     data-role="hint" data-hint-text="Add Journal Entry"
+                     data-cls-hint="bg-steel fg-white drop-shadow"
+                     data-hint-position="bottom"><span
+                        class="mif-note-add"></span></a></li>
+
+
+               </ul>
+            </div>
+
+         </div>
+
+         <!--Buttons - End -->
+
+
+
+
+      </div>
+      <!-- Top Row - Ends -->
+
+
+      <!-- Content Row - Starts -->
+
+      <div class="row" style="padding: 5px;">
+
+         <div class="colspan-12" th:if="${catgs != null}">
+
+
+            <div th:each="catg : ${catgs}">
+
+               <!--Category Heading - Starts  -->
+               <h1
+                  style="font-weight: medium; margin-left: 50px; margin-top: 50px; color: #4465a1"
+                  th:text="${catg}"></h1>
+               <!--Category Heading - Ends  -->
+
+               <!-- Journals Iterations - Begin -->
+               <div th:each="je: ${jeList}">
+
+                  <!-- Journal Category Matched to Current Category -->
+                  <div th:if="${je.category == catg }">
+
+                     <!-- Tag - Begins -->
+
+
+                     <div
+                        style="margin-left: 90px; margin-right: 50px; margin-top: 50px">
+
+
+                        <!-- Interval Block Quote - Starts -->
+
+
+                        <blockquote class="right-side"
+                           th:if="${je.valm > 0 }">
+                           <h6 style="color: #000058">
+                              <span style="color: #585800"
+                                 th:text=" ${catg} + ' : '"></span> <span
+                                 th:if="${je.vald > 0 }"
+                                 th:text="'Q' + ${je.vald} + '-'"></span>
+                              <span th:text="${je.valm}"></span>
+
+                           </h6>
+                        </blockquote>
+
+                        <blockquote class="right-side"
+                           th:if="${je.valm == 0 }">
+                           <h6 style="color: #000058">
+                              <span style="color: #585800"
+                                 th:text=" ${catg} "></span>
+
+                           </h6>
+                        </blockquote>
+
+
+
+                        <!-- Interval Block Quote - Ends -->
+
+
+                        <!-- Snippet Block Starts -->
+                        <div class="mx-auto" data-role="panel"
+                           th:if="
+                           ${je.snippets.size() > 0}"
+                           style="margin-top: 20px"
+                           data-title-caption="Snippet"
+                           data-title-icon="<span class='mif-pin'></span>"
+                           data-collapsible="true"
+                           data-collapsed="false"
+                           data-cls-panel="shadow-3"
+                           data-cls-title="bg-transparent fg-grayMouse"
+                           data-cls-title-icon="bg-white fg-grayMouse"
+                           data-cls-collapse-toggle="bg-transparent fg-grayMouse ">
+
+                           <!-- Looping at Snippets - Starts  -->
+                           <div th:each="snippet: ${je.snippets}">
+
+                              <!-- Image container - Starts -->
+                              <div
+                                 th:if="
+                           ${snippet.image !=null}">
+                                 <div
+                                    class="img-container rounded drop-shadow"
+                                    style="margin-top: 20px">
+                                    <img
+                                       th:src="@{/scJournalM/image/{sid} (sid=${snippet.sid})}">
+                                 </div>
+
+                              </div>
+
+                              <!-- Image container - Ends -->
+
+
+
+
+                              <!-- Notes- Starts -->
+                              <div
+                                 th:if="${snippet.notes.trim().length() > 0}"
+                                 class="card"
+                                 style="white-space: pre-line">
+                                 <h5 style="page-break-inside: avoid;">
+                                    <p class='indent-letter'
+                                       style="margin-left: 12px; page-break-inside: avoid;"
+                                       th:text="${snippet.notes}"></p>
+                                 </h5>
+                                 <div class="d-flex flex-row-r">
+                                    <a href="#"
+                                       class="button secondary cycle outline"
+                                       style="margin-top: 8px; margin-right: 10px"
+                                       th:href="@{/scJournalM/edit/{sid} (sid=${snippet.sid}) }"
+                                       role="button" data-role="hint"
+                                       data-hint-position="left"
+                                       data-cls-hint="bg-white fg-black drop-shadow"
+                                       data-hint-text="Add Tag(s)/ Edit Notes">
+                                       <span class="mif-pencil icon"></span>
+                                    </a>
+                                 </div>
+                              </div>
+                              <!-- Notes- Ends -->
+
+
+                              <!-- Updated On Block Quote - Starts -->
+                              <blockquote class="right-side"
+                                 th:if="${je.dateofentry != null}">
+                                 <small><cite> <span
+                                       style="color: #546E7A">Updated
+                                          : </span> <span
+                                       style="color: #546E7A"
+                                       th:text="${je.dateofentry}">
+                                    </span>
+                                 </cite> </small>
+                              </blockquote>
+
+                              <!-- Updated On Block Quote - Ends -->
+
+                              <!-- Url Link if any - Starts  -->
+
+                              <div
+                                 th:if="${snippet.url.trim().length() > 0}">
+                                 <a
+                                    th:href="@{{url} (url=${snippet.url})}"
+                                    data-role="hint"
+                                    data-hint-text="Navigate to Url"
+                                    data-cls-hint="bg-steel fg-white drop-shadow"
+                                    data-hint-position="right"><span
+                                    th:text="Reference"></span></a>
+                              </div>
+                              <!-- Url Link if any - Ends  -->
+                           </div>
+                           <!-- Looping at Snippet Ends  -->
+
+                        </div>
+                        <!-- Snippet Block Ends  -->
+
+
+                     </div>
+
+
+                  </div>
+                  <!-- Journal Category Matched to Current Category - ENDS -->
+               </div>
+               <!-- Journals Iterations - End -->
+
+
+
+            </div>
+
+
+         </div>
+      </div>
+
+
+      <!-- Content Row - Ends -->
+
+   </div>
+
+   <!-- Metro 4 -->
+   <script src="https://cdn.metroui.org.ua/v4.3.2/js/metro.min.js"></script>
+</body>
+</html>

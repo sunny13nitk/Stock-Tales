@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<div th:replace="fragments/header :: STHeader"></div>
+
+</head>
+<body>
+
+   <div style="min-height: 600px; overflow: hidden;">
+      <div data-role="navview" data-compact="md" data-expand="false"
+         data-active-state="true">
+         <div th:replace="fragments/navbar :: STNavbar"></div>
+
+
+
+         <div class="navview-content pl-4-md pr-4-md">
+
+            <div class="grid">
+
+               <div th:replace="fragments/brand :: STBrand"></div>
+
+               <!-- your Code Starts from Here  -->
+
+               <form th:object="${multipojo}"
+                  th:action="@{'/test/multi'}" method="post">
+                  <!--  <input type="hidden" th:field="*{url}" />
+ -->
+
+                  <div class="row">
+                     <div class="colspan-7 offset-1"
+                        style="margin-top: 5px; margin-bottom: 10px">
+                        <label class="fg-mauve"> Tag</label> <select
+                           name="tag" data-role="select" multiple
+                           th:field="*{tag}" data-cls-option="fg-red"
+                           data-cls-selected-item="bg-teal fg-white"
+                           data-cls-selected-item-remover="bg-darkTeal fg-white">
+
+                           <option
+                              th:each="tagVal : ${T(stocktales.dataBook.enums.EnumTag).values()}"
+                              th:value="${tagVal.name()}"
+                              th:text="${tagVal.name()}"></option>
+                        </select>
+
+                     </div>
+
+                  </div>
+
+                  <div class="row">
+                     <div class="colspan-7 offset-1"
+                        style="margin-top: 5px; margin-bottom: 10px">
+                        <label class="fg-mauve"> Category</label> <select
+                           class="form-control" name="catg"
+                           data-add-empty-value="true"
+                           data-empty-value=" " th:field="*{catg}">
+
+                           <option
+                              th:each="catgVal : ${T(stocktales.dataBook.enums.EnumCategory).values()}"
+                              th:value="${catgVal.name()}"
+                              th:text="${catgVal.name()}"></option>
+                        </select>
+
+                     </div>
+
+                  </div>
+
+                  <div class="colspan-7 offset-1">
+                     <label class="fg-mauve">Other Tag</label> <input
+                        type="text" data-role="taginput"
+                        th:field="*{othertag}" data-random-color="true">
+                     <p class="text-small">
+                        Use
+                        <kbd>,</kbd>
+                        to add tags
+                     </p>
+                  </div>
+
+                  <button class="button rounded" type="submit"
+                     style="background-color: #59D3AF; color: white; margin-top: 5px; margin-bottom: 10px"
+                     data-role="hint" data-hint-position="bottom"
+                     data-cls-hint="bg-Lightgreen fg-black"
+                     data-hint-text="Navigate">
+                     <span class="mif-save" style="margin-left: 0px">
+                     </span> <span style="margin-left: 3px">Save</span>
+                  </button>
+               </form>
+
+
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <!-- Metro 4 -->
+   <script src="https://cdn.metroui.org.ua/v4.3.2/js/metro.min.js"></script>
+</body>
+</html>

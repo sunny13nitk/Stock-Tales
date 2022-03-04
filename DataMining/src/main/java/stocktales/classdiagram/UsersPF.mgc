@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ClassDiagram>
+    <Class name="stocktales.usersPF.model.Holding" x="892" y="510">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Association
+            destinationClassName="stocktales.usersPF.model.HoldingItem"
+            endpointName="holdingItem" kind="Simple"/>
+        <Association
+            destinationClassName="stocktales.usersPF.model.UserStrategy"
+            endpointName="userStrategy" kind="Simple"/>
+        <Communication destinationClassName="stocktales.usersPF.model.HoldingItem"/>
+    </Class>
+    <Class name="stocktales.usersPF.model.HoldingItem" x="270" y="516">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Association
+            destinationClassName="stocktales.usersPF.model.Holding"
+            endpointName="holdingHeader" kind="Simple"/>
+    </Class>
+    <Class name="stocktales.usersPF.model.UserPFConfig" x="35" y="17">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Association
+            destinationClassName="stocktales.usersPF.model.UserStrategy"
+            endpointName="userStrategies" kind="Simple"/>
+        <Communication destinationClassName="stocktales.usersPF.model.UserStrategy"/>
+    </Class>
+    <Class name="stocktales.usersPF.model.UserStrategy" x="846" y="131">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Association
+            destinationClassName="stocktales.usersPF.model.Holding"
+            endpointName="holdings" kind="Simple"/>
+        <Association
+            destinationClassName="stocktales.usersPF.model.UserPFConfig"
+            endpointName="userpfconfig" kind="Simple"/>
+        <Communication destinationClassName="stocktales.usersPF.model.Holding"/>
+    </Class>
+    <Note x="499" y="96">User Can Subscribe to N Strategies</Note>
+    <Note x="1078" y="178">mapped to User&#xd;
+via cid</Note>
+    <Note x="717" y="365">Single Strategy can&#xd;
+ have multiple Holdings</Note>
+    <Note x="1053" y="518">mapped to UserStrategy&#xd;
+via id field</Note>
+    <Note x="97" y="548">Each Holding will&#xd;
+ have multiple &#xd;
+Buy/Sell Txns</Note>
+    <Note x="481" y="635">mapped via hid&#xd;
+from Holding</Note>
+</ClassDiagram>

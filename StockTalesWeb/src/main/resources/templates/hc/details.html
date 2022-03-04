@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<div th:replace="fragments/header :: STHeader"></div>
+
+</head>
+<body>
+
+
+
+
+   <div class="grid">
+
+      <!-- Top Row - Starts -->
+      <div class="row">
+
+         <div class="colspan-1" style="margin: 20px">
+            <img th:src="@{/images/dice.png}"
+               src="../../static/images/dice.png" width="60" height="60">
+
+         </div>
+         <!--ICOn - Ends -->
+
+         <div class="colspan-7">
+            <h4
+               style="margin-top: 35px; font-weight: medium; color: #4465a1">
+               Health Check Report For - <span style="color: #B1365B"
+                  th:text="${scCode}"></span>
+            </h4>
+         </div>
+
+         <div class="colspan-1 offset-2">
+            <a href="#" class="button alert cycle outline"
+               style="margin-left: 20px" th:href="@{/}" role="button">
+               <span class="mif-home" style="margin-left: 0px"></span>
+            </a>
+            <!-- Text  -->
+         </div>
+
+
+      </div>
+      <!-- Top Row - Ends -->
+
+
+      <!-- Content Row - Starts -->
+
+      <div class="row">
+
+
+         <div class="colspan-12" th:if="${hcResults != null}">
+            <!--Looping at Eval REsults for Each Combo Result  -->
+
+            <div th:each="comboResult : ${hcResults}">
+
+               <div class="row flex-align-center">
+
+                  <div class="colspan-5">
+                     <!--Category Heading - Starts  -->
+                     <h2>
+                        <span
+                           style="font-weight: medium; margin-left: 50px; margin-top: 50px; color: #4465a1"
+                           th:text="${comboResult.evalResult.stext}"></span>
+                        - <span style="color: #B1365B"
+                           th:text="${comboResult.evalResult.tagline}"></span>
+                     </h2>
+                     <!--Category Heading - Ends  -->
+
+                  </div>
+
+                  <div class="colspan-6">
+                     <div class="remark warning"
+                        th:if="${comboResult.evalResult.effect == T(stocktales.dataBook.enums.EnumEffect).Monitor}">
+
+                        <label style="color: #000058"> <span
+                           style="color: #585800"
+                           th:text="${comboResult.evalResult.msg}"></span>
+
+                        </label> <label style="color: #000058"> <span
+                           style="color: #585800"
+                           th:text="${comboResult.evalResult.repercursion}"></span>
+
+                        </label>
+                     </div>
+
+
+                     <div class="remark success"
+                        th:if="${comboResult.evalResult.effect == T(stocktales.dataBook.enums.EnumEffect).Positive}">
+
+                        <label style="color: #000058"> <span
+                           style="color: #585800"
+                           th:text="${comboResult.evalResult.msg}"></span>
+
+                        </label> <label style="color: #000058"> <span
+                           style="color: #585800"
+                           th:text="${comboResult.evalResult.repercursion}"></span>
+
+                        </label>
+                     </div>
+
+                     <div class="remark alert"
+                        th:if="${comboResult.evalResult.effect == T(stocktales.dataBook.enums.EnumEffect).Negative}">
+
+                        <label style="color: #000058"> <span
+                           style="color: #585800"
+                           th:text="${comboResult.evalResult.msg}"></span>
+
+                        </label> <label style="color: #000058"> <span
+                           style="color: #585800"
+                           th:text="${comboResult.evalResult.repercursion}"></span>
+
+                        </label>
+                     </div>
+
+                     <div class="remark yellow"
+                        th:if="${comboResult.evalResult.effect == T(stocktales.dataBook.enums.EnumEffect).Observation}">
+
+                        <label style="color: #000058"> <span
+                           style="color: #585800"
+                           th:text="${comboResult.evalResult.msg}"></span>
+
+                        </label> <label style="color: #000058"> <span
+                           style="color: #585800"
+                           th:text="${comboResult.evalResult.repercursion}"></span>
+
+                        </label>
+                     </div>
+
+                     <div class="remark info"
+                        th:if="${comboResult.evalResult.effect == T(stocktales.dataBook.enums.EnumEffect).Information}">
+
+                        <label style="color: #000058"> <span
+                           style="color: #585800"
+                           th:text="${comboResult.evalResult.msg}"></span>
+
+                        </label> <label style="color: #000058"> <span
+                           style="color: #585800"
+                           th:text="${comboResult.evalResult.repercursion}"></span>
+
+                        </label>
+                     </div>
+
+                  </div>
+               </div>
+               <div
+                  style="margin-left: 50px; margin-right: 50px; margin-top: 20px">
+                  <div data-role="panel" style="margin: 20px;"
+                     data-title-caption="Details" data-collapsed="true"
+                     data-title-icon="<span class='mif-pin'></span>"
+                     data-collapsible="true" data-cls-panel="shadow-3"
+                     data-cls-title="bg-transparent fg-grayMouse"
+                     data-cls-title-icon="bg-white fg-grayMouse"
+                     data-cls-collapse-toggle="bg-transparent fg-grayMouse ">
+                     <div class="colspan-10 offset-1"
+                        th:each="msg : ${comboResult.beanProcResult.messages}">
+                        <div class="remark success"
+                           th:if="${msg.effect == T(stocktales.dataBook.enums.EnumEffect).Positive}">
+                           <label style="color: #000058"> <span
+                              style="color: #585800"
+                              th:text="${msg.msg}"></span></label>
+                        </div>
+
+                        <div class="remark alert"
+                           th:if="${msg.effect == T(stocktales.dataBook.enums.EnumEffect).Negative}">
+                           <label style="color: #000058"> <span
+                              style="color: #585800"
+                              th:text="${msg.msg}"></span></label>
+                        </div>
+
+                        <div class="remark warning"
+                           th:if="${msg.effect == T(stocktales.dataBook.enums.EnumEffect).Monitor}">
+                           <label style="color: #000058"> <span
+                              style="color: #585800"
+                              th:text="${msg.msg}"></span></label>
+                        </div>
+
+                        <div class="remark yellow"
+                           th:if="${msg.effect == T(stocktales.dataBook.enums.EnumEffect).Observation}">
+                           <label style="color: #000058"> <span
+                              style="color: #585800"
+                              th:text="${msg.msg}"></span></label>
+                        </div>
+
+                        <div class="remark info"
+                           th:if="${msg.effect == T(stocktales.dataBook.enums.EnumEffect).Information}">
+                           <label style="color: #000058"> <span
+                              style="color: #585800"
+                              th:text="${msg.msg}"></span></label>
+                        </div>
+
+
+
+
+                     </div>
+
+                     <div class="row flex-align-center"
+                        th:if="${comboResult.beanProcResult != null && comboResult.evalResult.stext == T(stocktales.healthcheck.enums.EnumHCCriteria).Growth}">
+
+                        <div
+                           th:each="dc : ${comboResult.beanProcResult.dataContainers}">
+
+                           <!--Sales In Intervals - Starts -->
+                           <div
+                              th:if="${dc.title == T(stocktales.healthcheck.enums.EnumDataContainerTitle).SalesInIntervals}">
+
+                              <!-- Sales in Intervals -  Starts -->
+                              <div class="cell" style="margin: 20px">
+
+                                 <blockquote class="right-side">
+
+                                    <div
+                                       class="row d-flex flex-justify-center">
+
+                                       <h6
+                                          style="color: #000058; background: #F1F2FF; padding: 10px; margin-left: 5px center;">
+                                          <span style="color: #585800">Revenues
+                                             In Intervals</span>
+
+                                       </h6>
+                                    </div>
+
+                                    <table class="table compact striped">
+                                       <thead>
+                                          <tr>
+                                             <th
+                                                style="text-align: center;">Interval
+                                                in Past</th>
+                                             <th
+                                                style="text-align: center;">Sales
+                                                Growth CAGR</th>
+
+
+                                          </tr>
+                                       </thead>
+                                       <tbody>
+                                          <tr
+                                             th:each="nameVal : ${dc.nameValContainer}">
+
+                                             <td
+                                                th:if="${nameVal.value < 5}"
+                                                style="text-align: center; color: red; font-weight: bolder;"
+                                                th:text="${nameVal.name}"></td>
+
+                                             <td
+                                                th:if="${nameVal.value >= 5}"
+                                                style="text-align: center; color: #5D6A81; font-weight: bolder;"
+                                                th:text="${nameVal.name}"></td>
+
+                                             <td
+                                                th:if="${nameVal.value < 5}"
+                                                style="text-align: center; color: red; font-weight: bolder;"
+                                                th:text="${nameVal.value}"></td>
+
+                                             <td
+                                                th:if="${nameVal.value >= 5}"
+                                                style="text-align: center; color: #5D6A81; font-weight: bolder;"
+                                                th:text="${nameVal.value}"></td>
+
+
+                                          </tr>
+                                       </tbody>
+                                    </table>
+                                 </blockquote>
+
+                              </div>
+
+
+
+                           </div>
+
+                           <!--Sales In Intervals - Ends  -->
+
+
+                           <!--SalesTrendsOverall - Starts -->
+                           <div
+                              th:if="${dc.title == T(stocktales.healthcheck.enums.EnumDataContainerTitle).SalesTrendsOverall}">
+
+                              <!-- Sales in Intervals -  Starts -->
+                              <div class="cell" style="margin: 20px">
+
+                                 <blockquote class="right-side">
+
+                                    <div
+                                       class="row d-flex flex-justify-center">
+
+                                       <h6
+                                          style="color: #000058; background: #F1F2FF; padding: 10px; margin-left: 5px center;">
+                                          <span style="color: #585800">Revenues
+                                             Growth Trends</span>
+
+                                       </h6>
+                                    </div>
+
+                                    <table class="table compact striped">
+                                       <thead>
+                                          <tr>
+                                             <th
+                                                style="text-align: center;">Year(s)
+                                             </th>
+                                             <th
+                                                style="text-align: center;">Sales
+                                                Growth</th>
+
+
+                                          </tr>
+                                       </thead>
+                                       <tbody>
+                                          <tr
+                                             th:each="nameVal : ${dc.nameValContainer}">
+
+                                             <td
+                                                th:if="${nameVal.value < 5}"
+                                                style="text-align: center; color: red; font-weight: bolder;"
+                                                th:text="${nameVal.name}"></td>
+
+                                             <td
+                                                th:if="${nameVal.value >= 5}"
+                                                style="text-align: center; color: #5D6A81; font-weight: bolder;"
+                                                th:text="${nameVal.name}"></td>
+
+                                             <td
+                                                th:if="${nameVal.value < 5}"
+                                                style="text-align: center; color: red; font-weight: bolder;"
+                                                th:text="${nameVal.value}"></td>
+
+                                             <td
+                                                th:if="${nameVal.value >= 5}"
+                                                style="text-align: center; color: #5D6A81; font-weight: bolder;"
+                                                th:text="${nameVal.value}"></td>
+
+
+                                          </tr>
+                                       </tbody>
+                                    </table>
+                                 </blockquote>
+
+                              </div>
+
+
+
+                           </div>
+
+                           <!--SalesTrendsOverall - Ends -->
+
+
+
+                        </div>
+
+
+
+
+
+                     </div>
+                  </div>
+
+
+
+
+               </div>
+            </div>
+
+         </div>
+
+
+      </div>
+      <!-- Content Row - Ends -->
+
+   </div>
+
+   <!-- Metro 4 -->
+   <script src="https://cdn.metroui.org.ua/v4.3.2/js/metro.min.js"></script>
+</body>
+</html>

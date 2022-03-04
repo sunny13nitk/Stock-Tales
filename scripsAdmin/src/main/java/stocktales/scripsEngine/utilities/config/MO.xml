@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Months>
+	<monthConfig>
+		<monthNames>
+			<sname>JAN</sname>
+			<lname>JANUARY</lname>
+		</monthNames>
+		<quarter>1</quarter>
+		<monValue>1</monValue>
+	</monthConfig>
+
+	<monthConfig>
+		<monthNames>
+			<sname>FEB</sname>
+			<lname>FEBRUARY</lname>
+		</monthNames>
+		<quarter>1</quarter>
+		<monValue>2</monValue>
+	</monthConfig>
+
+	<monthConfig>
+		<monthNames>
+			<sname>MAR</sname>
+			<lname>MARCH</lname>
+		</monthNames>
+		<quarter>1</quarter>
+		<monValue>3</monValue>
+	</monthConfig>
+
+	<monthConfig>
+		<monthNames>
+			<sname>APR</sname>
+			<lname>APRIL</lname>
+		</monthNames>
+		<quarter>2</quarter>
+		<monValue>4</monValue>
+	</monthConfig>
+
+
+	<monthConfig>
+		<monthNames>
+			<sname>MAY</sname>
+			<lname>MAY</lname>
+		</monthNames>
+		<quarter>2</quarter>
+		<monValue>5</monValue>
+	</monthConfig>
+
+	<monthConfig>
+		<monthNames>
+			<sname>JUN</sname>
+			<lname>JUNe</lname>
+		</monthNames>
+		<quarter>2</quarter>
+		<monValue>6</monValue>
+	</monthConfig>
+
+	<monthConfig>
+		<monthNames>
+			<sname>JUL</sname>
+			<lname>JULY</lname>
+		</monthNames>
+		<quarter>3</quarter>
+		<monValue>7</monValue>
+	</monthConfig>
+
+	<monthConfig>
+		<monthNames>
+			<sname>AUG</sname>
+			<lname>AUGUST</lname>
+		</monthNames>
+		<quarter>3</quarter>
+		<monValue>8</monValue>
+	</monthConfig>
+
+	<monthConfig>
+		<monthNames>
+			<sname>SEP</sname>
+			<lname>SEPTEMBER</lname>
+		</monthNames>
+		<quarter>3</quarter>
+		<monValue>9</monValue>
+	</monthConfig>
+
+	<monthConfig>
+		<monthNames>
+			<sname>OCT</sname>
+			<lname>OCTOBER</lname>
+		</monthNames>
+		<quarter>4</quarter>
+		<monValue>10</monValue>
+	</monthConfig>
+
+	<monthConfig>
+		<monthNames>
+			<sname>NOV</sname>
+			<lname>NOVEMBER</lname>
+		</monthNames>
+		<quarter>4</quarter>
+		<monValue>11</monValue>
+	</monthConfig>
+
+	<monthConfig>
+		<monthNames>
+			<sname>DEC</sname>
+			<lname>DECEMBER</lname>
+		</monthNames>
+		<quarter>4</quarter>
+		<monValue>12</monValue>
+	</monthConfig>
+
+
+</Months>

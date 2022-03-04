@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<div th:replace="fragments/header :: STHeader"></div>
+
+</head>
+<body>
+
+   <div class="grid" style="margin: 20px">
+
+      <!-- Top Row - Starts -->
+      <div class="row">
+
+         <div class="colspan-2" style="margin-top: -10px">
+            <h5 style="margin-left: 40px;">
+               <img th:src="@{/images/dice.png}"
+                  src="../../static/images/dice.png" width="40"
+                  height="40"
+                  style="margin-left: 5px; margin-right: 10px">
+               Stock Tales
+            </h5>
+
+         </div>
+         <!--ICOn - Ends -->
+
+         <!-- Text -->
+         <div class="colspan-4" style="margin-left: 30px">
+            <h4 style="font-weight: medium; color: #4465a1">
+               New Journal Entry for - <span style="color: #B1365B"
+                  th:text="${scJP.sccode}"></span>
+            </h4>
+         </div>
+         <!-- Text  -->
+
+         <!-- Info- Box - Starts  -->
+
+         <div th:if="${numLast != null}" class="colspan-3"
+            style="margin-top: -20px">
+
+            <div class="icon-box bg-green fg-white">
+               <div class="icon">
+                  <span class="mif-book-reference"></span>
+               </div>
+               <div class="content">
+                  <div class="p-2">
+                     <div>ENTRIES</div>
+                     <div class="text-bold text-leader"
+                        th:text="${numLast.numEntries}">41</div>
+                  </div>
+                  <div data-role="progress" data-value="98"
+                     data-small="true" data-cls-bar="bg-white"
+                     data-cls-back="bg-cyan"></div>
+                  <div class="pl-2 pr-2">
+                     <span class="text-small"> Last Entry : </span> <span
+                        class="text-small"
+                        th:text="${numLast.lastEntryDate}"></span> <a
+                        href="#"
+                        th:href="@{/scJournal/ovw/{scCode} (scCode=${scJP.sccode})}"
+                        class="text-small fg-white"
+                        style="margin-left: 30px; align-content: flex-end;">
+                        More info <span class="mif-arrow-right"></span>
+                     </a>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <!-- Info- Box - Ends  -->
+
+
+         <!--Buttons - Start  -->
+         <div class="colspan-1"
+            style="margin-top: 13px; margin-left: 120px">
+            <a href="#" class="button secondary cycle outline"
+               th:href="@{'/'}" role="button" data-role="hint"
+               data-hint-position="right"
+               data-cls-hint="bg-white fg-black" data-hint-text="Home">
+               <span class="mif-home icon" style="margin-left: 0px"></span>
+            </a>
+
+         </div>
+
+         <!--Buttons - End -->
+
+      </div>
+      <!-- Top Row - Ends -->
+
+
+      <!-- Content Row - Starts -->
+
+      <div class="row">
+
+         <div class="colspan-12">
+
+            <!-- Form - Starts -->
+
+            <form th:object="${scJP}" th:action="@{'/scJournal/save'}"
+               method="post">
+
+               <!-- Place for messages: error, alert etc ... -->
+               <div class="form-group">
+                  <div class="col-xs-15">
+                     <div th:if="${formError != null}">
+
+                        <!-- Check for Form error -->
+
+                        <div class="remark alert"
+                           style="padding-top: 10px; margin: 2px">
+                           <label th:text="'ERROR : ' + ${formError}"></label>
+                        </div>
+                     </div>
+                  </div>
+
+                  <div class="col-xs-15">
+                     <div th:if="${formSucc != null}">
+
+
+                        <div class="remark success"
+                           style="padding-top: 10px; margin: 2px">
+                           <label th:text=" ${formSucc}"></label>
+                        </div>
+
+
+
+                     </div>
+                  </div>
+               </div>
+
+               <!--Hidden  Scrip Code field to be passed on to   -->
+               <input type="hidden" th:field="*{sccode}" />
+
+
+               <!--  Image & Notes Row Starts  -->
+               <div class="mx-auto" data-role="panel"
+                  style="margin-top: 5px"
+                  data-title-caption="Image and Notes"
+                  data-title-icon="<span class='mif-file-picture'></span>"
+                  data-collapsible="true" data-cls-panel="shadow-3"
+                  data-cls-title="bg-lightRed fg-white"
+                  data-cls-title-icon="bg-white fg-red"
+                  data-cls-collapse-toggle="bg-darkRed fg-white marker-light  ">
+
+
+                  <div th:if="${scJP.image != null}">
+                     <div class="img-container drop-shadow">
+                        <img th:src="@{'/scJournal/image'}">
+                     </div>
+
+                  </div>
+
+                  <div th:if="${scJP.image == null}"
+                     style="margin: 20px">
+
+                     <a href="#" class="button alert rounded outline"
+                        th:href="@{/scJournal/upload}" role="button"
+                        data-role="hint" data-hint-position="right"
+                        data-cls-hint=" fg-black"
+                        data-hint-text="Upload Image"> <span
+                        class="mif-add icon" style="margin-left: 0px"></span>
+                        <span style="margin-left: 3px">Upload
+                           Image</span>
+
+
+                     </a>
+
+                  </div>
+
+
+                  <!-- Tags Row- Starts -->
+
+                  <div class="row">
+
+                     <div class="cell-md-1">
+                        <h2 class="fg-grayMouse"
+                           style="margin: 10px; margin-top: 20px">1:1</h2>
+                     </div>
+
+                     <div class="cell-md-5" th:if="${catgs != null}">
+                        <label class="fg-mauve"> Category -
+                           Choose From Current</label> <select name="category"
+                           data-role="select" multiple
+                           th:field="*{category}"
+                           data-cls-option="fg-grayMouse"
+                           data-cls-selected-item="bg-teal fg-white"
+                           data-cls-selected-item-remover="bg-darkTeal fg-white">
+
+
+                           <option th:each="catg : ${catgs}"
+                              th:value="${catg}" th:selected="${catg}"
+                              th:text="${catg}"></option>
+
+                        </select>
+
+                     </div>
+                     <div class="cell-md-6">
+                        <label class="fg-mauve"><strong>OR
+                        </strong> (Add New) Category - Broad Classification </label> <span
+                           style="margin: 30px" class="text-small">
+                           Use <kbd>,</kbd> to add new Category
+                        </span> <input type="text" data-role="taginput"
+                           th:field="*{catgOther}"
+                           data-random-color="true">
+
+
+                     </div>
+
+                  </div>
+
+                  <div class="row">
+                     <div class="cell-md-1">
+                        <h2 class="fg-grayMouse"
+                           style="margin: 10px; margin-top: 20px">1:n</h2>
+                     </div>
+
+                     <div class="cell-md-5" th:if="${tags != null}">
+                        <label class="fg-mauve"> Tag(s) - Choose
+                           From Current</label> <select name="tag"
+                           data-role="select" multiple th:field="*{tag}"
+                           data-cls-option="fg-grayMouse"
+                           data-cls-selected-item="bg-teal fg-white"
+                           data-cls-selected-item-remover="bg-darkTeal fg-white">
+
+
+                           <option th:each="tag : ${tags}"
+                              th:value="${tag}" th:selected="${tag}"
+                              th:text="${tag}"></option>
+
+                        </select>
+
+                     </div>
+
+                     <div class="cell-md-6">
+                        <label class="fg-mauve"><strong>OR/AND
+                        </strong> (Add New) Tag(s) - Tag your Observations </label> <span
+                           style="margin: 30px" class="text-small">
+                           Use <kbd>,</kbd> to add tags
+                        </span> <input type="text" data-role="taginput"
+                           th:field="*{tagOther}"
+                           data-random-color="true">
+
+
+                     </div>
+
+                     <div class="col-md-12 form-group">
+                        <p class="fg-mauve" id="chars-counter">Length-
+                           0 char(s)</p>
+                        <textarea data-role="textarea"
+                           data-auto-size="true"
+                           data-chars-counter="#chars-counter"
+                           style="width: 1300px; min-height: 500px"
+                           data-chars-counter-template="Length- $1 char(s)"
+                           th:field="*{notes}"></textarea>
+                     </div>
+
+
+                  </div>
+                  <!-- Tag Row - Ends -->
+
+
+               </div>
+               <!--  Image & Notes Row Ends  -->
+
+
+
+               <!--Identification Row Starts  -->
+
+               <div class="mx-auto" data-role="panel"
+                  style="margin-top: 5px"
+                  data-title-caption="Identification, Source & Influence"
+                  data-title-icon="<span class='mif-key'></span>"
+                  data-collapsible="true" data-cls-panel="shadow-3"
+                  data-cls-title="bg-lightRed fg-white"
+                  data-cls-title-icon="bg-white fg-red"
+                  data-cls-collapse-toggle="bg-darkRed fg-white marker-light  ">
+
+                  <!-- Interval Row - Starts -->
+                  <div class="row">
+                     <div style="margin: 5px">
+                        <p class="text-left text-upper bg-white fg-red">
+                           <strong><u>Basic Details</u></strong>
+                        </p>
+
+                     </div>
+                  </div>
+
+                  <div class="row">
+
+                     <div class="cell-md-2">
+                        <label class="fg-mauve"> Interval Type</label> <select
+                           class="form-control" name="interval"
+                           th:field="*{interval}">
+
+                           <option
+                              th:each="intervalValue : ${T(stocktales.dataBook.enums.EnumInterval).values()}"
+                              th:value="${intervalValue.name()}"
+                              th:text="${intervalValue.name()}"></option>
+                        </select>
+
+                     </div>
+                     <div class="cell-md-2" style="margin-left: 20px">
+                        <label class="fg-mauve"> Year</label> <select
+                           data-role="select" name="valm"
+                           th:field="*{valm}"
+                           data-add-empty-value="true" class="input">
+                           <!-- Sectors list to be pushed via Model -->
+                           <option th:each="year : ${years}"
+                              th:value="${year}" th:selected="${year}"
+                              th:text="${year}"></option>
+                        </select>
+
+                     </div>
+
+                     <div class="cell-md-2" style="margin-left: 20px">
+                        <label class="fg-mauve"> Quarter (Only
+                           for QoQ Data)</label> <select data-role="select"
+                           name="vald" th:field="*{vald}"
+                           data-add-empty-value="true" class="input">
+                           <!-- Sectors list to be pushed via Model -->
+                           <option th:value="1" th:text="Q1"></option>
+                           <option th:value="2" th:text="Q2"></option>
+                           <option th:value="3" th:text="Q3"></option>
+                           <option th:value="4" th:text="Q4"></option>
+
+                        </select>
+
+                     </div>
+
+                     <div class="cell-md-3" style="margin-left: 50px">
+                        <label class="fg-mauve"> Source of
+                           Information</label> <select class="form-control"
+                           name="source" th:field="*{source}"
+                           data-add-empty-value="true">
+
+                           <option
+                              th:each="sValue : ${T(stocktales.dataBook.enums.EnumSource).values()}"
+                              th:value="${sValue.name()}"
+                              th:text="${sValue.name()}"></option>
+                        </select>
+
+                     </div>
+
+                     <div class="cell-md-2" style="margin-left: 20px">
+                        <label class="fg-mauve"> Journal Entry
+                           Influence</label> <select class="form-control"
+                           name="effect" th:field="*{effect}"
+                           data-add-empty-value="true">
+
+                           <option
+                              th:each="eValue : ${T(stocktales.dataBook.enums.EnumEffect).values()}"
+                              th:value="${eValue.name()}"
+                              th:text="${eValue.name()}"></option>
+                        </select>
+
+                     </div>
+
+
+                  </div>
+                  <!-- Interval Row - Ends -->
+
+
+                  <!-- URL Row- Starts -->
+                  <div class="row">
+                     <div style="margin: 5px">
+                        <p class="text-left text-upper bg-white fg-red">
+                           <strong><u>References</u></strong>
+                        </p>
+
+                     </div>
+                  </div>
+
+                  <div class="row">
+
+                     <div class="cell-md-11">
+                        <label class="fg-mauve">Maintain
+                           Reference URL - If Any</label> <input type="text"
+                           class="metro-input" th:field="*{url}" />
+                     </div>
+                  </div>
+                  <!-- URL Row - Ends -->
+
+
+
+
+
+               </div>
+
+               <!--Identification Row Ends -->
+
+
+               <div class="d-flex flex-row-r"
+                  style="margin-top: 30px; margin-bottom: 50px;">
+                  <button class="button rounded yellow" data-role="hint"
+                     data-hint-position="left" data-cls-hint="fg-black"
+                     data-hint-text="Save Journal entry">
+                     <span class="mif-floppy-disk"
+                        style="margin-left: 0px"> </span> <span
+                        style="margin-left: 3px">Save</span>
+                  </button>
+
+               </div>
+
+            </form>
+
+         </div>
+      </div>
+
+
+      <!-- Content Row - Ends -->
+
+   </div>
+
+   <!-- Metro 4 -->
+   <script src="https://cdn.metroui.org.ua/v4.3.2/js/metro.min.js"></script>
+</body>
+</html>

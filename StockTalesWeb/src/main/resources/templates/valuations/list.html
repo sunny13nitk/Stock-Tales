@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport"
+   content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Stock Tales</title>
+<!-- Metro 4 -->
+<link rel="stylesheet"
+   href="https://cdn.metroui.org.ua/v4.3.2/css/metro-all.min.css">
+<title>Stock Tales</title>
+</head>
+<body>
+
+
+   <div class="grid" style="padding: 2px">
+      <div class="row">
+         <div class="cell-1">
+            <ul class="t-menu compact open">
+               <li><a href="#"><span class="icon mif-home"></span></a></li>
+               <li><a href="#" class="dropdown-toggle"><span
+                     class="icon mif-compass"></span></a>
+                  <ul class="t-menu compact" data-role="dropdown">
+                     <li><a href="#"><span
+                           class="icon mif-home"></span></a></li>
+                     <li><a href="#" class="dropdown-toggle"><span
+                           class="icon mif-compass"></span></a>
+                        <ul class="t-menu compact horizontal"
+                           data-role="dropdown">
+                           <li><a href="#"><span
+                                 class="icon mif-home"></span></a></li>
+                           <li><a href="#"><span
+                                 class="icon mif-compass"></span></a></li>
+                           <li><a href="#"><span
+                                 class="icon mif-bubbles"></span></a></li>
+                           <li><a href="#"><span
+                                 class="icon mif-file-empty"></span></a></li>
+                        </ul></li>
+                     <li><a href="#"><span
+                           class="icon mif-bubbles"></span></a></li>
+                     <li><a href="#"><span
+                           class="icon mif-bubbles"></span></a></li>
+                  </ul></li>
+               <li><a href="#"><span class="icon mif-bubbles"></span></a></li>
+               <li><a href="#"><span
+                     class="icon mif-file-empty"></span></a></li>
+            </ul>
+         </div>
+         <div class="cell-11">
+
+            <!--Top Row - Starts  -->
+            <div class="row">
+
+               <div class="colspan-11 " style="margin-left: 10px">
+                  <h3 style="color: #4465a1">Strategies</h3>
+               </div>
+
+
+            </div>
+            <!--Top Row - Ends  -->
+
+
+
+
+
+
+            <!-- Current Selected Scrips Row --Starts -->
+
+            <div class="colspan-11">
+
+
+               <!-- Table Row - Starts -->
+
+               <div class="row">
+                  <!-- Here goes your table -->
+
+                  <table
+                     class="table striped table-border row-hover mt-4"
+                     data-show-search="false"
+                     data-show-rows-steps="false" id="t-inspector"
+                     data-showPagination="false" data-role="table"
+                     data-horizontal-scroll="true" data-rows="-1"
+                     data-info-wrapper=".my-info-wrapper"
+                     data-thousand-separator=","
+                     data-pagination-wrapper=".my-pagination-wrapper">
+
+                     <thead>
+                        <tr>
+
+                           <th data-cls-column="text-center">Strategy
+                              Name</th>
+
+                           <th data-cls-column="text-center"
+                              data-size="750">Concept</th>
+
+                           <th data-cls-column="text-center">Number
+                              of Scrips</th>
+
+                        </tr>
+                     </thead>
+
+
+
+
+                     <tr th:each="stgyI : ${stgList}">
+                        <td><a
+                           th:href="@{'/stratergy/' + ${stgyI.id}}"
+                           th:text="${stgyI.name}"> </a></td>
+
+                        <td><textarea th:text="${stgyI.concept}"
+                              data-auto-size="true" disabled></textarea></td>
+
+                        <td th:text="${stgyI.numScrips}">11</td>
+
+
+                     </tr>
+
+                  </table>
+
+
+               </div>
+
+
+               <!-- Table Row - Ends -->
+
+            </div>
+
+         </div>
+      </div>
+   </div>
+
+
+
+   <!-- Metro 4 -->
+   <script src="https://cdn.metroui.org.ua/v4.3.2/js/metro.min.js"></script>
+</body>
+</html>

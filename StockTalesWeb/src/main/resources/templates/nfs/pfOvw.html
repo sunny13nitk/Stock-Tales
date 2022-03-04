@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<div th:replace="fragments/header :: STHeader"></div>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script type="text/javascript"
+	src="https://www.gstatic.com/charts/loader.js"></script>
+</head>
+<body>
+
+
+	<!-- Header div - Start  -->
+	<div class="head-bar pos-absolute bg-transparent fg-darkteal text-bold">
+
+		<div class="cell-11">
+			<label style="margin-left: 5px; font-weight: bold; font-size: 1.3em">
+				<img th:src="@{/images/nfs.png}" src="../../static/images/nfs.png"
+				width="45" height="40" style="margin-left: 5px; margin-right: 10px">
+				NFS: Need for Speed !!!
+			</label>
+
+
+		</div>
+		<div class="cell-1">
+			<a href="#" class="button steel rounded outline"
+				style="border: none;" th:href="@{/}" role="button"> <span
+				class="mif-home  mif-3x"></span>
+			</a>
+		</div>
+
+	</div>
+
+	<!-- Header div - End  -->
+
+	<!-- Content Row - Starts -->
+	<div class="grid" style="margin-top: 40px">
+		<div class="row">
+			<div class="cell-2">
+				<div th:replace="fragments/NFSMenu :: NFSSideMenu"></div>
+			</div>
+
+
+			<div class="cell-10">
+
+				<!-- Top Row -->
+				<div class="row">
+
+					<!-- P&L Cells -->
+					<div class="colspan-5 " style="padding: 0px">
+
+						<div class="card" style="padding-top: -30px">
+
+							<div class="row flex-align-end">
+								<div class="colspan-6">
+									<blockquote class="left-side"
+										style="margin-left: 20px; margin-top: 5px">
+
+										<div class="row flex-align-center">
+											<div class="cell flex-align-center">
+												<span class="mif-inr mif-2x"></span> <label
+													style="color: #4465a1; font-weight: bold; font-size: 1.75em; margin-left: 7px"
+													th:text="${pfSummary.portfolioPL.currVal}"> </label>
+											</div>
+
+										</div>
+										<span style="color: #337ABF; font-weight: medium;">Current
+											Portfolio Value</span>
+
+									</blockquote>
+								</div>
+
+								<div class="colspan-6"
+									th:if="${pfSummary.portfolioPL.realzPl != 0}">
+									<blockquote class="left-side"
+										style="margin-left: 20px; margin-top: 5px">
+										<div class="row flex-align-center">
+											<div class="cell flex-align-end">
+												<span th:if="${pfSummary.portfolioPL.realzPl > 0}"
+													class="mif-thumbs-up mif-2x fg-darkGreen"></span> <span
+													th:if="${pfSummary.portfolioPL.realzPl  < 0}"
+													class="mif-thumbs-down mif-2x fg-darkRed"></span> <label
+													th:if="${pfSummary.portfolioPL.realzPl > 0}"
+													style="color: #51ae78; font-weight: bold; font-size: 1.45em; margin-left: 7px"
+													th:text="${pfSummary.portfolioPL.realzPLStr}"> </label> <label
+													th:if="${pfSummary.portfolioPL.realzPl < 0}"
+													style="color: #E84C5B; font-weight: bold; font-size: 1.45em; margin-left: 7px"
+													th:text="${pfSummary.portfolioPL.realzPLStr}"> </label>
+											</div>
+
+										</div>
+										<span style="color: #337ABF; font-weight: medium;">Realized
+											P&L</span>
+
+									</blockquote>
+								</div>
+
+							</div>
+
+							<div class="row flex-align-end">
+								<div class="colspan-6">
+									<blockquote class="right-side" style="">
+
+										<div class="row flex-align-end">
+											<div class="cell flex-align-end">
+												<span th:if="${pfSummary.portfolioPL.plPer > 0}"
+													class="mif-thumbs-up mif-2x fg-darkGreen"></span> <span
+													th:if="${pfSummary.portfolioPL.plPer  <= 0}"
+													class="mif-thumbs-down mif-2x fg-darkRed"></span> <label
+													th:if="${pfSummary.portfolioPL.plPer > 0}"
+													style="color: #51ae78; font-weight: bold; font-size: 1.45em; margin-left: 7px"
+													th:text="${pfSummary.portfolioPL.pl}"> </label> <label
+													th:if="${pfSummary.portfolioPL.plPer <= 0}"
+													style="color: #E84C5B; font-weight: bold; font-size: 1.45em; margin-left: 7px"
+													th:text="${pfSummary.portfolioPL.pl}"> </label>
+											</div>
+
+										</div>
+										<span style="color: #337ABF; font-weight: medium;">P&L
+											Amount (incl. Realiz.)</span>
+
+										<div class="row flex-align-end">
+											<div class="cell flex-align-end">
+												<span th:if="${pfSummary.portfolioPL.plPer > 0}"
+													class="mif-thumbs-up mif-2x fg-darkGreen"></span> <span
+													th:if="${pfSummary.portfolioPL.plPer  <= 0}"
+													class="mif-thumbs-down mif-2x fg-darkRed"></span> <label
+													th:if="${pfSummary.portfolioPL.plPer > 0}"
+													style="color: #51ae78; font-weight: bold; font-size: 1.45em; margin-left: 7px"
+													th:text="${pfSummary.portfolioPL.plPer}"> </label> <span
+													th:if="${pfSummary.portfolioPL.plPer > 0}"
+													style="color: #51ae78; font-weight: bold; font-size: 1.45em;">
+													%</span> <label th:if="${pfSummary.portfolioPL.plPer <= 0}"
+													style="color: #E84C5B; font-weight: bold; font-size: 1.45em; margin-left: 7px"
+													th:text="${pfSummary.portfolioPL.plPer}"> <span
+													th:if="${pfSummary.portfolioPL.plPer <= 0}"
+													style="color: #E84C5B; font-weight: bold; font-size: 1.45em;">
+														%</span>
+												</label>
+											</div>
+
+										</div>
+										<span style="color: #337ABF; font-weight: medium;">P&L
+											%</span>
+
+
+									</blockquote>
+
+								</div>
+
+								<div class="colspan-6">
+									<blockquote class="right-side" style="margin-right: 15px">
+
+										<div class="row flex-align-end">
+											<div class="cell flex-align-end">
+												<span th:if="${pfSummary.portfolioPL.daysGain > 0}"
+													class="mif-thumbs-up mif-2x fg-darkGreen"></span> <span
+													th:if="${pfSummary.portfolioPL.daysGain <= 0}"
+													class="mif-thumbs-down mif-2x fg-darkRed"></span> <label
+													th:if="${pfSummary.portfolioPL.daysGain > 0}"
+													style="color: #51ae78; font-weight: bold; font-size: 1.65em; margin-left: 7px"
+													th:text="${pfSummary.portfolioPL.daysGain}"> </label> <label
+													th:if="${pfSummary.portfolioPL.daysGain <= 0}"
+													style="color: #E84C5B; font-weight: bold; font-size: 1.65em; margin-left: 7px"
+													th:text="${pfSummary.portfolioPL.daysGain}"> </label>
+											</div>
+
+										</div>
+										<span style="color: #337ABF; font-weight: medium;">Day's
+											Gain in Rs.</span>
+
+
+										<div class="row flex-align-end">
+											<div class="cell flex-align-end">
+												<span th:if="${pfSummary.portfolioPL.daysGainPer > 0}"
+													class="mif-thumbs-up mif-2x fg-darkGreen"></span> <span
+													th:if="${pfSummary.portfolioPL.daysGainPer  <= 0}"
+													class="mif-thumbs-down mif-2x fg-darkRed"></span> <label
+													th:if="${pfSummary.portfolioPL.daysGainPer > 0}"
+													style="color: #51ae78; font-weight: bold; font-size: 1.65em; margin-left: 7px"
+													th:text="${pfSummary.portfolioPL.daysGainPer}"> </label> <span
+													th:if="${pfSummary.portfolioPL.daysGainPer > 0}"
+													style="color: #51ae78; font-weight: bold; font-size: 1.45em;">
+													%</span> <label th:if="${pfSummary.portfolioPL.daysGainPer <= 0}"
+													style="color: #E84C5B; font-weight: bold; font-size: 1.65em; margin-left: 7px"
+													th:text="${pfSummary.portfolioPL.daysGainPer}"> </label> <span
+													th:if="${pfSummary.portfolioPL.daysGainPer < 0}"
+													style="color: #E84C5B; font-weight: bold; font-size: 1.45em;">
+													%</span>
+											</div>
+
+										</div>
+										<span style="color: #337ABF; font-weight: medium;">Day's
+											Gain (%)</span>
+
+									</blockquote>
+
+								</div>
+
+
+							</div>
+
+
+
+
+
+						</div>
+
+
+
+					</div>
+					<!-- P&L Cells - End -->
+
+					<!-- Donut Mcap -->
+					<div class="colspan-4">
+						<div class="d-flex flex-justify-center">
+
+							<div id="chart_pf" class=" flex-justify-center"
+								style="margin-top: -3px"></div>
+
+						</div>
+
+					</div>
+
+					<!-- Donut MCap - Ends -->
+
+					<!-- Mcap Split Table -->
+					<div class="colspan-2">
+
+						<div class="row-flex flex-justify-center" th:if="${numExits> 0}">
+
+							<div class="info-button bg-white fg-red bd-red small">
+								<span class="mif-bell mif-2x fg-red" style="margin-left: 4px">
+								</span><label
+									style="color: #E84C5B; font-weight: bold; font-size: 1.55em; margin-left: 8px; margin-top: 5px"
+									th:text="${numExits}"> </label> <span
+									style="color: #E84C5B; font-weight: bold; font-size: 1.35em; margin-left: 2px">Exits!</span>
+								<a th:href="@{/nfs/exitometer}" class="info"
+									style="background-color: #E84C5B; color: white; padding: 3px; margin-top: 5px; margin-bottom: 10px; margin-left: 7px; margin-right: 7px; align-content: top;">Details</a>
+
+							</div>
+						</div>
+						<div class="row-flex flex-justify-center">
+							<div class="card" style="margin-top: 60px;">
+
+								<div class="row"
+									style="padding-top: -10px; padding-left: 10px; padding-right: 10px; padding-bottom: 10px">
+
+									<table class="table compact striped">
+										<thead>
+											<tr>
+												<th style="text-align: center;">Market Cap</th>
+												<th style="text-align: center;"># Scrips</th>
+
+											</tr>
+										</thead>
+										<tbody>
+											<tr th:each="mCapItem : ${pfSummary.mcapClass}">
+												<td style="text-align: center; font-weight: bolder;"
+													th:text="${mCapItem.mcapCatgName}">LargeCap</td>
+												<td
+													style="text-align: center; font-weight: bolder; color: #E74C3C;"
+													th:text="${mCapItem.numScrips}">8</td>
+
+											</tr>
+										</tbody>
+									</table>
+
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Mcap Split Table : Ends-->
+
+				</div>
+
+				<!-- Gainers & Losers  -->
+
+				<div class="row flex-align-center" style="padding: 5px">
+
+					<div class="card" style="padding-top: -20px">
+						<div class="row flex-align-end">
+
+							<div class="cell">
+								<blockquote class="right-side">
+									<div class="row flex-align-end">
+
+										<div class="cell flex-align-end">
+
+											<span th:if="${pfSummary.pfGainersLosers.numPfGainers> 0}"
+												class="mif-arrow-drop-up mif-2x fg-darkGreen"></span> <label
+												th:if="${pfSummary.pfGainersLosers.numPfGainers> 0}"
+												style="color: #51ae78; font-weight: bold; font-size: 1.45em; margin-left: 7px"
+												th:text="${pfSummary.pfGainersLosers.numPfGainers}">
+											</label> <span style="color: #337ABF; font-weight: medium;">Gainers</span>
+
+										</div>
+										<div class="cell flex-align-end">
+
+											<span th:if="${pfSummary.pfGainersLosers.numPfLosers> 0}"
+												class="mif-arrow-drop-down mif-2x fg-darkRed"></span> <label
+												th:if="${pfSummary.pfGainersLosers.numPfLosers> 0}"
+												style="color: #E84C5B; font-weight: bold; font-size: 1.45em; margin-left: 7px"
+												th:text="${pfSummary.pfGainersLosers.numPfLosers}">
+											</label> <span style="color: #337ABF; font-weight: medium;">Losers</span>
+
+										</div>
+
+									</div>
+									<div class="row flex-align-end">
+										<div class="cell flex-justify-end">
+											<span
+												style="color: #337ABF; font-weight: bold; margin-left: 40px; font-size: 1.05em">Portfolio</span>
+										</div>
+									</div>
+								</blockquote>
+
+							</div>
+							<div class="cell">
+
+								<blockquote class="right-side">
+									<div class="row flex-align-end">
+
+										<div class="cell flex-align-end">
+
+											<span th:if="${pfSummary.pfGainersLosers.numDayGainers> 0}"
+												class="mif-arrow-drop-up mif-2x fg-darkGreen"></span> <label
+												th:if="${pfSummary.pfGainersLosers.numDayGainers> 0}"
+												style="color: #51ae78; font-weight: bold; font-size: 1.45em; margin-left: 7px"
+												th:text="${pfSummary.pfGainersLosers.numDayGainers}">
+											</label> <span style="color: #337ABF; font-weight: medium;">Gainers</span>
+
+										</div>
+										<div class="cell flex-align-end">
+
+											<span th:if="${pfSummary.pfGainersLosers.numDayLosers> 0}"
+												class="mif-arrow-drop-down mif-2x fg-darkRed"></span> <label
+												th:if="${pfSummary.pfGainersLosers.numDayLosers> 0}"
+												style="color: #E84C5B; font-weight: bold; font-size: 1.45em; margin-left: 7px"
+												th:text="${pfSummary.pfGainersLosers.numDayLosers}">
+											</label> <span style="color: #337ABF; font-weight: medium;">Losers</span>
+
+										</div>
+
+									</div>
+									<div class="row flex-align-end">
+										<div class="cell flex-justify-end">
+											<span
+												style="color: #337ABF; font-weight: bold; margin-left: 40px; font-size: 1.05em">Today</span>
+										</div>
+									</div>
+								</blockquote>
+
+
+							</div>
+							<div class="cell">
+								<blockquote class="right-side">
+									<div class="row flex-align-end">
+
+										<span th:if="${pfSummary.pfGainersLosers.maxGainer != null}"
+											class="mif-thumbs-up mif-3x fg-darkGreen"
+											style="margin-top: -10px"></span> <label
+											th:if="${pfSummary.pfGainersLosers.maxGainer != null}"
+											style="color: #51ae78; font-weight: bold; font-size: 1.25em; margin-left: 12px; margin-top: 15px"
+											th:text="${pfSummary.pfGainersLosers.maxGainer.sector}">
+										</label> <label th:if="${pfSummary.pfGainersLosers.maxGainer != null}"
+											style="color: #51ae78; font-weight: bold; font-size: 1.25em; margin-left: 7px; margin-top: 15p"
+											th:text="${pfSummary.pfGainersLosers.maxGainer.alloc}">
+										</label> <label
+											style="color: #51ae78; font-weight: bold; font-size: 1.25em; margin-left: 2px">%</label>
+
+
+
+
+									</div>
+									<div class="row flex-align-end">
+										<div class="cell flex-justify-end">
+											<span
+												style="color: #337ABF; font-weight: bold; margin-left: 40px; font-size: 1.05em">Top
+												Gainer</span>
+										</div>
+									</div>
+								</blockquote>
+
+
+							</div>
+							<div class="cell">
+
+								<blockquote class="right-side">
+									<div class="row flex-align-end">
+
+										<span th:if="${pfSummary.pfGainersLosers.maxLoser != null}"
+											class="mif-thumbs-down mif-3x fg-darkRed"
+											style="margin-top: -10px"></span> <label
+											th:if="${pfSummary.pfGainersLosers.maxLoser != null}"
+											style="color: #E84C5B; font-weight: bold; font-size: 1.25em; margin-left: 12px; margin-top: 15px"
+											th:text="${pfSummary.pfGainersLosers.maxLoser.sector}">
+										</label> <label th:if="${pfSummary.pfGainersLosers.maxLoser != null}"
+											style="color: #E84C5B; font-weight: bold; font-size: 1.25em; margin-left: 7px; margin-top: 15p"
+											th:text="${pfSummary.pfGainersLosers.maxLoser.alloc}">
+										</label> <label
+											style="color: #E84C5B; font-weight: bold; font-size: 1.25em; margin-left: 2px">%</label>
+
+
+
+
+									</div>
+									<div class="row flex-align-end">
+										<div class="cell flex-justify-end">
+											<span
+												style="color: #337ABF; font-weight: bold; margin-left: 40px; font-size: 1.05em">Top
+												Loser</span>
+										</div>
+									</div>
+								</blockquote>
+
+							</div>
+
+
+						</div>
+					</div>
+
+				</div>
+
+
+				<!-- Table Row  -->
+				<div class="row flex-align-center" style="padding: 5px">
+					<div class="cell-md-auto">
+						<table class="table compact striped table-border row-hover "
+							id="t-inspector" data-role="table" data-show-search="true"
+							data-show-rows-steps="false"
+							data-table-search-title="Search By Scrip Code :"
+							data-search-min-length="1" data-search-threshold="300"
+							data-rows="-1" data-search-fields="sccode"
+							data-horizontal-scroll="true" data-thousand-separator=",">
+							<thead>
+								<tr>
+
+									<th data-name="sccode" align="left"
+										class="sortable-column sort-asc">Scrip</th>
+
+									<th data-name="rankincl" data-format="number"
+										data-cls-column="text-center" align="center"
+										class="sortable-column ">Rank Incl.</th>
+
+									<th data-name="rankcurr" class="sortable-column "
+										data-format="number" data-cls-column=" text-center">Rank
+										Curr.</th>
+
+
+									<th data-name="priceincl" class="sortable-column "
+										data-format="number" data-cls-column=" text-center">PPU</th>
+
+									<th data-name="cmp" class="sortable-column"
+										data-format="number" data-cls-column=" text-center">CMP</th>
+
+									<th data-name="units" class="sortable-column "
+										data-format="number" data-cls-column=" text-center">Units</th>
+
+									<th data-name="plper" data-sortable="true"
+										class="sortable-column " data-format="money"
+										data-cls-column=" text-center">P&L (%)</th>
+
+									<th data-name="plamnt" data-sortable="true" data-format="float"
+										data-cls-column=" text-center">P&L (Rs.)</th>
+
+									<th data-name="daysChangePer" data-sortable="true"
+										class="sortable-column " data-format="float"
+										data-cls-column=" text-center">Chg D (%)</th>
+
+									<th data-name="daysChangeAmnt" data-sortable="true"
+										data-format="float" data-cls-column=" text-center">Chg D
+										(Rs.)</th>
+
+									<th data-name="dateincl" data-sortable="true"
+										data-format="date" data-cls-column=" text-center">Incl.
+										On</th>
+
+									<th data-name="datelasttxn" data-sortable="true"
+										data-format="date" data-cls-column=" text-center">Last
+										Txn.</th>
+
+
+
+
+
+								</tr>
+							</thead>
+							<tbody>
+
+
+								<tr th:each="holding : ${pfSummary.pfTable}">
+									<td th:text="${holding.sccode}"></td>
+
+									<td style="text-align: center" th:text="${holding.rankincl}"></td>
+									<td style="text-align: center" th:text="${holding.rankcurr}"></td>
+									<td style="text-align: center" th:text="${holding.priceincl}"></td>
+									<td style="text-align: center" th:text="${holding.cmp}"></td>
+									<td style="text-align: center" th:text="${holding.units}"></td>
+									<td style="text-align: center" th:text="${holding.plper}"></td>
+
+
+									<td style="text-align: center;" th:if="${holding.plamnt} >= 0">
+										<!-- Positive Factor  --> <span
+										class="mif-arrow-drop-up mif-x fg-green"><label
+											style="color: green; font-weight: bolder;"
+											th:text="${holding.plamnt}">14.3</label></span>
+
+									</td>
+
+									<td style="text-align: center;" th:if="${holding.plamnt} < 0">
+										<!-- Positive Factor  --> <span
+										class="mif-arrow-drop-down mif-x fg-red"><label
+											style="color: red; font-weight: bolder;"
+											th:text="${holding.plamnt}">14.3</label></span>
+
+									</td>
+
+									<td style="text-align: center"
+										th:text="${holding.daysChangePer}"></td>
+
+
+
+									<td style="text-align: center;"
+										th:if="${holding.daysChangeAmnt} >= 0">
+										<!-- Positive Factor  --> <span
+										class="mif-arrow-drop-up mif-x fg-green"><label
+											style="color: green; font-weight: bolder;"
+											th:text="${holding.daysChangeAmnt}">14.3</label></span>
+
+									</td>
+
+									<td style="text-align: center;"
+										th:if="${holding.daysChangeAmnt} < 0">
+										<!-- Positive Factor  --> <span
+										class="mif-arrow-drop-down mif-x fg-red"><label
+											style="color: red; font-weight: bolder;"
+											th:text="${holding.daysChangeAmnt}">14.3</label></span>
+
+									</td>
+
+
+									<td style="text-align: center"
+										th:text="${#dates.format(holding.dateincl, 'dd-MMM-yyyy')}"></td>
+									<td style="text-align: center"
+										th:text="${#dates.format(holding.datelasttxn, 'dd-MMM-yyyy')}"></td>
+
+
+
+								</tr>
+
+							</tbody>
+						</table>
+					</div>
+
+				</div>
+
+
+				<!-- Customize button at Top ROW - Starts -->
+
+				<div class="row flex-justify-end"
+					style="padding-right: 20px; padding-top: 5px; padding-bottom: 20px">
+					<a href="#" class="button primary rounded outline"
+						th:href="@{/nfs/pf/massUpd}" role="button"> <span
+						class="mif-cog icon" style="margin-left: 0px"></span> <span
+						style="margin-left: 3px">Mass Update</span>
+					</a>
+				</div>
+
+
+
+
+			</div>
+			<!-- Customize Button - Col End -->
+
+		</div>
+
+		<!-- Customize button at Top ROW - Ends-->
+
+
+
+	</div>
+
+
+
+
+	</div>
+	</div>
+
+
+	<script th:inline="javascript">
+				var pf_data = /*[[${chartData}]]*/'noValue';
+			
+
+				$(document).ready(function() {
+					google.charts.load('current', {
+						packages : [ 'corechart', 'bar']
+					});
+					google.charts.setOnLoadCallback(drawDonutChart);
+					//google.charts.setOnLoadCallback(drawBarChart);
+
+				});
+            
+   function drawBarChart() 
+   {
+
+                var data = new google.visualization.DataTable();
+               
+                data.addColumn('string', 'MCap');
+				data.addColumn('number', 'Allocation');
+
+				
+				var dataArray = [];
+
+					$.each(pf_data, function(i, obj) {
+						dataArray.push([ obj.sector, obj.alloc ]);
+					});
+
+               data.addRows(dataArray);
+               
+               
+            
+
+               /*
+               In case Data labels are needed on Bar Chart - Not working on combo*/
+               var view = new google.visualization.DataView(data);
+               
+               view.setColumns([ 0, 1, {
+                  calc : "stringify",
+                  sourceColumn : 1,
+                  type : "string",
+                  role : "annotation"
+               }],
+                
+               
+               );
+
+               var options = {
+                  width : 270,
+                  height : 270,
+                  margin : 20,
+                  pointSize : 5,
+
+                  colors : [ '#7998C5', '#C8819E', '#8ABC67' ],
+                  legend : 'none',
+                  
+                    hAxis : {
+                     
+                     viewWindow : 
+                     {
+                        min : [ 7, 30, 0 ],
+                        max : [ 17, 30, 0 ]
+                     },
+                     textStyle:
+                     { 
+                       color: '#698AFF',
+                       fontName: 'Calibri',
+                       fontSize: 12,
+                       bold: true
+                      }
+                     
+                  },
+                  
+                  vAxis : {
+                     
+                     viewWindow : 
+                     {
+                        min : [ 7, 30, 0 ],
+                        max : [ 17, 30, 0 ]
+                     },
+                     textStyle:
+                     { 
+                       color: '#698AFF',
+                       fontName: 'Calibri',
+                       fontSize: 12,
+                       bold: true
+                      }
+                     
+                  }
+                  
+                  
+                  
+               };
+               var chartPEAvg = new google.visualization.BarChart(
+                     document.getElementById('chart_pf'));
+        
+               
+               //In case of Data points enabled on chart series
+               chartPEAvg.draw(view, options);
+            }   
+            
+
+		 function drawDonutChart ()
+             
+             {
+
+					var data = new google.visualization.DataTable();
+
+					data.addColumn('string', 'MCap');
+					data.addColumn('number', 'Allocation');
+
+				
+					var dataArray = [];
+
+					$.each(pf_data, function(i, obj) {
+						dataArray.push([ obj.sector, obj.alloc ]);
+					});
+
+					data.addRows(dataArray);
+               
+                     var options = {
+                                     width : 290,
+                                     height : 300,
+                                     title: 'Portfolio Spread by MCap',
+                                     titleTextStyle: {
+                                                         color: '#486590',
+                                                         fontSize: 14
+                                                       
+                                                      },
+                                     colors : [ '#7998C5', '#C8819E', '#8ABC67' ],
+                                     legend : 'none',
+                                     pieHole: 0.4
+                          };
+					
+
+					
+					var chartRev = new google.visualization.PieChart(document
+							.getElementById('chart_pf'));
+					chartRev.draw(data, options);
+
+				} 
+			</script>
+
+	<!-- Charts - ENDS -->
+
+
+	<!-- Metro 4 -->
+	<script src="https://cdn.metroui.org.ua/v4.3.2/js/metro.min.js"></script>
+</body>
+</html>

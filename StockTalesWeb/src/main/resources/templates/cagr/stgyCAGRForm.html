@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<div th:replace="fragments/header :: STHeader"></div>
+
+</head>
+<body>
+
+   <div style="height: 800px; overflow: hidden;">
+      <div data-role="navview" data-compact="md" data-expand="false"
+         data-active-state="true">
+         <div th:replace="fragments/navbar :: STNavbar"></div>
+
+
+
+         <div class="navview-content pl-4-md pr-4-md">
+
+            <div class="grid">
+
+               <div th:replace="fragments/brand :: STBrand"></div>
+
+               <!-- your Code Starts from Here  -->
+               <div class="colspan-10 offset-1" style="margin-top: 80px">
+
+                  <div class="card">
+                     <div class="card-header">
+
+                        <div class="remark primary"
+                           style="padding-top: 10px; margin: 2px">
+                           <h4>Strategy CAGR Calculation Details</h4>
+                        </div>
+
+
+
+
+
+
+
+                        <!-- Place for messages: error, alert etc ... -->
+                        <div class="form-group">
+                           <div class="col-xs-15">
+                              <div th:if="${formError != null}">
+
+                                 <!-- Check for Form error -->
+
+                                 <div class="remark alert"
+                                    style="padding-top: 10px; margin: 2px">
+                                    <label
+                                       th:text="'Error Loading Scrip' + ${formError}"></label>
+                                 </div>
+                              </div>
+                           </div>
+
+                           <div class="col-xs-15">
+                              <div th:if="${formSucc != null}">
+
+
+                                 <div class="remark success"
+                                    style="padding-top: 10px; margin: 2px">
+                                    <label th:text=" ${formSucc}"></label>
+                                 </div>
+
+
+
+                              </div>
+                           </div>
+                        </div>
+
+
+
+                        <form th:object="${pojo}"
+                           th:action="@{'/cagrcalc/process'} "
+                           method="post">
+
+                           <input type="hidden" th:field="*{stgyId}" />
+
+                           <div class="row">
+                              <div class="cell-md-3">
+                                 <label class="fg-mauve"
+                                    style="margin-left: 5px">
+                                    Base Year </label> <input type="text"
+                                    placeholder=" Min'm 2010 "
+                                    class="metro-input"
+                                    th:field="*{baseYr}">
+                              </div>
+
+                              <div class="cell-md-3">
+                                 <label style="margin-left: 5px">
+                                    Length to Traverse </label> <input
+                                    type="text"
+                                    placeholder="(w.r.t Base Year)"
+                                    class="metro-input"
+                                    th:field="*{length}">
+                              </div>
+
+                              <div class="cell-md-3">
+                                 <label style="margin-left: 5px">
+                                    Rollover Interval </label> <input
+                                    type="text" data-role="spinner"
+                                    data-step="1" data-fixed="0"
+                                    data-min-value="0"
+                                    data-max-value="10"
+                                    data-cls-spinner-button="fg-white"
+                                    data-cls-spinner-button-plus="bg-red"
+                                    data-cls-spinner-button-minus="bg-green"
+                                    th:field="*{intervalinYrs}">
+                              </div>
+
+                              <div class="cell-md-3"
+                                 style="margin-top: 20px">
+
+                                 <input type="checkbox"
+                                    data-role="switch"
+                                    th:field="*{E2EOnly}" checked
+                                    data-material="true"
+                                    data-caption-position="left"
+                                    data-cls-caption="fg-teal text-bold"
+                                    data-caption="End To End CAGR Only">
+
+
+                              </div>
+
+                           </div>
+
+
+
+
+
+
+
+                           <div class="d-flex flex-row-r"
+                              style="margin-top: 10px; margin-bottom: 10px;">
+                              <button class="button rounded"
+                                 style="color: black; background: #bde7e7"
+                                 data-role="hint"
+                                 data-hint-position="left"
+                                 data-cls-hint="fg-black"
+                                 data-hint-text="Click Calculate to Proceed">
+                                 <span class="mif-next"
+                                    style="margin-left: 0px"> </span> <span
+                                    style="margin-left: 3px">Calculate</span>
+                              </button>
+
+                           </div>
+                        </form>
+                     </div>
+
+
+                  </div>
+
+               </div>
+
+            </div>
+
+         </div>
+      </div>
+   </div>
+   </div>
+
+   <!-- Metro 4 -->
+   <script src="https://cdn.metroui.org.ua/v4.3.2/js/metro.min.js"></script>
+</body>
+</html>

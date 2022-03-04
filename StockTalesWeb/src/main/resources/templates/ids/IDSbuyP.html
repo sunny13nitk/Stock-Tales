@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<div th:replace="fragments/header :: STHeader"></div>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script type="text/javascript"
+	src="https://www.gstatic.com/charts/loader.js"></script>
+</head>
+<body>
+
+	<div th:replace="fragments/IDS_FG :: IDSMenu"></div>
+
+	<div style="margin-top: 40px">
+		<div id="overview">
+			<div class="frame"
+				style="padding: 10px; height: 470px; overflow: auto;">
+
+				<div class="row flex-align-center">
+					<div class="colspan-2" style="margin-left: 10px">
+
+
+						<h6 style="color: #FB8605">
+							<span class="mif-opencart" style="margin-right: 5px"></span> Buy
+							Proposals ! - <span style="color: #057AFB"
+								th:text="${proposal.buyP.size()}"></span>
+
+						</h6>
+					</div>
+					<!--Deployable Amount  -->
+					<div class="colspan-3" style="margin-left: 10px">
+
+						<h6 style="color: #FB8605">
+							<span class="mif-beenhere" style="margin-right: 5px"></span> Cash
+							Available Rs. - <span style="color: #057AFB"
+								th:text="${proposal.buyPHeader.depAmntStr}"></span>
+
+						</h6>
+
+					</div>
+
+					<!--Day's Purchase Amount  -->
+					<div th:if="${proposal.buyP.size() > 0}" class="colspan-3"
+						style="margin-left: 10px">
+						<h6 style="color: #FB8605">
+							<span class="mif-dollars" style="margin-right: 5px;"></span>
+							Today's Purchase Rs. - <span style="color: #057AFB"
+								th:text="${proposal.buyPHeader.dayAmntStr}"></span>
+
+						</h6>
+
+					</div>
+
+					<!-- Utilization  -->
+					<div th:if="${proposal.buyP.size() > 0}" class="colspan-1"
+						style="margin-left: 5px;">
+						<span id="donut_val" data-role="donut" data-size=70 data-radius=30
+							style="margin-top: 1px" data-hole=".8" data-animate="10"
+							data-fill="#057AFB" data-background=transparent
+							th:attr="data-value=${proposal.buyPHeader.utlizDay}"
+							class="mx-auto"></span>
+					</div>
+
+					<!--Actions  -->
+					<div class="colspan-2" style="margin-left: 10px">
+
+
+						<a th:if="${proposal.buyPHeader.scurl != null}"
+							th:href="${proposal.buyPHeader.scurl}" th:target="_blank"
+							class="button primary rounded outline" data-role="hint"
+							data-hint-position="top" data-cls-hint="bg-white fg-dark"
+							data-hint-text="Execute in SmallCase"> SmallCase </a> <a href="#"
+							class="button dark rounded outline" th:href="@{/ids/buyP/edit}"
+							role="button" data-role="hint" data-hint-position="top"
+							data-cls-hint="bg-white fg-dark"
+							data-hint-text="Commit txn's in System"> Commit </a>
+					</div>
+
+
+
+				</div>
+
+				<!--Error : Shortfall of Funds - Row -->
+
+				<div class="row flex-align-center"
+					style="margin-top: -17px; margin-left: 10px"
+					th:if="${proposal.buyPHeader.shortfall > 0}">
+					<div class="remark alert">
+						<span>There is a short-fall of Rs. </span> <span
+							style="color: #CE313C; font-weight: bold;"
+							th:text="${proposal.buyPHeader.shortfall}"></span> <span>.
+							Please add the amount to Money Bag to proceed with below
+							purchases or reduce Txn. by this amount. </span>
+					</div>
+
+				</div>
+
+				<div class="row flex-align-center" style="margin-top: -17px">
+					<div class="cell-9">
+						<h5
+							style="color: #325254; background-color: #DDFFDC; padding: 10px; font-size: .8em; font-weight: bold;">
+							Buy(s) for Today!</h5>
+
+						<div class="row"
+							style="padding-top: -20px; padding-left: 10px; padding-right: 10px; padding-bottom: 10px">
+
+							<table class="table  table-border compact striped">
+								<thead>
+									<tr>
+										<th style="text-align: center;">Scrip</th>
+										<th style="text-align: center;">Units</th>
+										<th style="text-align: center;">CMP</th>
+										<th style="text-align: center;">Amount</th>
+										<th style="text-align: center;">SMA Breach <!--Buttons - Info  -->
+											<a style="margin-left: 12px; margin-top: -2px"
+											class="button info cycle mini" data-role="hint"
+											data-hint-text="SMA Breach levels used for Deployments are determined on SORT of SMA levels in the right panel."
+											data-cls-hint="bg-white fg-black drop-shadow"
+											data-hint-position="right"><span
+												class="mif-info  fg-white"></span></a> <!--Buttons - Info  -->
+
+										</th>
+										<th style="text-align: center;">T. Units</th>
+										<th style="text-align: center;">N. PPU</th>
+										<th style="text-align: center;">E. PPU</th>
+										<th style="text-align: center;">Utilization</th>
+										<th style="text-align: center;"></th>
+										<th style="text-align: center;">VP</th>
+
+
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="proposal : ${proposal.buyP}">
+
+										<td
+											style="text-align: center; color: #000000; font-weight: bold; font-size: 200"
+											th:text="${proposal.getScCode()}"></td>
+										<td
+											style="text-align: center;; color: #000000; font-weight: bold; font-size: 200"
+											th:text="${proposal.getNumUnitsBuy()}"></td>
+
+										<td
+											style="text-align: center; color: #1B1B01; font-weight: bold; background: #FEFEEB"
+											th:text="${proposal.getPpuBuy()}"></td>
+										<td
+											style="text-align: center; color: #1B1B01; font-weight: bold; background: #FEFEEB"
+											th:text="${proposal.getAmountStr()}"></td>
+
+										<td style="text-align: center"><span class=" tally alert"
+											th:text="${proposal.getSmaBreach()}"></span></td>
+
+										<td
+											style="text-align: center; color: #000000; font-weight: bold; font-size: 200"
+											th:text="${proposal.getTotalUnits()}"></td>
+
+										<td
+											style="text-align: center;; color: #4FB05C; font-weight: bolder;"
+											th:text="${proposal.getNppu()}"></td>
+
+										<td
+											style="text-align: center;; color: #4FB05C; font-weight: bolder;"
+											th:text="${proposal.getEffectppu()}"></td>
+
+
+										<td style="text-align: center">
+											<div data-role="progress" data-type="buffer"
+												data-cls-bar="bg-blue" data-cls-buffer="bg-white"
+												data-small="true"
+												th:attr="data-value=${proposal.getUtilz()}"></div>
+										</td>
+
+										<td th:text="${proposal.getUtilz()}">33.4</td>
+
+										<td style="text-align: center"><span
+											class=" tally success" th:text="${proposal.getVp()}"></span></td>
+
+
+									</tr>
+								</tbody>
+							</table>
+
+						</div>
+
+
+					</div>
+
+
+
+					<div class="cell-3">
+						<h5
+							style="color: #543252; background-color: #E7E8FF; padding: 10px; font-size: .8em; font-weight: bold;">
+							SMA spreads for Proposals!
+
+							<!--Buttons - Info  -->
+							<a style="margin-left: 12px; margin-top: -2px"
+								class="button info cycle mini" data-role="hint"
+								data-hint-text="SMA  vals. as is computed - Not Sorted!"
+								data-cls-hint="bg-white fg-black drop-shadow"
+								data-hint-position="right"><span class="mif-info  fg-white"></span></a>
+
+							<!--Buttons - Info  -->
+
+						</h5>
+
+						<div class="row"
+							style="padding-top: -20px; padding-left: 10px; padding-right: 10px; padding-bottom: 10px">
+
+							<table class="table  table-border compact striped">
+								<thead>
+									<tr>
+										<th style="text-align: center;">SMA1</th>
+										<th style="text-align: center;">SMA2</th>
+										<th style="text-align: center;">SMA3</th>
+										<th style="text-align: center;">SMA4</th>
+
+
+
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="sma : ${proposal.smaList}">
+
+										<td style="text-align: center"><span
+											class=" tally yellow" th:text="${sma.SMAI1}"></span></td>
+										<td style="text-align: center"><span
+											class=" tally primary" th:text="${sma.SMAI2}"></span></td>
+										<td style="text-align: center"><span
+											class=" tally secondary" th:text="${sma.SMAI3}"></span></td>
+										<td style="text-align: center"><span
+											class=" tally success" th:text="${sma.SMAI4}"></span></td>
+
+
+									</tr>
+								</tbody>
+							</table>
+
+						</div>
+
+
+					</div>
+
+
+				</div>
+
+
+			</div>
+
+
+
+
+		</div>
+	</div>
+
+
+	<!-- Metro 4 -->
+	<script src="https://cdn.metroui.org.ua/v4.3.2/js/metro.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<div th:replace="fragments/header :: STHeader"></div>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script type="text/javascript"
+	src="https://www.gstatic.com/charts/loader.js"></script>
+</head>
+<body>
+
+
+	<!-- Header div - Start  -->
+	<div class="head-bar pos-absolute bg-transparent fg-darkteal text-bold">
+
+		<div class="cell-11">
+			<label style="margin-left: 5px; font-weight: bold; font-size: 1.3em">
+				<img th:src="@{/images/nfs.png}" src="../../static/images/nfs.png"
+				width="45" height="40" style="margin-left: 5px; margin-right: 10px">
+				NFS: Need for Speed !!!
+			</label>
+
+
+		</div>
+		<div class="cell-1">
+			<a href="#" class="button steel rounded outline"
+				style="border: none;" th:href="@{/}" role="button"> <span
+				class="mif-home  mif-3x"></span>
+			</a>
+		</div>
+
+	</div>
+
+	<!-- Header div - End  -->
+
+	<!-- Content Row - Starts -->
+	<div class="grid" style="margin-top: 40px">
+		<div class="row">
+			<div class="cell-2">
+				<div th:replace="fragments/NFSMenu :: NFSSideMenu"></div>
+			</div>
+
+
+			<div class="cell-10">
+
+				<h4 style="color: #4465a1">Portfolio Re-Balance Proposal Panel</h4>
+
+				<div class="row"
+					th:if="${rebalContainer.numCurrPFScrips < rebalContainer.numIdealScrips }">
+
+					<div class="remark alert" style="padding-top: 10px; margin: 2px">
+						<label
+							th:text="'CONCENTRATION RISK : You are currently holding -' + ${rebalContainer.numCurrPFScrips} + ' scrips in your Portfolio v/s an advised number of ' + ${rebalContainer.numIdealScrips} + ' scrips.'"></label>
+					</div>
+
+
+				</div>
+
+				<div class="row"
+					th:if="${rebalContainer.numCurrPFScrips == rebalContainer.numIdealScrips }">
+					<div class="remark primary" style="padding-top: 10px; margin: 2px">
+						<label
+							th:text="'Adequaltely Diversified : You are currently holding -' + ${rebalContainer.numCurrPFScrips} + ' scrips which is as per suggested size.'"></label>
+					</div>
+
+				</div>
+
+				<div class="row flex-align-center"
+					th:if="${rebalContainer.numCurrPFScrips > 0}">
+
+					<div class="colspan-7 offset-2">
+						<div class="card" style="padding-top: -20px">
+
+							<div class="row flex-align-center">
+								<div class="cell">
+									<blockquote class="right-side">
+										<h3 style="color: #8000fc"
+											th:text="${rebalContainer.currInvStr}"></h3>
+										<span style="color: #486590; font-weight: medium;">Current
+											Investment</span>
+									</blockquote>
+
+								</div>
+
+								<div class="cell">
+									<blockquote class="right-side">
+										<h3 style="color: #D74A76; margin-right: 10px"
+											th:text="${rebalContainer.invAmntStr}"></h3>
+
+										<span style="color: #486590; font-weight: medium;">Incremental
+											Investment</span>
+									</blockquote>
+								</div>
+
+
+
+							</div>
+
+						</div>
+
+					</div>
+
+				</div>
+
+
+
+
+
+
+
+
+
+
+				<div class="row" th:if="${rebalContainer.numExits > 0 }">
+					<div class="colspan-11">
+						<div class="remark warning" style="padding-top: 10px; margin: 2px">
+							<label
+								th:text="'Re-Balance Algo suggests to exit - ' + ${rebalContainer.numExits} + ' scrips. You can manually choose the scrips you want to exit and replace them with the scrips from Proposals Section as below. You can also select & add new scrips from Proposal Section.'"></label>
+						</div>
+					</div>
+
+				</div>
+
+
+				<div class="grid">
+
+					<form method="post" th:action="@{/nfs/save_rebal}"
+						th:object="${rebalContainer}">
+
+						<input type="hidden" th:field="*{invAmnt}" />
+
+
+
+						<div class="row">
+
+							<div class="cell-5" th:if="${rebalContainer.numExits > 0}">
+								<h6
+									style="color: #325254; background-color: #FFDCDD; padding: 10px">
+									Exits Recommended by Algo</h6>
+
+								<div class="row flex-align-center" style="padding: 5px">
+									<div class="cell-md-auto">
+										<table
+											class="table subcompact striped table-border row-hover "
+											data-show-search="false" data-show-rows-steps="false"
+											id="t-inspector" data-showPagination="false"
+											data-role="table" data-horizontal-scroll="true"
+											data-rows="-1" data-info-wrapper=".my-info-wrapper"
+											data-thousand-separator=","
+											data-pagination-wrapper=".my-pagination-wrapper">
+
+											<thead style="text-align: center;">
+												<tr>
+													<th data-name="scCode" class="sortable-column "
+														data-cls-column=" text-left">Scrip Code</th>
+
+													<th data-name="plPer" data-format="number"
+														data-cls-column=" text-left">P&L %</th>
+
+													<th data-name="plAmnt" data-format="number"
+														data-cls-column=" text-left">P&L Amnt.</th>
+
+													<th data-name="isincluded" data-cls-column=" text-left">Mark
+														for Exit</th>
+												</tr>
+											</thead>
+
+
+
+
+											<tr th:each="scExitI , stat :  *{exitsList.scExit} ">
+
+
+												<td><span th:text="${scExitI.scCode}"></span> <input
+													type="hidden"
+													th:field="*{exitsList.scExit[__${stat.index}__].scCode}" /></td>
+
+												<td><span th:text="${scExitI.plPer}"></span> <input
+													type="hidden"
+													th:field="*{exitsList.scExit[__${stat.index}__].plPer}" /></td>
+												<td><span th:text="${scExitI.plAmnt}"></span> <input
+													type="hidden"
+													th:field="*{exitsList.scExit[__${stat.index}__].plAmnt}" /></td>
+												<td><input type="checkbox" data-role="switch"
+													th:field="*{exitsList.scExit[__${stat.index}__].isincluded}"
+													checked data-material="true"
+													data-cls-caption="fg-teal text-bold" /></td>
+											</tr>
+
+										</table>
+
+									</div>
+								</div>
+
+
+							</div>
+
+							<div class="cell-6" th:if="${rebalContainer.numProposals > 0}">
+
+								<h6
+									style="color: #325254; background-color: #DDFFDC; padding: 10px">
+									Proposals for Addition</h6>
+
+								<div class="row flex-align-center" style="padding: 5px">
+									<div class="cell-md-auto">
+
+										<table
+											class="table subcompact striped table-border row-hover "
+											data-show-search="false" data-show-rows-steps="false"
+											id="t-inspector" data-showPagination="false"
+											data-role="table" data-horizontal-scroll="true"
+											data-rows="-1" data-info-wrapper=".my-info-wrapper"
+											data-thousand-separator=","
+											data-pagination-wrapper=".my-pagination-wrapper">
+
+											<thead style="text-align: center;">
+												<tr>
+													<th data-name="sccode" class="sortable-column "
+														data-cls-column=" text-left">Scrip Code</th>
+
+													<th data-name="rank" data-format="number"
+														data-cls-column=" text-left">Rank</th>
+
+													<th data-name="consolscore" data-format="number"
+														data-cls-column=" text-left">Score</th>
+
+													<th data-cls-column=" text-center"></th>
+													<th data-name="isincluded" data-cls-column=" text-left">Include</th>
+												</tr>
+											</thead>
+
+
+
+
+											<tr th:each="scNewI , stat :  *{proposals.scSel} ">
+
+
+												<td><span th:text="${scNewI.sccode}"></span> <input
+													type="hidden"
+													th:field="*{proposals.scSel[__${stat.index}__].sccode}" /></td>
+
+												<td><span th:text="${scNewI.rank}"></span> <input
+													type="hidden"
+													th:field="*{proposals.scSel[__${stat.index}__].rank}" /></td>
+												<td><span th:text="${scNewI.consolscore}"></span> <input
+													type="hidden"
+													th:field="*{proposals.scSel[__${stat.index}__].consolscore}" /></td>
+												<td><input type="hidden"
+													th:field="*{proposals.scSel[__${stat.index}__].screenerUrl}" />
+													<a th:href="${scNewI.screenerUrl}" th:target="_blank"
+													class="button rounded outline"
+													style="border: none; align-content: top;"> <img
+														th:src="@{/images/screener.png}"
+														src="../../static/images/screener.png" width="35"
+														height="85" style="margin-left: 5px; margin-bottom: 5px">
+												</a></td>
+												<td><input type="checkbox" data-role="switch"
+													th:field="*{proposals.scSel[__${stat.index}__].isincluded}"
+													checked data-material="true"
+													data-cls-caption="fg-teal text-bold" /></td>
+											</tr>
+
+										</table>
+
+
+
+									</div>
+								</div>
+
+							</div>
+
+						</div>
+
+
+
+
+
+
+						<div class="row flex-align-end">
+							<div class="cell-2 offset-8">
+								<div class="form-group" style="margin-top: 10px">
+
+									<button class="button yellow rounded" type="submit"
+										name="action" value="refresh">
+										<span class="mif-checkmark"></span> Proceed with Changes
+									</button>
+
+
+								</div>
+							</div>
+						</div>
+
+
+
+					</form>
+				</div>
+
+
+
+
+			</div>
+
+
+
+
+
+
+
+		</div>
+
+
+
+
+	</div>
+
+
+
+
+
+
+	<!-- Metro 4 -->
+	<script src="https://cdn.metroui.org.ua/v4.3.2/js/metro.min.js"></script>
+
+</body>
+</html>

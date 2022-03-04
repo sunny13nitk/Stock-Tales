@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<div th:replace="fragments/header :: STHeader"></div>
+
+</head>
+<body>
+
+   <div class="grid" style="margin: 20px">
+
+      <!-- Top Row - Starts -->
+      <div class="row">
+
+         <div class="colspan-4" style="margin-top: -10px">
+            <h4 style="margin-left: 40px;">
+               <img th:src="@{/images/dice.png}"
+                  src="../../static/images/dice.png" width="60"
+                  height="60"
+                  style="margin-left: 5px; margin-right: 10px">
+               Stock Tales
+            </h4>
+
+         </div>
+         <!--ICOn - Ends -->
+
+         <!-- Text -->
+         <div class="colspan-5" style="margin-left: 30px">
+            <h4 style="font-weight: medium; color: #4465a1">Edit
+               Snippet Notes for Journal Entry</h4>
+         </div>
+         <!-- Text  -->
+
+
+
+
+         <!--Buttons - Start  -->
+         <div class="colspan-1"
+            style="margin-top: 13px; margin-left: 120px">
+            <a href="#" class="button secondary cycle outline"
+               th:href="@{'/'}" role="button" data-role="hint"
+               data-hint-position="right"
+               data-cls-hint="bg-white fg-black" data-hint-text="Home">
+               <span class="mif-home icon" style="margin-left: 0px"></span>
+            </a>
+
+         </div>
+
+         <!--Buttons - End -->
+
+      </div>
+      <!-- Top Row - Ends -->
+
+
+      <!-- Content Row - Starts -->
+
+      <div class="row">
+
+         <div class="colspan-12">
+
+            <!-- Form - Starts -->
+
+            <form th:object="${snippet}"
+               th:action="@{/scJournalM/editSnippetNotes}" method="post">
+
+               <!-- Place for messages: error, alert etc ... -->
+               <div class="form-group">
+                  <div class="col-xs-15">
+                     <div th:if="${formError != null}">
+
+                        <!-- Check for Form error -->
+
+                        <div class="remark alert"
+                           style="padding-top: 10px; margin: 2px">
+                           <label th:text="'ERROR : ' + ${formError}"></label>
+                        </div>
+                     </div>
+                  </div>
+
+                  <div class="col-xs-15">
+                     <div th:if="${formSucc != null}">
+
+
+                        <div class="remark success"
+                           style="padding-top: 10px; margin: 2px">
+                           <label th:text=" ${formSucc}"></label>
+                        </div>
+
+
+
+                     </div>
+                  </div>
+               </div>
+
+               <!--Hidden  Scrip Code field to be passed on to   -->
+               <input type="hidden" th:field="*{sid}" /> <input
+                  type="hidden" th:field="*{scripJorunal}" />
+
+
+               <!--  Image & Notes Row Starts  -->
+               <div class="mx-auto" data-role="panel"
+                  style="margin-top: 5px"
+                  data-title-caption="Image and Notes"
+                  data-title-icon="<span class='mif-file-picture'></span>"
+                  data-collapsible="true" data-cls-panel="shadow-3"
+                  data-cls-title="bg-lightRed fg-white"
+                  data-cls-title-icon="bg-white fg-red"
+                  data-cls-collapse-toggle="bg-darkRed fg-white marker-light  ">
+
+
+                  <div th:if="${snippet.image != null}">
+                     <div
+                        class="img-container rounded  thumbnail drop-shadow"
+                        style="max-width: 98%; margin: 5px"
+                        align="center">
+                        <img
+                           th:src="@{/scJournalM/image/{sid} (sid=${snippet.sid})}">
+                     </div>
+
+                  </div>
+
+
+                  <div class="col-md-12 form-group">
+                     <p class="fg-mauve" id="chars-counter"
+                        style="margin: 10px">Length- 0 char(s)</p>
+                     <textarea data-role="textarea"
+                        data-auto-size="true"
+                        data-chars-counter="#chars-counter"
+                        style="width: 1300px; min-height: 500px; margin: 10px"
+                        data-chars-counter-template="Length- $1 char(s)"
+                        th:field="*{notes}"></textarea>
+                  </div>
+                  <!-- URL Row- Starts -->
+                  <div class="row">
+                     <div style="margin: 10px">
+                        <p class="text-left text-upper bg-white fg-red">
+                           <strong><u>References</u></strong>
+                        </p>
+
+                     </div>
+                  </div>
+
+                  <div class="row">
+
+                     <div class="cell-md-11" style="margin: 10px">
+                        <label class="fg-mauve">Maintain
+                           Reference URL - If Any</label> <input type="text"
+                           class="metro-input" th:field="*{url}" />
+                     </div>
+                  </div>
+                  <!-- URL Row - Ends -->
+
+               </div>
+               <!-- Image & Notes Row Ends -->
+
+
+
+
+
+               <div class="d-flex flex-row-r"
+                  style="margin-top: 30px; margin-bottom: 50px;">
+                  <button class="button rounded "
+                     style="color: #004466; background: #00ffb3"
+                     data-role="hint" data-hint-position="left"
+                     data-cls-hint="fg-black" data-hint-text="Save">
+                     <span class="mif-beenhere" style="margin-left: 0px">
+                     </span> <span style="margin-left: 3px">Confirm
+                        Changes</span>
+                  </button>
+
+               </div>
+
+            </form>
+
+         </div>
+      </div>
+      <!-- Content Row - Ends -->
+
+   </div>
+
+   <!-- Metro 4 -->
+   <script src="https://cdn.metroui.org.ua/v4.3.2/js/metro.min.js"></script>
+</body>
+</html>

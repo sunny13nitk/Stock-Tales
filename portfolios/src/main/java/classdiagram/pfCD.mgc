@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ClassDiagram>
+    <Class
+        name="stocktales.basket.allocations.autoAllocation.pojos.DurVWv"
+        x="948" y="286">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+    <Class
+        name="stocktales.basket.allocations.autoAllocation.pojos.DurVWvNett_ED"
+        x="503" y="270">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Extension destinationClassName="stocktales.basket.allocations.autoAllocation.pojos.DurVWvNett"/>
+    </Class>
+    <Class
+        name="stocktales.basket.allocations.autoAllocation.pojos.DurVWvNett"
+        x="922" y="95">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Association
+            destinationClassName="stocktales.basket.allocations.autoAllocation.pojos.DurVWv"
+            endpointName="durItems" kind="Simple"/>
+    </Class>
+    <Class
+        name="stocktales.basket.allocations.autoAllocation.pojos.ScripEDRCScore"
+        x="523" y="24">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Association
+            destinationClassName="stocktales.basket.allocations.autoAllocation.pojos.DurVWvNett"
+            endpointName="returnRatiosScore" kind="Simple"/>
+        <Association
+            destinationClassName="stocktales.basket.allocations.autoAllocation.pojos.DurVWvNett"
+            endpointName="cashflowsScore" kind="Simple"/>
+        <Association
+            destinationClassName="stocktales.basket.allocations.autoAllocation.pojos.DurVWvNett_ED"
+            endpointName="earningsDivScore" kind="Simple"/>
+    </Class>
+</ClassDiagram>

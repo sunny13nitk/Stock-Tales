@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<div th:replace="fragments/header :: STHeader"></div>
+
+</head>
+<body>
+
+   <div style="height: 800px; overflow: hidden;">
+      <div data-role="navview" data-compact="md" data-expand="false"
+         data-active-state="true">
+         <div th:replace="fragments/navbar :: STNavbar"></div>
+
+
+
+         <div class="navview-content pl-4-md pr-4-md">
+
+            <div class="grid">
+
+               <div th:replace="fragments/brand :: STBrand"></div>
+
+               <!--Error Messages Row - Starts -->
+
+               <div class="col-xs-15">
+                  <div th:if="${formError != null}">
+
+                     <!-- Check for Form error -->
+
+                     <div class="remark alert"
+                        style="padding-top: 10px; margin: 2px">
+                        <label
+                           th:text="'Error Loading Scrip' + ${formError}"></label>
+                     </div>
+                  </div>
+               </div>
+
+
+               <div class="col-xs-15">
+                  <div th:if="${formSucc != null}">
+
+
+                     <div class="remark success"
+                        style="padding-top: 10px; margin: 2px">
+                        <label th:text=" ${formSucc}"></label>
+                     </div>
+
+
+
+                  </div>
+               </div>
+
+               <!--Error Messages Row - Ends -->
+
+
+               <!-- SitePath Form Row - Starts  -->
+
+               <div class="colspan-10 offset-1" style="margin-top: 5px">
+
+                  <div class="card">
+
+                     <h6 style="color: #4465a1; margin-left: 10px">Maintain
+                        Scrip(s) Specific Field Pool Configuration</h6>
+
+                     <form th:object="${cfg}"
+                        th:action="@{'/ScSpFPools/save'} " method="post">
+
+                        <!--Hidden SitePath Id field to be passed on to   -->
+                        <input type="hidden" th:field="*{fpid}" />
+
+                        <div class="colspan-7 offset-1"
+                           style="margin-top: 5px; margin-bottom: 10px">
+                           <label> Scrip Name</label> <select
+                              data-role="select" name="scrip"
+                              th:field="*{sccode}"
+                              data-add-empty-value="true" class="input">
+                              <!-- Sectors list to be pushed via Model -->
+                              <option th:each="scrip : ${scrips}"
+                                 th:value="${scrip}"
+                                 th:selected="${scrip}"
+                                 th:text="${scrip}"></option>
+                           </select>
+                        </div>
+
+                        <div class="colspan-7 offset-1"
+                           style="margin-top: 10px; margin-bottom: 10px;">
+                           <label>Entity Name - Fully Qualified</label>
+                           <input type="text" class="metro-input"
+                              th:field="*{fPoolEntityQName}" /> <small
+                              class="text-muted">Copy the Fully
+                              Qualified Field Pool Entity Class. e.g.
+                              "stocktales.dataBook.model.entity.scripSp.FPBAJFINANCE"</small>
+                        </div>
+
+                        <div class="colspan-7 offset-1"
+                           style="margin-top: 10px; margin-bottom: 10px;">
+                           <label>Service Bean Name </label> <input
+                              type="text" class="metro-input"
+                              th:field="*{srvbean}" /> <small
+                              class="text-muted">Copy the Scrip
+                              Specific Field Pool Service Bean Name.
+                              e.g. "FPBAJFINANCESrv"</small>
+                        </div>
+
+
+
+
+
+
+                        <div class="colspan-1 offset-10"
+                           style="margin-top: 10px; margin-bottom: 10px;">
+                           <button class="button rounded"
+                              style="background-color: #59D3AF; color: white; margin-top: 5px; margin-bottom: 10px"
+                              data-role="hint"
+                              data-hint-position="bottom"
+                              data-cls-hint="bg-LightGreen fg-black"
+                              data-hint-text="Save Configuration">
+                              <span class="mif-floppy-disk"
+                                 style="margin-left: 0px"> </span> <span
+                                 style="margin-left: 3px">Save</span>
+                           </button>
+
+                        </div>
+                     </form>
+                  </div>
+               </div>
+
+               <!-- SitePath Form Row - Ends  -->
+
+
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <!-- Metro 4 -->
+   <script src="https://cdn.metroui.org.ua/v4.3.2/js/metro.min.js"></script>
+</body>
+</html>

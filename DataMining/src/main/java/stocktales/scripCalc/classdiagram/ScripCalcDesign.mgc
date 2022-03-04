@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ClassDiagram>
+    <Class name="stocktales.scripCalc.intf.IIncrementalDeltaSrv" x="542" y="668">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+    <Class name="stocktales.scripCalc.pojos.TY_AttrMultiContainer"
+        x="-16" y="73">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+    <Class name="stocktales.scripCalc.annotation.ScripCalcAttrList"
+        x="1130" y="70">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+    <Class name="stocktales.scripCalc.impl.FieldValidatorSrv" x="19" y="605">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Extension destinationClassName="stocktales.scripCalc.intf.IFieldValidator"/>
+    </Class>
+    <Class name="stocktales.scripCalc.pojos.TY_ScripCalcResult" x="374" y="23">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Association
+            destinationClassName="stocktales.scripCalc.pojos.TY_AttrMultiContainer"
+            endpointName="attrsMulti" kind="Simple"/>
+    </Class>
+    <Class name="stocktales.scripCalc.annotation.ScripCalcAttr" x="1129" y="19">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+    <Class name="stocktales.scripCalc.enums.EnumCalcOperation" x="1128" y="127">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+    <Class name="stocktales.scripCalc.intf.IFieldValidator" x="152" y="488">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+    <Class name="stocktales.scripCalc.enums.EnumDataType" x="979" y="128">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+    <Class name="stocktales.scripCalc.impl.FieldValueRetrieverSrv"
+        x="256" y="674">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Extension destinationClassName="stocktales.scripCalc.intf.IFieldValueRetriever"/>
+        <Association
+            destinationClassName="stocktales.scripCalc.intf.IFieldValidator"
+            endpointName="fldValidatorSrv" kind="Simple"/>
+        <Communication destinationClassName="stocktales.scripCalc.intf.IFieldValidator"/>
+    </Class>
+    <Class
+        name="stocktales.scripCalc.aspect.ScripCalculationsCustomAttributesAspect"
+        x="68" y="255">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Association
+            destinationClassName="stocktales.scripCalc.intf.IFieldValidator"
+            endpointName="fldValidatorSrv" kind="Simple"/>
+        <Association
+            destinationClassName="stocktales.scripCalc.intf.IIncrementalDeltaSrv"
+            endpointName="icDeltaSrv" kind="Simple"/>
+        <Association
+            destinationClassName="stocktales.scripCalc.intf.IFieldValueRetriever"
+            endpointName="fldValRetSrv" kind="Simple"/>
+        <Communication destinationClassName="stocktales.scripCalc.pojos.TY_AttrMultiContainer"/>
+        <Communication destinationClassName="stocktales.scripCalc.annotation.ScripCalcAttrList"/>
+        <Communication destinationClassName="stocktales.scripCalc.intf.IFieldValidator"/>
+        <Communication destinationClassName="stocktales.scripCalc.intf.IFieldValueRetriever"/>
+    </Class>
+    <Class name="stocktales.scripCalc.impl.IncrementalDeltaSrv" x="942" y="605">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Extension destinationClassName="stocktales.scripCalc.intf.IIncrementalDeltaSrv"/>
+        <Association
+            destinationClassName="stocktales.scripCalc.enums.EnumDataType"
+            endpointName="dtypeKey" kind="Simple"/>
+        <Association
+            destinationClassName="stocktales.scripCalc.enums.EnumDataType"
+            endpointName="dtypeVal" kind="Simple"/>
+        <Communication destinationClassName="stocktales.scripCalc.pojos.TY_AttrMultiContainer"/>
+    </Class>
+    <Class name="stocktales.scripCalc.intf.IFieldValueRetriever" x="570" y="397">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+</ClassDiagram>

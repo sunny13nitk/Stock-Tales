@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<div th:replace="fragments/header :: STHeader"></div>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script type="text/javascript"
+	src="https://www.gstatic.com/charts/loader.js"></script>
+</head>
+</head>
+<body style="overflow: hidden">
+
+	<div th:replace="fragments/IDS_FG :: IDSMenu"></div>
+
+	<div style="margin-top: 32px;">
+		<div id="overview">
+			<div class="frame"
+				style="height: 570px; overflow: scroll; padding: 8px">
+
+
+				<div class="row flex-justify-left">
+
+					<!-- Form - for SCrips Adding -->
+
+					<form th:object="${schmPOJO}" th:action="@{/ids/cfScSch}"
+						method="post">
+
+						<!-- Place for messages: error, alert etc ... -->
+						<div class="form-group">
+							<div class="col-xs-15">
+								<div th:if="${formError != null}">
+
+									<!-- Check for Form error -->
+
+									<div class="remark alert"
+										style="padding-top: 10px; margin: 2px">
+										<label th:text="'ERROR : ' + ${formError}"></label>
+									</div>
+								</div>
+							</div>
+
+							<div class="col-xs-15">
+								<div th:if="${formSucc != null}">
+
+
+									<div class="remark success"
+										style="padding-top: 10px; margin: 2px">
+										<label th:text=" ${formSucc}"></label>
+									</div>
+
+
+
+								</div>
+							</div>
+						</div>
+
+
+						<!--Select Scrips Title  -->
+						<div data-role="panel"
+							data-title-caption="Select Scrip(s) you would like to include in your Portfolio
+										Schema from Dropdown Below"
+							data-collapsible="true" data-width="1250"
+							data-title-icon="<span class='mif-opencart mif-2x fg-orange'></span>"
+							data-cls-title="bg-white fg-steel"
+							style="padding: 10px; margin-left: 10px; margin-top: 2px">
+
+							<div th:if="${scrips != null}" style="margin-left: 40px">
+								<select name="scripsStr" data-role="select" multiple
+									style="max-width: 1000px; width: 1000px"
+									th:field="*{scripsStr}" data-cls-option="fg-grayMouse"
+									data-cls-selected-item="bg-teal fg-white"
+									data-random-color="true"
+									data-cls-selected-item-remover="bg-darkTeal fg-white">
+
+
+									<option th:each="scripsStr : ${scrips}" th:value="${scripsStr}"
+										th:selected="${scripsStr}" th:text="${scripsStr}"></option>
+
+								</select>
+
+							</div>
+
+
+							<div class="d-flex flex-row-r"
+								style="margin-top: 30px; margin-bottom: 10px;">
+								<button class="button rounded "
+									style="color: #004466; background: #00ffb3" data-role="hint"
+									data-hint-position="left" data-cls-hint="fg-black"
+									data-hint-text="Proceed for Allocations Configuration">
+									<span class="mif-beenhere" style="margin-left: 0px"> </span> <span
+										style="margin-left: 3px">Proceed</span>
+								</button>
+
+							</div>
+						</div>
+
+
+
+					</form>
+
+				</div>
+
+
+				<!-- Table Row - Starts -->
+				<div class="grid"
+					th:if="${ schmPOJO.scAllocMassUpdate.getScAllocList().size() > 0}">
+					<div class="row flex-justify-center">
+
+
+						<div class="cell-6">
+							<div class="row flex-justify-center">
+								<h6 style="color: #4465a1">Maintain Sector(s) and
+									Ideal/Incremental Allocations</h6>
+
+								<span style="margin-left: 20px; margin-top: 5px">
+
+									<button class="button rounded secondary"
+										onclick="$('#info-box-1').data('infobox').open()">Help!</button>
+								</span>
+
+							</div>
+
+							<!-- Form for Added Scrips Adjustment - STARTS -->
+
+							<div class="row flex-justify-center" style="padding: 10px">
+								<form method="post" th:action="@{/ids/schemaVal}"
+									th:object="${schmPOJO}">
+
+
+									<!-- Here goes your table -->
+
+									<table
+										class="table subcompact striped table-border row-hover mt-4"
+										data-show-search="false" data-show-rows-steps="false"
+										id="t-inspector" data-showPagination="false" data-role="table"
+										data-horizontal-scroll="true" data-rows="-1"
+										data-info-wrapper=".my-info-wrapper"
+										data-thousand-separator=","
+										data-pagination-wrapper=".my-pagination-wrapper">
+
+										<thead>
+											<tr>
+
+												<th class="sortable-column sort-asc">Scrip Code</th>
+
+												<th data-cls-column=" text-center" data-size="330">Sector</th>
+
+												<th data-format="number" data-size="100"
+													data-cls-column=" text-center">Ideal % Allocation</th>
+
+												<th data-format="number" data-size="100"
+													data-cls-column=" text-center">Incr. % Allocation</th>
+												<th data-cls-column=" text-center"></th>
+
+											</tr>
+										</thead>
+
+
+
+
+										<tr
+											th:each="scAllocI , stat :  *{scAllocMassUpdate.scAllocList} ">
+											<td><input type="hidden"
+												th:field="*{scAllocMassUpdate.scAllocList[__${stat.index}__].scCode}" />
+												<a th:href="@{'/scOvw/' + ${scAllocI.scCode}}"
+												th:text="${scAllocI.scCode}"></a></td>
+
+											<td><input type="text"
+												class="input-small alert metro-input"
+												th:field="*{scAllocMassUpdate.scAllocList[__${stat.index}__].sector}"></td>
+
+
+											<td><input type="text"
+												class="input-small alert metro-input"
+												th:field="*{scAllocMassUpdate.scAllocList[__${stat.index}__].idealAlloc}"></td>
+
+											<td><input type="text"
+												class="input-small alert metro-input"
+												th:field="*{scAllocMassUpdate.scAllocList[__${stat.index}__].incAlloc}"></td>
+
+											<td style="text-align: center;"><a
+												class="button red cycle small outline"
+												th:href="@{'/ids/pfSchema/delete/' + *{scAllocMassUpdate.scAllocList[__${stat.index}__].scCode}}"
+												data-role="hint"
+												data-hint-text="Remove Scrip from Portfolio Schema"
+												data-cls-hint="bg-lightyellow fg-black drop-shadow"
+												data-hint-position="bottom"><span class="mif-bin fg-red"></span></a></td>
+										</tr>
+
+									</table>
+
+
+									<div class="row flex-justify-left">
+										<div
+											style="margin-top: 15px; margin-bottom: 10px; margin-left: 10px">
+											<label>Choose Deployable Amounts Mode </label> <select
+												class="form-control"
+												th:field="*{scAllocMassUpdate.depAmtMode}">
+												<option
+													th:each="modeval : ${T(stocktales.IDS.enums.EnumSchemaDepAmntsUpdateMode).values()}"
+													th:value="${modeval.name()}" th:text="${modeval.name()}"></option>
+											</select> <small class="text-muted">Affects the Deployable
+												Amounts for Each of the Scrips in Schema.</small>
+										</div>
+
+
+									</div>
+
+
+									<div class="toolbar"
+										style="margin-left: 300px; margin-top: 10px">
+
+
+
+										<button class="button alert rounded" type="submit"
+											name="action" value="validProc">
+											<span class="mif-checkmark"></span> Validate and Proceed
+										</button>
+
+										<button th:if="${schmPOJO.isValidated() == true}"
+											style="margin-left: 20px" class="button success rounded"
+											type="submit" name="action" value="save">
+											<span class="mif-floppy-disk"></span> Save
+										</button>
+
+
+
+									</div>
+
+								</form>
+
+								<div class="row flex-justify-left">
+									<div class="info-box" id="info-box-1" data-role="infobox"
+										data-width=1100 data-height=1300>
+										<span class="button square closer"></span>
+										<div class="info-box-content">
+
+											<div class="remark success">
+												<p>You can add scrips to your Schema selecting from
+													above panel.</p>
+												<p>You can change the Sector, Ideal and Incremental
+													Allocations for already existing scrips in Schema.</p>
+												<p>You can also remove the scrips from the current
+													Schema. This will trigger scrips weights & DepAmounts to be
+													adjusted as per rest of scrips weights.</p>
+
+											</div>
+
+											<p>
+												<strong>Deployment Amount Mode's Significance for
+													the options is explained as below.</strong>
+											</p>
+
+											<div class="remark yellow">
+												<p>CurrDepAmnts - Refurbish Schema Deployable Amounts
+													only considering Current Total Available Deployable
+													Amounts; Ignores already used amounts for current Holdings;
+													takes current Schema deployment Amounts as base</p>
+
+											</div>
+
+											<div class="remark info">
+												<p>Holistic - Consider (Used as well as current
+													Deployable Amounts) SUM to calculate Total Corpus and
+													distribute the amounts accordingly to Schema's Deployable
+													Amounts; More Holistic view of Corpus Deployments</p>
+
+											</div>
+
+											<div class="remark secondary">
+												<p>None - Do not change current Deployment(s) in the
+													Schema; Only for the new Money Bag Deposits/Withdrawals the
+													amounts updated in Scrips to Schema deployments, Would
+													change as per hence-forth Money additions/withdrawals; the
+													Status of deployment Amounts until now will remain status
+													quo; ideal for slowly building new positions</p>
+
+											</div>
+
+										</div>
+									</div>
+								</div>
+
+
+
+							</div>
+
+							<!-- Form for Added Scrips Adjustment ENDS -->
+						</div>
+
+						<div class="cell-6" th:if="${schmPOJO.stats != null}">
+
+							<div class="row flex-justify-center">
+								<h6 style="color: #4465a1">Quick Stats..</h6>
+							</div>
+
+							<div class="row flex-justify-center">
+								<div class="colspan-5">
+
+									<blockquote class="right-side">
+										<div class="row flex-align-center">
+											<div class="cell flex-align-center">
+												<label
+													style="color: #E39657; font-weight: bold; font-size: 1.45em; margin-left: 10px"
+													th:text="${schmPOJO.stats.numbers.numScrips}"> </label> <span
+													style="color: #DC7B2B; font-weight: medium;"> Scrips
+												</span>
+											</div>
+
+											<div class="cell flex-align-center">
+												<label
+													style="color: #00254A; font-weight: bold; font-size: 1.45em; margin-left: 10px"
+													th:text="${schmPOJO.stats.numbers.numSectors}"> </label> <span
+													style="color: #4A2500; font-weight: medium;">
+													Sectors </span>
+
+											</div>
+										</div>
+
+										<div class="row flex-align-center">
+											<div class="cell flex-align-center">
+												<label
+													style="color: #4A004A; font-weight: bold; font-size: 1.45em; margin-left: 10px"
+													th:text="${schmPOJO.stats.numbers.sumIdealAlloc}">
+												</label> <span
+													style="color: #4A004A; font-weight: bold; font-size: 1.45em; margin-top: -10px">
+													%</span>
+											</div>
+
+
+											<div class="cell flex-align-center">
+												<span style="color: #25004A; font-weight: medium;">
+													Ideal Allocations </span>
+											</div>
+										</div>
+
+										<div class="row flex-align-center">
+											<div class="cell flex-align-center">
+												<label
+													style="color: #004A00; font-weight: bold; font-size: 1.45em; margin-left: 10px"
+													th:text="${schmPOJO.stats.numbers.sumIncAlloc}"> </label> <span
+													style="color: #004A00; font-weight: bold; font-size: 1.45em; margin-top: -10px">
+													%</span>
+
+
+											</div>
+
+
+											<div class="
+												cell flex-align-center">
+												<span style="color: #004A25; font-weight: medium;">
+													Incremental Allocations </span>
+											</div>
+										</div>
+
+
+
+
+										<div class="row flex-align-end">
+
+
+
+											<div class="cell flex-align-center">
+												<label
+													style="color: #4A2500; font-weight: bold; font-size: 1.45em; margin-left: 10px"
+													th:text="${schmPOJO.stats.numbers.sumtop5Scrips}">
+												</label> <span
+													style="color: #4A2500; font-weight: bold; font-size: 1.45em; margin-top: -10px">
+													%</span>
+
+
+											</div>
+
+
+											<div class="cell flex-align-center">
+												<span style="color: #4A0000; font-weight: medium;">
+													Top 5 Allocations </span>
+											</div>
+
+
+
+										</div>
+
+										<div class="row flex-align-end">
+
+
+
+											<div class="cell flex-align-center">
+												<label
+													style="color: #0062C3; font-weight: bold; font-size: 1.45em; margin-left: 10px"
+													th:text="${schmPOJO.stats.numbers.minmInvStr}"> </label>
+											</div>
+
+
+											<div class="cell flex-align-center">
+												<span style="color: #0000C3; font-weight: medium;">Min'm
+													Amount </span>
+
+											</div>
+
+
+
+										</div>
+
+
+
+
+
+									</blockquote>
+
+
+
+									<!--Totals Allocations  -->
+
+
+
+								</div>
+								<!-- MCap Graph -->
+								<div class="colspan-7">
+									<div class="d-flex flex-justify-center">
+
+										<div id="chart_pf" class=" flex-justify-center"></div>
+
+									</div>
+								</div>
+
+
+
+
+
+							</div>
+
+							<div class="row flex-justify-center">
+
+								<div class="colspan-4">
+									<table class="table compact striped">
+										<thead>
+											<tr>
+												<th style="text-align: center;">Sector</th>
+												<th style="text-align: center;">Allocation (%)</th>
+
+											</tr>
+										</thead>
+										<tbody>
+											<tr th:each="secAlloc : ${secData}">
+												<td style="text-align: center; font-weight: bolder;"
+													th:text="${secAlloc.sector}">LargeCap</td>
+												<td
+													style="text-align: center; font-weight: bolder; color: #E74C3C;"
+													th:text="${secAlloc.alloc}">8</td>
+
+											</tr>
+										</tbody>
+									</table>
+
+								</div>
+
+								<div class="colspan-8">
+									<div class="d-flex flex-justify-center">
+
+										<div id="chart_sec" class=" flex-justify-center"></div>
+
+									</div>
+								</div>
+
+							</div>
+
+
+						</div>
+
+
+					</div>
+				</div>
+
+				<div class="row flex-justify-center">
+					<!-- Returns Graph -->
+					<div id="chart_ret"></div>
+
+				</div>
+
+
+
+
+			</div>
+
+
+
+
+
+
+
+		</div>
+
+
+	</div>
+
+	<!--Charts Starts  -->
+
+	<script th:inline="javascript">
+		var mCapdata = /*[[${mCapData}]]*/'noValue';
+		var secdata = /*[[${secData}]]*/'noValue';
+		var real_data = /*[[${seriesval}]]*/'noValue';
+
+		$(document).ready(function() {
+			google.charts.load('current', {
+				packages : [ 'corechart', 'bar' ]
+			});
+			//google.charts.setOnLoadCallback(drawBarChart);
+			google.charts.setOnLoadCallback(drawDonutChart);
+			google.charts.setOnLoadCallback(drawDonutChartSecAllocs);
+			google.charts.setOnLoadCallback(drawLineChartPrices);
+
+		});
+	
+		 function drawLineChartPrices() {
+
+             var data4 = new google.visualization.DataTable();
+             
+             data4.addColumn('string', 'Date');
+             data4.addColumn('number', 'Value');
+             
+             var dataArray4 = [];
+             
+              $.each(real_data, function(i, obj) {
+                dataArray4.push([ obj.date, obj.value]);
+             });
+
+             data4.addRows(dataArray4);
+             
+             
+          
+
+             /*
+             In case Data labels are needed on Bar Chart - Not working on combo*/
+             var view4 = new google.visualization.DataView(data4);
+             
+             view4.setColumns([ 0, 1],
+              
+             
+             );
+
+             var options4 = {
+                width : 1500,
+                height : 550,
+                margin : 20,
+                pointSize : 2,
+                title: 'Value of INR 100 invested in Schema since last 5 years',
+                titleTextStyle: {
+                                    color: '#294166',
+                                    fontSize: 13
+                                  
+                                 },
+
+                colors : [ '#B430AF' ],
+                seriesType : 'line',
+                legend : 'none',
+                
+                  hAxis : {
+                   
+                   viewWindow : 
+                   {
+                      min : [ 7, 30, 0 ],
+                      max : [ 17, 30, 0 ]
+                   },
+                   textStyle:
+                   { 
+                     color: '#30B435',
+                     fontName: 'Calibri',
+                     fontSize: 12,
+                     bold: true
+                    }
+                   
+                },
+                
+                vAxis : {
+                   
+                   viewWindow : 
+                   {
+                      min : [ 7, 30, 0 ],
+                      max : [ 17, 30, 0 ]
+                   },
+                   textStyle:
+                   { 
+                     color: '#30B435',
+                     fontName: 'Calibri',
+                     fontSize: 12,
+                     bold: true
+                    }
+                   
+                },
+                
+                
+                
+             };
+             var chartPricesDelta = new google.visualization.LineChart(
+                   document.getElementById('chart_ret'));
+      
+             
+             //In case of Data points enabled on chart series
+             chartPricesDelta.draw(view4, options4);
+          }   
+		
+				function drawDonutChart()
+		
+				{
+		
+					var data = new google.visualization.DataTable();
+
+					data.addColumn('string', 'MCap');
+					data.addColumn('number', 'Allocation');
+
+				
+					var dataArray = [];
+
+					$.each(mCapdata, function(i, obj) {
+						dataArray.push([ obj.sector, obj.alloc ]);
+					});
+
+					data.addRows(dataArray);
+               
+                     var options = {
+                                     width : 280,
+                                     height : 300,
+                                     title: 'Schema Spread by MCap',
+                                     titleTextStyle: {
+                                                         color: '#294166',
+                                                         fontSize: 13
+                                                       
+                                                      },
+                                     colors : [ '#7998C5', '#C8819E', '#8ABC67' ],
+                                     legend : 'none',
+                                     pieHole: 0.4
+                          };
+					
+
+					
+					var chartMCap = new google.visualization.PieChart(document
+							.getElementById('chart_pf'));
+					chartMCap.draw(data, options);
+
+		
+				}
+				
+				
+				function drawDonutChartSecAllocs()
+				
+				{
+		
+					var datasec = new google.visualization.DataTable();
+
+					datasec.addColumn('string', 'Sector');
+					datasec.addColumn('number', 'Allocation');
+
+				
+					var dataArray = [];
+
+					$.each(secdata, function(i, obj) {
+						dataArray.push([ obj.sector, obj.alloc ]);
+					});
+
+					datasec.addRows(dataArray);
+               
+                     var optionssec = {
+                                     width : 400,
+                                     height : 400,
+                                     title: 'Allocations Spread by Sector(s)',
+                                     titleTextStyle: {
+                                                         color: '#294166',
+                                                         fontSize: 15
+                                                       
+                                                      },
+                                     colors : [ '#7998C5', '#C8819E', '#8ABC67','#79C580','#C5A679','#DB242A','#24DBD5','#4EA5B1','#B15A4E','#B14E74','#B18C4E','#609F9D','#60829F','#609F7D','#837C7C','#7C8383' ],
+                                     legend : 'none',
+                                     pieHole: 0.4
+                          };
+					
+
+					
+					var chartSec = new google.visualization.PieChart(document
+							.getElementById('chart_sec'));
+					chartSec.draw(datasec, optionssec);
+
+		
+				}
+	</script>
+
+	<!-- Charts - ENDS -->
+
+
+	<!-- Metro 4 -->
+	<script src="https://cdn.metroui.org.ua/v4.3.2/js/metro.min.js"></script>
+</body>
+</html>

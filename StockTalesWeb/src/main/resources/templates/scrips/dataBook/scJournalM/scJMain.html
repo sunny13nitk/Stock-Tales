@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<div th:replace="fragments/header :: STHeader"></div>
+
+</head>
+<body>
+
+   <div class="grid" style="margin: 20px">
+
+
+      <!-- Top Row - Starts -->
+      <div class="row">
+
+         <div class="colspan-3" style="margin-top: -10px">
+            <h3 style="margin-left: 40px;">
+               <img th:src="@{/images/dice.png}"
+                  src="../../static/images/dice.png" width="60"
+                  height="60"
+                  style="margin-left: 5px; margin-right: 10px">
+               Stock Tales
+            </h3>
+
+         </div>
+         <!--ICOn - Ends -->
+
+         <!-- Text -->
+         <div class="colspan-6 offset-1">
+
+            <h4 style="font-weight: medium; color: #4465a1">
+               Journal Log for - <span style="color: #B1365B"
+                  th:text="${scJP.sccode}"></span>
+            </h4>
+
+
+
+            <blockquote class="right-side" th:if="${stats != null}">
+               <h6 style="color: #000058">
+
+                  <span th:if="${stats.lastEntryDate != null}"
+                     th:text="${stats.lastEntryDate}"></span> <small><cite>
+                        <span style="color: black">Last Update</span>
+                  </cite> </small> <span th:text="${stats.numEntries}"></span> <small><cite>
+                        <span style="color: black">Entries</span>
+                  </cite> </small>
+
+               </h6>
+            </blockquote>
+
+
+
+
+         </div>
+         <!-- Text  -->
+         <!--Buttons - Start  -->
+         <div class="colspan-1" style="margin-top: 13px">
+            <a class=" button
+            secondary cycle outline"
+               th:href="@{'/'}" role="button" data-role="hint"
+               data-hint-position="right"
+               data-cls-hint="bg-white fg-black" data-hint-text="Home">
+               <span class="mif-home icon" style="margin-left: 0px"></span>
+            </a>
+
+         </div>
+
+         <!--Buttons - End -->
+
+
+      </div>
+      <!-- Top Row - Ends -->
+
+      <!-- Snippet Button Row - Starts-->
+
+      <div style="margin: 20px">
+
+         <a href="#" class="button alert rounded outline large"
+            th:href="@{/scJournalM/newSnippet}" role="button"
+            data-role="popover"
+            data-popover-text="
+                        Snippet Consists of Tag(s)/Image and Notes"
+            data-popover-position="right" data-popover-hide="5000"
+            data-cls-popover="bg-red fg-white drop-shadow"> <span
+            class="mif-add icon" style="margin-left: 0px"></span> <span
+            style="margin-left: 3px">Add Snippet</span>
+
+
+         </a>
+
+      </div>
+
+      <!-- Snippet Button Row - Ends-->
+
+      <!-- Category Row - Starts-->
+
+      <div class="row" style="padding: 5px;">
+         <!--Category Heading - Starts  -->
+         <h1
+            style="font-weight: medium; margin-left: 50px; margin-top: 20px; color: #4465a1"
+            th:text="${scJP.category}"></h1>
+         <!--Category Heading - Ends  -->
+      </div>
+
+      <!-- Category Row - Ends-->
+
+
+
+      <!--Tag Row - Starts  -->
+
+      <div
+         style="margin-left: 90px; margin-right: 50px; margin-top: 50px"
+         th:if="${scJP.effect == T(stocktales.dataBook.enums.EnumEffect).Positive}">
+
+         <h6 class="text-upper" th:if="${scJP.tag != null}"
+            style="color: #62920d; background-color: #edfad7; padding: 15px; padding-left: 20px; page-break-inside: avoid;">
+            <span style="color: #3D0D92; margin-left: 10px"
+               class="mif-tags"></span> <strong
+               style="margin-left: 10px" th:text="${scJP.tag}">
+            </strong>
+         </h6>
+
+      </div>
+
+      <div
+         style="margin-left: 90px; margin-right: 50px; margin-top: 50px"
+         th:if="${scJP.effect == T(stocktales.dataBook.enums.EnumEffect).Monitor}">
+
+         <h6 class="text-upper" th:if="${scJP.tag != null}"
+            style="color: #f86a4b; background-color: #ffe3dd; padding: 15px; padding-left: 20px; page-break-inside: avoid;">
+            <span style="color: #09b1d5; margin-left: 10px"
+               class="mif-tags"></span> <strong
+               style="margin-left: 10px" th:text="${scJP.tag}">
+            </strong>
+         </h6>
+      </div>
+
+      <div
+         style="margin-left: 90px; margin-right: 50px; margin-top: 50px"
+         th:if="${scJP.effect == T(stocktales.dataBook.enums.EnumEffect).Information}">
+
+         <h6 class="text-upper" th:if="${scJP.tag != null}"
+            style="color: #00558f; background-color: #e2f3fe; padding: 15px; padding-left: 20px; page-break-inside: avoid;">
+            <span style="color: #8F3A00; margin-left: 10px"
+               class="mif-tags"></span> <strong
+               style="margin-left: 10px" th:text="${scJP.tag}">
+            </strong>
+         </h6>
+      </div>
+
+      <div
+         style="margin-left: 90px; margin-right: 50px; margin-top: 50px"
+         th:if="${scJP.effect == T(stocktales.dataBook.enums.EnumEffect).Observation}">
+
+         <h6 class="text-upper" th:if="${scJP.tag != null}"
+            style="color: #A7AA07; background-color: #fbfcc3; padding: 15px; padding-left: 20px; page-break-inside: avoid;">
+            <span style="color: #0A07AA; margin-left: 10px"
+               class="mif-tags"></span> <strong
+               style="margin-left: 10px" th:text="${scJP.tag}">
+            </strong>
+         </h6>
+      </div>
+
+      <div
+         style="margin-left: 90px; margin-right: 50px; margin-top: 50px"
+         th:if="${scJP.effect == T(stocktales.dataBook.enums.EnumEffect).Negative}">
+
+         <h6 class="text-upper" th:if="${scJP.tag != null}"
+            style="color: white; background-color: #f52800; padding: 15px; padding-left: 20px; page-break-inside: avoid;">
+            <span style="color: white; margin-left: 10px"
+               class="mif-tags"></span> <strong
+               style="margin-left: 10px" th:text="${scJP.tag}">
+            </strong>
+         </h6>
+      </div>
+
+      <!--Tag Row - Ends  -->
+
+
+      <!-- Interval Block Quote - Starts -->
+      <div th:if="${scJP.tag != null }">
+         <blockquote class="right-side" th:if="${scJP.valm > 0 }">
+            <h6 style="color: #000058">
+               <span style="color: #585800"
+                  th:text=" ${scJP.category} + ' : '"></span> <span
+                  th:if="${scJP.vald > 0 }"
+                  th:text="'Q' + ${scJP.vald} + '-'"></span> <span
+                  th:text="${scJP.valm}"></span>
+
+            </h6>
+         </blockquote>
+
+         <blockquote class="right-side" th:if="${scJP.valm == 0 }">
+            <h6 style="color: #000058">
+               <span style="color: #585800" th:text=" ${scJP.category} "></span>
+
+            </h6>
+         </blockquote>
+      </div>
+      <!-- Interval Block Quote - Ends -->
+
+
+      <!-- Panels - Image/ Notes and Url Starts  -->
+
+      <div class="mx-auto" data-role="panel" style="margin-top: 20px"
+         data-title-caption="Snippet"
+         data-title-icon="<span class='mif-pin'></span>"
+         data-collapsible="true" data-cls-panel="shadow-3"
+         data-cls-title="bg-transparent fg-grayMouse"
+         data-cls-title-icon="bg-white fg-grayMouse"
+         data-cls-collapse-toggle="bg-transparent fg-grayMouse "
+         th:if="${scJP.snippets.size() >0}">
+
+         <!--Looping at Snippets - Starts  -->
+         <div th:each="snippet: ${scJP.snippets}">
+
+
+            <!-- Image container - Starts -->
+            <div th:if="${snippet.image != null}">
+               <div class="img-container rounded drop-shadow"
+                  style="margin-top: 20px">
+                  <img
+                     th:src="@{/scJournalM/snippet/imageBuff/{sid} (sid=${snippet.sid})}">
+               </div>
+
+            </div>
+
+            <!-- Image container - Ends -->
+
+            <!-- Notes- Starts -->
+            <div th:if="${snippet.notes != null}" class="card"
+               style="white-space: pre-line; page-break-inside: avoid;">
+
+               <h5 style="page-break-inside: avoid;">
+                  <p class='indent-letter' style="margin-left: 12px"
+                     th:text="${snippet.notes}"></p>
+
+               </h5>
+
+               <div class="d-flex flex-row-r">
+                  <a href="#" class="button secondary cycle outline"
+                     style="margin-top: 8px; margin-right: 10px"
+                     th:href="@{/scJournalM/editBuff/{sid} (sid=${snippet.sid}) }"
+                     role="button" data-role="hint"
+                     data-hint-position="left"
+                     data-cls-hint="bg-white fg-black drop-shadow"
+                     data-hint-text="Add Tag(s)/ Edit Notes"> <span
+                     class="mif-pencil icon"></span>
+                  </a>
+               </div>
+
+            </div>
+
+            <!-- Notes- Ends -->
+
+
+            <!-- Updated On Block Quote - Starts -->
+            <blockquote class="right-side"
+               th:if="${scJP.dateofentry != null}">
+               <small><cite> <span style="color: #546E7A">Updated
+                        : </span> <span style="color: #546E7A"
+                     th:text="${scJP.dateofentry}"> </span>
+               </cite> </small>
+            </blockquote>
+
+            <!-- Updated On Block Quote - Ends -->
+            <!-- Url Link if any - Starts  -->
+            <div th:if="${snippet.url != null}">
+               <a th:if="${snippet.url.length() > 0}"
+                  th:href="@{{url} (url=${snippet.url})}"
+                  data-role="hint"
+                  data-hint-text="Navigate to Reference"
+                  data-cls-hint="bg-steel fg-white drop-shadow"
+                  data-hint-position="right"><span
+                  th:text="Reference"></span></a>
+            </div>
+            <!-- Url Link if any - Ends  -->
+         </div>
+         <!--Looping at Snippets - Ends  -->
+
+      </div>
+      <!-- Panels - Image/ Notes and Url Ends  -->
+
+      <div class="d-flex flex-row-r" th:if="${scJP.snippets.size() > 0}"
+         style="margin-top: 30px; margin-bottom: 50px;">
+
+         <a class="button yellow rounded" th:href="@{/scJournalM/save}"
+            role="button" data-role="hint" data-hint-position="left"
+            data-cls-hint="fg-black" data-hint-text="Save Journal Entry">
+            <span class="mif-floppy-disk" style="margin-left: 0px">
+         </span> <span style="margin-left: 3px">Save</span>
+         </a>
+
+
+      </div>
+
+
+   </div>
+   <!-- Grid - Ends -->
+
+
+
+
+   <!-- Metro 4 -->
+   <script src="https://cdn.metroui.org.ua/v4.3.2/js/metro.min.js"></script>
+</body>
+</html>

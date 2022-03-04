@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport"
+   content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>My App</title>
+<!-- Metro 4 -->
+<link rel="stylesheet"
+   href="https://cdn.metroui.org.ua/v4.3.2/css/metro-all.min.css">
+<title>Stock Tales</title>
+</head>
+<body>
+
+
+   <div class="grid" style="padding: 10px">
+      <div class="row">
+         <!-- Screener Tiles  -->
+         <div class="colspan-5">
+            <div class="card ">
+               <div class="card-content p-2">
+
+                  <h5
+                     style="color: #821D30; background-color: #FFC2C7; padding: 10px; text-align: justify;">
+                     <span class="mif-stack mif-lg"></span> Screener
+                  </h5>
+
+
+               </div>
+
+
+               <div class="tiles-grid tiles-group size-2"
+                  style="padding: 10px">
+                  <!--Strength Scores  -->
+                  <div data-role="tile" data-size="medium"
+                     class="bg-white fg-red  border bd-red border-radius"
+                     data-effect="hover-zoom-right">
+                     <div class="slide-front bg-white">
+                        <span class="mif-clipboard icon h-130 w-100"></span>
+                     </div>
+                     <div
+                        class="slide-back d-flex flex-justify-center flex-align-center p-4 op-mauve ">
+                        <a data-role="tile" data-size="small" href="#"
+                           th:href="@{scrips/edrc}"
+                           class="button flat-button bg-transparent border-visible-none"></a>
+
+                     </div>
+
+                  </div>
+
+
+                  <!--My filters  -->
+
+                  <div data-role="tile" data-size="small"
+                     class="bg-white fg-orange  border bd-orange border-radius"
+                     data-effect="hover-zoom-right">
+                     <div class="slide-front bg-white">
+
+                        <span class="mif-filter icon h-130 w-100"></span>
+                     </div>
+                     <div
+                        class="slide-back d-flex flex-justify-center flex-align-center p-4 op-mauve ">
+                        <a data-role="tile" data-size="small" href="#"
+                           th:href="@{scrips/edrc/myFilter}"
+                           class="button flat-button bg-transparent border-visible-none"></a>
+                     </div>
+
+                  </div>
+
+                  <!--Strategy -->
+
+                  <div data-role="tile" data-size="small"
+                     class="bg-white fg-pink  border bd-pink border-radius"
+                     data-effect="hover-zoom-left">
+                     <div class="slide-front">
+
+                        <span class="mif-compass2 icon h-130 w-100"></span>
+                     </div>
+                     <div
+                        class="slide-back d-flex flex-justify-center flex-align-center p-4 op-mauve ">
+                        <a data-role="tile" data-size="small" href="#"
+                           th:href="@{stratergy/list}"
+                           class="button flat-button bg-transparent border-visible-none"></a>
+                     </div>
+
+                  </div>
+
+
+               </div>
+
+
+
+            </div>
+
+         </div>
+         <div class="colspan-5 offset-1">
+
+            <div class="card ">
+               <div class="card-content p-2">
+
+                  <h5
+                     style="color: #167D7F; background-color: #DDFFE7; padding: 10px">
+                     <span class="mif-school mif-lg"></span> Admin
+                  </h5>
+
+               </div>
+
+
+               <div class="tiles-grid tiles-group size-3"
+                  style="padding: 10px">
+                  <!--Upload  -->
+                  <div data-role="tile" data-size="medium"
+                     class="bg-white fg-green  border bd-green border-radius"
+                     data-effect="hover-zoom-right">
+                     <div class="slide-front">
+
+                        <span class="mif-upload icon h-130 w-100"></span>
+                     </div>
+                     <div
+                        class="slide-back d-flex flex-justify-center flex-align-center p-4 op-mauve ">
+                        <a data-role="tile" data-size="small" href="#"
+                           th:href="@{admin/sc/upload}"
+                           class="button flat-button bg-transparent border-visible-none"></a>
+                     </div>
+
+                  </div>
+
+                  <!--Status Check -->
+                  <div data-role="tile" data-size="medium"
+                     class="bg-white fg-teal  border bd-teal border-radius"
+                     data-effect="hover-zoom-right">
+                     <div class="slide-front">
+                        <a data-role="tile" data-size="small"
+                           th:href="@{'/scrips/edrc'}" class="bg-white"></a>
+                        <span class="mif-stethoscope icon h-130 w-100"></span>
+                     </div>
+                     <div
+                        class="slide-back d-flex flex-justify-center flex-align-center p-4 op-mauve ">
+                        <p class="text-top fg-black"
+                           style="font-weight: bold;">Status Update</p>
+                     </div>
+
+                  </div>
+
+
+               </div>
+
+
+
+            </div>
+
+         </div>
+
+
+
+
+      </div>
+
+
+
+
+   </div>
+
+
+
+
+   <!-- Metro 4 -->
+   <script src="https://cdn.metroui.org.ua/v4.3.2/js/metro.min.js"></script>
+</body>
+</html>

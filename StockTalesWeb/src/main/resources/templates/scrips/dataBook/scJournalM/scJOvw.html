@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<div th:replace="fragments/header :: STHeader"></div>
+
+</head>
+<body>
+
+   <div style="min-height: 600px; overflow: hidden;">
+      <div data-role="navview" data-compact="md" data-expand="false"
+         data-active-state="true">
+         <div th:replace="fragments/navbar :: STNavbar"></div>
+
+
+
+         <div class="navview-content pl-4-md pr-4-md">
+
+            <div class="grid">
+
+               <div th:replace="fragments/brand :: STBrand"></div>
+
+               <!-- your Code Starts from Here  -->
+
+               <!--Boxes Row - Starts  -->
+               <div class="row">
+
+                  <!--Social Box - Starts  -->
+                  <div class="colspan-5 offset-1">
+                     <div class="social-box">
+                        <div class="header bg-cyan fg-white">
+                           <img th:src="@{/images/journal.png}"
+                              src="../../static/images/journal.png"
+                              class="avatar"></img>
+                           <h4 th:text="${scCode}"></h4>
+
+                           <div class="subtitle">Scrip Journal
+                              Overview</div>
+
+                        </div>
+                        <ul class="skills">
+                           <li style="margin-top: -40px">
+                              <h4 class=" fg-red"
+                                 th:text="${summary.numCatgs}"></h4>
+                              <h6 class="fg-steel">CATEGORIES</h6>
+                           </li>
+
+                           <li th:if="${tagDetails != null}"
+                              style="margin-top: -40px">
+                              <h4 class=" fg-orange"
+                                 th:text="${tagDetails.size()}"></h4>
+                              <h6 class="fg-steel">TAGS</h6>
+                           </li>
+
+                           <li style="margin-top: -40px">
+                              <h4 class=" fg-pink"
+                                 th:text="${summary.numSources}"></h4>
+                              <h6 class="fg-steel">SOURCES</h6>
+                           </li>
+
+
+                           <li style="margin-top: -40px">
+                              <h4 class=" fg-green"
+                                 th:text="${summary.numEffects}"></h4>
+                              <h6 class="fg-steel">EFFECTS</h6>
+                           </li>
+                        </ul>
+                     </div>
+                  </div>
+                  <!--Social Box - Ends  -->
+
+                  <!--Info Box - Starts  -->
+                  <div class="colspan-3 offset-1"
+                     style="margin-top: 15px">
+                     <div class="row">
+                        <div class="more-info-box bg-cyan fg-white">
+                           <div class="content">
+                              <h2 class="text-bold mb-0"
+                                 th:text="${snippet.numEntries}"></h2>
+                              <div class="text-medium">Journal
+                                 Entries</div>
+                              <div></div>
+                              <div class="text-small"
+                                 th:text="${snippet.lastEntryDate}">
+                              </div>
+
+                           </div>
+                           <div class="icon">
+                              <span class="mif-clipboard"></span>
+                           </div>
+
+                           <a href="#"
+                              th:href="@{/scJournalM/details/{scCode}(scCode=${scCode})}"
+                              class="more"> View Journal <span
+                              class="mif-arrow-right"></span></a>
+
+
+
+                        </div>
+                     </div>
+
+                     <div class="row" style="margin-top: 20px">
+                        <div class="multi-action">
+                           <button
+                              class="action-button rotate-minus bg-red fg-white"
+                              onclick="$(this).toggleClass('active')"
+                              data-role="hint"
+                              data-hint-text="Click to View Actions"
+                              data-cls-hint="bg-red fg-white drop-shadow"
+                              data-hint-position="top">
+                              <span class="icon"><span
+                                 class="mif-plus"></span></span>
+                           </button>
+                           <ul class="actions drop-right">
+
+
+                              <li class="bg-orange"><a
+                                 th:href="@{/scJournalM/woTags/{scCode}(scCode=${scCode})}"
+                                 data-role="hint"
+                                 data-hint-text="View Journal w/o Tags"
+                                 data-cls-hint="bg-orange fg-white drop-shadow"
+                                 data-hint-position="bottom"><span
+                                    class="mif-broadcast"></span></a></li>
+
+
+                              <li class="bg-blue"><a
+                                 th:href="@{/scJournalM/pf/{scCode}(scCode=${scCode})}"
+                                 data-role="hint"
+                                 data-hint-text="View Journal - Expand All"
+                                 data-cls-hint="bg-cyan fg-white drop-shadow"
+                                 data-hint-position="bottom"><span
+                                    class="mif-printer"></span></a></li>
+
+                              <li class="bg-green"><a
+                                 th:href="@{/scJournalM/advS/{scCode}(scCode=${scCode})}"
+                                 data-role="hint"
+                                 data-hint-text="Advance Search"
+                                 data-cls-hint="bg-green fg-white drop-shadow"
+                                 data-hint-position="bottom"><span
+                                    class="mif-search"></span></a></li>
+
+
+                           </ul>
+                        </div>
+
+                     </div>
+
+
+
+
+                  </div>
+                  <!--Info Box - Ends  -->
+
+                  <!--Buttons - Start  -->
+                  <div class="colspan-1"
+                     style="margin-top: 13px; margin-left: 50px">
+                     <a href="#"
+                        class="button alert cycle large outline "
+                        th:href="@{/scJournalM/new/{scCode} (scCode=${scCode}) }"
+                        role="button" data-role="hint"
+                        data-hint-position="top"
+                        data-cls-hint="bg-yellow fg-black"
+                        data-hint-text="Create New Journal Entry"> <span
+                        class="mif-note-add icon"
+                        style="margin-left: 0px"></span>
+                     </a>
+
+                  </div>
+
+                  <!--Buttons - End -->
+               </div>
+               <!--Boxes Row - Ends  -->
+
+
+
+               <!-- Skills Row - Starts-->
+               <div class="row">
+                  <!-- Catg Col Starts -->
+                  <div class="colspan-3" style="margin-left: 5px"
+                     th:if="${catgClass != null}">
+
+                     <!--Catg Details are not null  -->
+
+                     <div class="skill-box">
+                        <div class="header bg-red fg-white">
+                           <img th:src="@{/images/icon_catg_red.png}"
+                              src="../../static/images/icon_catg_red.png"
+                              class="avatar"></img>
+                           <div class="title">Categories</div>
+                           <div class="subtitle">Composition</div>
+                        </div>
+                        <ul class="skills">
+                           <li th:each="category : ${catgClass}"><a
+                              th:href="@{/scJournalM/detailsByCatg/{scCode}/{catg} ((scCode=${scCode}), catg=${category.placeholder})}"
+                              data-role="hint"
+                              data-hint-text="View Journal Entries."
+                              data-cls-hint="bg-steel fg-white drop-shadow"
+                              data-hint-position="right"><span
+                                 th:text="${category.placeholder}"></span></a>
+
+                              <span class="badge bg-red fg-white"
+                              th:text="${category.numEntries}"></span></li>
+
+                        </ul>
+                     </div>
+
+
+                  </div>
+                  <!-- Catg Col Ends -->
+
+                  <!-- Tag Col Starts -->
+                  <div class="colspan-4" style="margin-left: 25px"
+                     th:if="${tagDetails != null}">
+
+                     <!--Tag Details are not null  -->
+
+                     <div class="skill-box">
+                        <div class="header bg-orange fg-white">
+                           <img th:src="@{/images/tag.png}"
+                              src="../../static/images/tag.png"
+                              class="avatar"></img>
+                           <div class="title">Tags</div>
+                           <div class="subtitle">Composition</div>
+                        </div>
+                        <ul class="skills">
+                           <li th:each="tag : ${tagDetails}"><a
+                              th:href="@{/scJournalM/detailsByTag/{scCode}/{tag} ((scCode=${scCode}), tag=${tag.placeholder})}"
+                              data-role="hint"
+                              data-hint-text="View Journal Entries."
+                              data-cls-hint="bg-steel fg-white drop-shadow"
+                              data-hint-position="right"><span
+                                 th:text="${tag.placeholder}"></span></a> <span
+                              class="badge bg-orange fg-white"
+                              th:text="${tag.numEntries}"></span></li>
+
+                        </ul>
+                     </div>
+
+
+                  </div>
+                  <!-- Tags Col Ends -->
+
+                  <!-- Sources Col Starts -->
+                  <div class="colspan-2" style="margin-left: 25px"
+                     th:if="${srcClass != null}">
+
+                     <!--Source Details are not null  -->
+
+                     <div class="skill-box">
+                        <div class="header bg-pink fg-white">
+                           <img th:src="@{/images/icon_source.png}"
+                              src="../../static/images/icon_source.png"
+                              class="avatar"></img>
+                           <div class="title">Sources</div>
+                           <div class="subtitle">Composition</div>
+                        </div>
+                        <ul class="skills">
+                           <li th:each="source : ${srcClass}"><a
+                              th:href="@{/scJournalM/detailsBySource/{scCode}/{source} ((scCode=${scCode}), source=${source.placeholder})}"
+                              data-role="hint"
+                              data-hint-text="View Journal Entries."
+                              data-cls-hint="bg-steel fg-white drop-shadow"
+                              data-hint-position="right"><span
+                                 th:text="${source.placeholder}"></span></a>
+                              <span class="badge bg-pink fg-white"
+                              th:text="${source.numEntries}"></span></li>
+
+                        </ul>
+                     </div>
+
+
+                  </div>
+                  <!-- Sources Col Ends -->
+
+
+
+                  <!-- Effect Col Starts -->
+                  <div class="colspan-2" style="margin-left: 25px"
+                     th:if="${effectClass != null}">
+
+                     <!--Effect Classification are not null  -->
+
+                     <div class="skill-box">
+                        <div class="header bg-green fg-white">
+                           <img th:src="@{/images/effect.png}"
+                              src="../../static/images/effect.png"
+                              class="avatar"></img>
+                           <div class="title">States</div>
+                           <div class="subtitle">Composition</div>
+                        </div>
+                        <ul class="skills">
+                           <li th:each="effect : ${effectClass}"><a
+                              th:href="@{/scJournalM/detailsByEffect/{scCode}/{effect} ((scCode=${scCode}), effect=${effect.placeholder})}"
+                              data-role="hint"
+                              data-hint-text="View Journal Entries."
+                              data-cls-hint="bg-steel fg-white drop-shadow"
+                              data-hint-position="right"><span
+                                 th:text="${effect.placeholder}"></span></a>
+                              <span class="badge bg-green fg-white"
+                              th:text="${effect.numEntries}"></span></li>
+
+                        </ul>
+                     </div>
+
+
+                  </div>
+                  <!-- Effect Col Ends -->
+
+               </div>
+               <!-- Skills Row - Ends-->
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <!-- Metro 4 -->
+   <script src="https://cdn.metroui.org.ua/v4.3.2/js/metro.min.js"></script>
+</body>
+</html>

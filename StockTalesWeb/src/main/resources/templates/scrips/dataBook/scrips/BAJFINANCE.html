@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<div th:replace="fragments/header :: STHeader"></div>
+
+</head>
+<body>
+
+   <div style="min-height: 800px; overflow: hidden;">
+      <div data-role="navview" data-compact="md" data-expand="false"
+         data-active-state="true">
+         <div th:replace="fragments/navbar :: STNavbar"></div>
+
+
+
+         <div class="navview-content pl-4-md pr-4-md">
+
+            <div class="grid">
+
+               <div th:replace="fragments/brand :: STBrand"></div>
+
+               <!-- your Code Starts from Here  -->
+               <!--Main Content Grid - Starts  -->
+               <div class="grid">
+
+                  <!--Title Row - Starts  -->
+                  <div class="row">
+
+                     <div class="colspan-7 offset-3">
+                        <h4
+                           style="margin-top: 50px; font-weight: medium; color: #4465a1">
+                           Scrip Specific FieldPool Details for : <span
+                              style="color: #B1365B">Bajaj
+                              Finance</span>
+                        </h4>
+                     </div>
+
+
+
+
+                  </div>
+
+
+                  <!--Title Row - Ends -->
+
+                  <!-- Form - Starts -->
+
+                  <form th:object="${fpdata}"
+                     th:action="@{'/BAJFINANCE/fp'} " method="post">
+
+                     <!--Hidden fieldPoolId & Scrip Code field to be passed on to   -->
+                     <input type="hidden" th:field="*{id}" />
+
+                     <!--Identification Row Starts  -->
+
+                     <div class="mx-auto" data-role="panel"
+                        style="margin-top: 20px"
+                        data-title-caption="Identification"
+                        data-title-icon="<span class='mif-key'></span>"
+                        data-collapsible="true"
+                        data-cls-panel="shadow-3"
+                        data-cls-title="bg-lightRed fg-white"
+                        data-cls-title-icon="bg-white fg-red"
+                        data-cls-collapse-toggle="bg-darkRed fg-white marker-light  ">
+
+                        <div class="row">
+
+                           <div class="cell-md-3">
+                              <label class="fg-mauve"> Interval
+                                 Type</label> <select class="form-control"
+                                 name="interval" th:field="*{interval}"
+                                 data-add-empty-value="true">
+
+                                 <option
+                                    th:each="intervalValue : ${T(stocktales.dataBook.enums.EnumInterval).values()}"
+                                    th:value="${intervalValue.name()}"
+                                    th:text="${intervalValue.name()}">
+                                 </option>
+                              </select>
+
+                           </div>
+                           <div class="cell-md-3">
+                              <label class="fg-mauve"> Year</label> <select
+                                 data-role="select" name="valm"
+                                 th:field="*{valm}"
+                                 data-add-empty-value="true"
+                                 class="input">
+                                 <!-- Sectors list to be pushed via Model -->
+                                 <option th:each="year : ${years}"
+                                    th:value="${year}"
+                                    th:selected="${year}"
+                                    th:text="${year}"></option>
+                              </select>
+
+                           </div>
+
+                           <div class="cell-md-3">
+                              <label class="fg-mauve"> Quarter
+                                 (Only for QoQ Data)</label> <select
+                                 data-role="select" name="vald"
+                                 th:field="*{vald}"
+                                 data-add-empty-value="true"
+                                 class="input">
+                                 <!-- Sectors list to be pushed via Model -->
+                                 <option th:value="1" th:text="Q1"></option>
+                                 <option th:value="2" th:text="Q2"></option>
+                                 <option th:value="3" th:text="Q3"></option>
+                                 <option th:value="4" th:text="Q4"></option>
+
+                              </select>
+
+                           </div>
+
+                           <div class="cell-md-3">
+                              <label class="fg-mauve"> All
+                                 Amounts in Rs. </label> <select
+                                 class="form-control" th:field="*{unit}">
+
+                                 <option
+                                    th:each="unitValue : ${T(stocktales.dataBook.enums.EnumUnit).values()}"
+                                    th:value="${unitValue.name()}"
+                                    th:text="${unitValue.name()}">
+                                 </option>
+                              </select>
+                           </div>
+                        </div>
+
+
+                     </div>
+                     <!--Identification Row Ends  -->
+
+                     <!--Customer Franchise Row Starts  -->
+
+                     <div class="mx-auto" data-role="panel"
+                        style="margin-top: 20px"
+                        data-title-caption="Customer Franchise & Cards/App Penetration- Numbers in Millions"
+                        data-title-icon="<span class='mif-users'></span>"
+                        data-collapsible="true"
+                        data-cls-panel="shadow-3"
+                        data-cls-title="bg-lightRed fg-white"
+                        data-cls-title-icon="bg-white fg-red"
+                        data-cls-collapse-toggle="bg-darkRed fg-white marker-light  ">
+
+                        <div class="row">
+
+                           <div class="cell-md-3">
+                              <label class="fg-mauve">Total
+                                 Franchise</label> <input type="text"
+                                 class="metro-input"
+                                 th:field="*{cftotalm}" />
+                           </div>
+                           <div class="cell-md-3">
+                              <label class="fg-mauve">Overall
+                                 Cross Sell Franchise</label> <input type="text"
+                                 class="metro-input"
+                                 th:field="*{xsellm}" />
+                           </div>
+                           <div class="cell-md-3">
+                              <label class="fg-mauve">Non
+                                 Delinquent Customers</label> <input type="text"
+                                 class="metro-input" th:field="*{bestm}" />
+                           </div>
+
+                           <div class="cell-md-3">
+                              <label class="fg-mauve">Best Cross
+                                 Sell Franchise - % </label> <input type="text"
+                                 class="metro-input"
+                                 th:field="*{perbestxsell}" />
+                           </div>
+                        </div>
+
+                        <div class="row">
+                           <div class="cell-md-3">
+                              <label class="fg-mauve">New to
+                                 BFAL Customer (Millions)</label> <input
+                                 type="text" class="metro-input"
+                                 th:field="*{newcustomersm}" />
+                           </div>
+                           <div class="cell-md-3">
+                              <label class="fg-mauve">New Loans
+                                 Booked (Millions)</label> <input type="text"
+                                 class="metro-input"
+                                 th:field="*{newloansbookedm}" />
+                           </div>
+
+                           <div class="cell-md-5">
+                              <label class="fg-mauve">New Loans
+                                 Origination % to Existing Customers</label> <input
+                                 type="text" class="metro-input"
+                                 th:field="*{newloanstoexiscust}" />
+                           </div>
+                        </div>
+                        <div class="row">
+                           <div style="margin: 10px">
+                              <p class="text-left bg-white fg-red">
+                                 <strong>Cards and Wallet
+                                    Penetration</strong>
+                              </p>
+
+                           </div>
+                        </div>
+                        <div class="row">
+
+                           <div class="cell-md-3">
+                              <label class="fg-mauve">EMI Cards
+                                 in Force(Millions)</label> <input type="text"
+                                 class="metro-input"
+                                 th:field="*{emicardm}" />
+                           </div>
+                           <div class="cell-md-3">
+                              <label class="fg-mauve">Co-Branded
+                                 EMI Cards in Force (Millions)</label> <input
+                                 type="text" class="metro-input"
+                                 th:field="*{coemicardm}" />
+                           </div>
+                           <div class="cell-md-3">
+                              <label class="fg-mauve">Mobikwik
+                                 Wallet Customers (Millions)</label> <input
+                                 type="text" class="metro-input"
+                                 th:field="*{mobikwikm}" />
+                           </div>
+
+                        </div>
+
+                     </div>
+
+                     <!--Customer Franchise Row Ends  -->
+
+                     <!--BHFL Row Starts  -->
+
+                     <div class="mx-auto" data-role="panel"
+                        style="margin-top: 20px" data-collapsed="true"
+                        data-title-caption="BHFL Subsidary Details - All amounts in Rs. Cr."
+                        data-title-icon="<span class='mif-home'></span>"
+                        data-collapsible="true"
+                        data-cls-panel="shadow-3"
+                        data-cls-title="bg-lightRed fg-white"
+                        data-cls-title-icon="bg-white fg-red"
+                        data-cls-collapse-toggle="bg-darkRed fg-white marker-light  ">
+
+                        <div class="row">
+                           <div style="margin: 10px">
+                              <p class="text-left bg-white fg-red">
+                                 <strong>AUM Details - Split</strong>
+                              </p>
+
+                           </div>
+                        </div>
+                        <div class="row">
+
+                           <div class="cell-md-3">
+                              <label class="fg-mauve">Total AUM</label>
+                              <input type="text" class="metro-input"
+                                 th:field="*{bhflaum}" />
+                           </div>
+                           <div class="cell-md-3">
+                              <label class="fg-mauve">Home Loans
+                                 AUM</label> <input type="text"
+                                 class="metro-input"
+                                 th:field="*{bhflhomeloanaum}" />
+                           </div>
+                           <div class="cell-md-3">
+                              <label class="fg-mauve">LAP AUM</label> <input
+                                 type="text" class="metro-input"
+                                 th:field="*{bhfllapaum}" />
+                           </div>
+
+                           <div class="cell-md-3">
+                              <label class="fg-mauve">Lease
+                                 Rental Discounting AUM </label> <input
+                                 type="text" class="metro-input"
+                                 th:field="*{bhfllrdaum}" />
+                           </div>
+                        </div>
+
+                        <div class="row">
+                           <div class="cell-md-3">
+                              <label class="fg-mauve">Developer
+                                 Financing AUM</label> <input type="text"
+                                 class="metro-input"
+                                 th:field="*{bhfldevfinaum}" />
+                           </div>
+                           <div class="cell-md-3">
+                              <label class="fg-mauve">Rural AUM</label>
+                              <input type="text" class="metro-input"
+                                 th:field="*{bhflruralaum}" />
+                           </div>
+                        </div>
+                        <div class="row">
+                           <div style="margin: 10px">
+                              <p class="text-left bg-white fg-red">
+                                 <strong>Performance Parameters</strong>
+                              </p>
+
+                           </div>
+                        </div>
+                        <div class="row">
+
+                           <div class="cell-md-3">
+                              <label class="fg-mauve">Opex to
+                                 NII - %</label> <input type="text"
+                                 class="metro-input"
+                                 th:field="*{bhflopextonii}" />
+                           </div>
+                           <div class="cell-md-3">
+                              <label class="fg-mauve">Capital
+                                 Adequacy Ratio - BHFL</label> <input
+                                 type="text" class="metro-input"
+                                 th:field="*{bhflcar}" />
+                           </div>
+                           <div class="cell-md-3">
+                              <label class="fg-mauve">GNPA -
+                                 BHFL</label> <input type="text"
+                                 class="metro-input"
+                                 th:field="*{bhflgnpa}" />
+                           </div>
+
+                           <div class="cell-md-3">
+                              <label class="fg-mauve">NNPA -
+                                 BHFL</label> <input type="text"
+                                 class="metro-input"
+                                 th:field="*{bhflnnpa}" />
+                           </div>
+
+                        </div>
+
+                        <div class="row">
+                           <div style="margin: 10px">
+                              <p class="text-left bg-white fg-red">
+                                 <strong>Home Loans - Segment
+                                    Disbursement Details</strong>
+                              </p>
+
+                           </div>
+                        </div>
+                        <div class="row">
+
+                           <div class="cell-md-3">
+                              <label class="fg-mauve">Home Loans
+                                 to Salaried - %</label> <input type="text"
+                                 class="metro-input"
+                                 th:field="*{hltosalaried}" />
+                           </div>
+                           <div class="cell-md-3">
+                              <label class="fg-mauve">Home Loans
+                                 to Self-Employed - %</label> <input type="text"
+                                 class="metro-input"
+                                 th:field="*{hltoselfemp}" />
+                           </div>
+                           <div class="cell-md-3">
+                              <label class="fg-mauve">Home Loans
+                                 to Professionals - %</label> <input type="text"
+                                 class="metro-input"
+                                 th:field="*{hltoprof}" />
+                           </div>
+
+                        </div>
+
+                        <div class="row">
+                           <div style="margin: 10px">
+                              <p class="text-left bg-white fg-red">
+                                 <strong>BHFL Locations update
+                                    by LoB</strong>
+                              </p>
+
+                           </div>
+                        </div>
+                        <div class="row">
+
+                           <div class="cell-md-3">
+                              <label class="fg-mauve">Locations-
+                                 Home Loans</label> <input type="text"
+                                 class="metro-input"
+                                 th:field="*{hllocations}" />
+                           </div>
+                           <div class="cell-md-3">
+                              <label class="fg-mauve">Locations
+                                 - LAP</label> <input type="text"
+                                 class="metro-input"
+                                 th:field="*{laplocations}" />
+                           </div>
+                           <div class="cell-md-3">
+                              <label class="fg-mauve">Locations
+                                 - Developer Finance</label> <input type="text"
+                                 class="metro-input"
+                                 th:field="*{devfinlocations}" />
+                           </div>
+
+                           <div class="cell-md-3">
+                              <label class="fg-mauve">Locations
+                                 - Rural Mortgages</label> <input type="text"
+                                 class="metro-input"
+                                 th:field="*{rurallocations}" />
+                           </div>
+
+                        </div>
+
+                     </div>
+
+                     <!--BHFL Row Ends  -->
+
+                     <!-- Geographic Presence Row- Starts -->
+
+                     <div class="mx-auto" data-role="panel"
+                        style="margin-top: 20px" data-collapsed="true"
+                        data-title-caption="Geographical Presence"
+                        data-title-icon="<span class='mif-location'></span>"
+                        data-collapsible="true"
+                        data-cls-panel="shadow-3"
+                        data-cls-title="bg-lightRed fg-white"
+                        data-cls-title-icon="bg-white fg-red"
+                        data-cls-collapse-toggle="bg-darkRed fg-white marker-light  ">
+
+                        <div class="row">
+
+                           <div class="cell-md-3">
+                              <label class="fg-mauve">Total
+                                 Locations</label> <input type="text"
+                                 class="metro-input"
+                                 th:field="*{totalloc}" />
+                           </div>
+                           <div class="cell-md-3">
+                              <label class="fg-mauve">Rural
+                                 Locations </label> <input type="text"
+                                 class="metro-input"
+                                 th:field="*{ruralloc}" />
+                           </div>
+                           <div class="cell-md-3">
+                              <label class="fg-mauve">Active
+                                 Point-of-Sales (Lacs.)</label> <input
+                                 type="text" class="metro-input"
+                                 th:field="*{posl}" />
+                           </div>
+
+                        </div>
+                     </div>
+                     <!-- Geographic Presence Row- Ends -->
+
+
+                     <!-- BFSL Row- Starts -->
+
+                     <div class="mx-auto" data-role="panel"
+                        style="margin-top: 20px" data-collapsed="true"
+                        data-title-caption="Bajaj Financial Securities Ltd."
+                        data-title-icon="<span class='mif-cast'></span>"
+                        data-collapsible="true"
+                        data-cls-panel="shadow-3"
+                        data-cls-title="bg-lightRed fg-white"
+                        data-cls-title-icon="bg-white fg-red"
+                        data-cls-collapse-toggle="bg-darkRed fg-white marker-light  ">
+
+                        <div class="row">
+
+                           <div class="cell-md-3">
+                              <label class="fg-mauve">Total
+                                 Revenues</label> <input type="text"
+                                 class="metro-input"
+                                 th:field="*{bfslsales}" />
+                           </div>
+                           <div class="cell-md-3">
+                              <label class="fg-mauve">PAT </label> <input
+                                 type="text" class="metro-input"
+                                 th:field="*{bfslpat}" />
+                           </div>
+
+
+                        </div>
+                     </div>
+                     <!-- BFSL Row- Ends -->
+
+
+                     <div class="d-flex flex-row-r"
+                        style="margin-top: 30px; margin-bottom: 50px;">
+                        <button class="button rounded"
+                           style="background-color: #59D3AF; color: white; margin-top: 5px; margin-bottom: 10px"
+                           data-role="hint" data-hint-position="left"
+                           data-cls-hint="bg-LightGreen fg-black"
+                           data-hint-text="Save Data For Scrip">
+                           <span class="mif-floppy-disk"
+                              style="margin-left: 0px"> </span> <span
+                              style="margin-left: 3px">Save</span>
+                        </button>
+
+                     </div>
+
+                  </form>
+
+                  <!-- Form - Ends -->
+               </div>
+               <!--Main Content Grid - Ends  -->
+
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <!-- Metro 4 -->
+   <script src="https://cdn.metroui.org.ua/v4.3.2/js/metro.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,2694 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<div th:replace="fragments/header :: STHeader"></div>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script type="text/javascript"
+	src="https://www.gstatic.com/charts/loader.js"></script>
+</head>
+<body>
+
+	<div class="head-bar pos-absolute bg-transparent fg-darkteal text-bold">
+
+
+		<div class="cell-9">
+			<a href="#" class="button alert rounded outline"
+				style="border: none;" th:href="@{/}" role="button"> <span
+				class="mif-home  mif-2x"></span>
+
+			</a> <label
+				style="color: #E15851; font-weight: bold; font-size: 1.75em; margin-left: 10px"
+				th:text="${ss.quoteBasic.name}"></label> <label
+				th:if="${ ss.latestQ != null}"
+				style="color: #5851E1; font-weight: bold; font-size: .8em; margin-left: 10px"
+				th:text="${ss.latestQ}"> </label> <a href="#"
+				class="button alert rounded outline" style="border: none;"
+				th:href="'/admin/sc/upload/'+${ss.quoteBasic.scCode}+'/Scrip Details Overview'"
+				role="button"> <span class="mif-upload  mif-2x"></span>
+			</a> <a href="#" class="button warning rounded outline"
+				style="border: none;"
+				th:href="@{/scJournalM/ovw/{scCode}(scCode=${ss.quoteBasic.scCode})}"
+				role="button"> <span class="mif-file-text  mif-2x"></span>
+			</a>
+
+
+
+		</div>
+
+		<div class="cell flex-justify-end" th:if="${ ss.scLinks != null}">
+			<a th:href="${ss.scLinks.urlcompany}" th:target="_blank"
+				class="button rounded outline" style="border: none"
+				th:if="${ss.scLinks.urlcompany != null && ss.scLinks != null}">
+				<img th:src="@{/images/ir.png}" src="../../static/images/ir.png"
+				width="25" height="33" style="margin-left: 5px;">
+			</a> <a th:href="${ss.scLinks.urlnse}" th:target="_blank"
+				class="button rounded outline" style="border: none"
+				th:if="${ss.scLinks.urlnse != null && ss.scLinks != null}"> <img
+				th:src="@{/images/NSE.png}" src="../../static/images/NSE.png"
+				width="25" height="33" style="margin-left: -15px;">
+			</a> <a th:href="${ss.scLinks.urlscreener}" th:target="_blank"
+				class="button rounded outline" style="border: none"
+				th:if="${ss.scLinks.urlscreener != null && ss.scLinks != null}">
+				<img th:src="@{/images/screener.png}"
+				src="../../static/images/screener.png" width="25" height="33"
+				style="margin-left: -15px;">
+			</a> <a th:href="${ss.scLinks.urlvp}" th:target="_blank"
+				class="button rounded outline" style="border: none"
+				th:if="${ss.scLinks.urlvp != null && ss.scLinks != null}"> <img
+				th:src="@{/images/vp.png}" src="../../static/images/vp.png"
+				width="25" height="33" style="margin-left: -15px;">
+			</a> <a th:href="${ss.scLinks.urltrendlyne}" th:target="_blank"
+				class="button rounded outline" style="border: none"
+				th:if="${ss.scLinks.urltrendlyne != null && ss.scLinks != null}">
+				<img th:src="@{/images/tr.png}" src="../../static/images/tr.png"
+				width="25" height="33" style="margin-left: -15px;">
+			</a> <a
+				th:href="@{/scrips/links/{scCode}(scCode=${ss.quoteBasic.scCode})}"
+				class="button alert rounded outline" style="border: none;"
+				role="button"> <span class="mif-link  mif-1x"></span>
+
+			</a> <a th:href="@{/qnav/navwithParam}"
+				class="button info rounded outline" style="border: none;"
+				role="button"> <span class="mif-search  mif-1x"></span>
+
+			</a>
+
+		</div>
+
+		<div class="cell flex-justify-end offset-2"
+			th:if="${ ss.scLinks == null}">
+			<a
+				th:href="@{/scrips/links/{scCode}(scCode=${ss.quoteBasic.scCode})}"
+				class="button alert rounded outline" style="border: none;"
+				role="button"> <span class="mif-link  mif-1x"></span>
+
+			</a> <a th:href="@{/qnav/navwithParam}"
+				class="button info rounded outline" style="border: none;"
+				role="button"> <span class="mif-search  mif-1x"></span>
+
+			</a>
+		</div>
+
+
+
+
+
+
+	</div>
+
+	<ul data-app-bar="true" data-role="materialtabs" data-fixed-tabs="true"
+		data-deep="true" data-cls-tab="bg-transparent fg-grayblue text-light"
+		data-cls-tab-active="text-bold fg-darkMauve"
+		data-cls-marker="bg-orange">
+
+		<li><a href="#overview">Overview</a></li>
+		<li><a href="#valuations">Valuations</a></li>
+		<li><a href="#wc">Working Capital</a></li>
+		<li><a href="#growth">Quality of Growth</a></li>
+		<li><a href="#margins">Margins</a></li>
+		<li><a href="#journal">Journal</a></li>
+	</ul>
+
+
+
+
+	<div style="margin-top: 112px">
+		<div id="overview">
+			<div class="frame"
+				style="padding: 10px; height: 470px; overflow: auto;">
+
+				<div class="colspan-12 " style="padding: 10px">
+					<div class="card" style="padding-top: -20px">
+						<div class="row flex-align-center">
+
+							<div th:if="${ss.quoteBasic.sector != null}" class="cell">
+								<blockquote class="right-side">
+									<h4 style="color: #5D7EAE" th:text="${ss.quoteBasic.sector}"></h4>
+									<span style="color: #907348; font-weight: medium;">Sector</span>
+
+									<div class="row flex-align-end">
+										<div class="cell flex-align-end">
+											<label
+												style="color: #E39657; font-weight: bold; font-size: 1.75em; margin-left: 10px"
+												th:text="${ss.last4QData.OPM}"> </label> <span
+												style="color: #DC7B2B; font-weight: medium;"> % OPM </span>
+
+										</div>
+
+
+										<div class="cell flex-align-end">
+											<label
+												style="color: #F88028; font-weight: bold; font-size: 1.75em; margin-left: 10px"
+												th:text="${ss.last4QData.NPM}"> </label> <span
+												style="color: #E66507; font-weight: medium;">% NPM </span>
+										</div>
+
+									</div>
+									<span style="color: #907348; font-weight: medium;">Last
+										4Q</span>
+								</blockquote>
+							</div>
+
+
+							<div th:if="${ss.quoteBasic.uph > 0}" class="cell">
+								<blockquote class="right-side">
+									<div id="donut_val" data-role="donut" style="margin-top: 10px"
+										data-hole=".8" data-animate="10" data-fill="#4EA8B2"
+										th:attr="
+                           data-value=${ss.quoteBasic.uph}
+                           "
+										class="mx-auto"></div>
+									<div class="row flex-align-center">
+										<span
+											style="color: #B2584E; font-weight: medium; margin-top: 10px; margin-left: 100px">Unpledged
+											Promoter Holdings</span>
+									</div>
+								</blockquote>
+							</div>
+							<div class="cell">
+								<blockquote class="right-side">
+
+									<div class="row d-flex flex-justify-center">
+
+										<span th:if="${ss.quoteBasic.peg != 0}"
+											style="color: #29b98c; margin-top: 4px"
+											class="mif-sunrise mif-3x"></span> <span
+											th:if="${ss.quoteBasic.peg != 0}"
+											style="color: #29b98c; font-weight: bold; font-size: 1.2em; margin: 6px; margin-top: 14px; margin-left: 7px"
+											th:text="${ss.quoteBasic.peg}"></span> <span
+											style="color: #29b98c; font-weight: medium; margin-top: 16px; margin-left: 5px">
+											PEG</span>
+									</div>
+
+
+
+									<div class="row d-flex flex-justify-center">
+
+
+
+										<span
+											th:if="${ss.quoteBasic.fcfyield != 0 && !ss.quoteBasic.isFinancial()}"
+											style="color: #D74A76; margin-top: 4px"
+											class="mif-flag mif-2x"></span> <span
+											th:if="${ss.quoteBasic.fcfyield != 0}"
+											style="color: #D74A76; font-weight: bold; font-size: 1.4em; margin: 4px; margin-left: 10px"
+											th:text="${ss.quoteBasic.fcfyield}"></span> <span
+											style="color: #D74A76; font-weight: medium; margin-top: 10px; margin-left: 5px">
+											% FCF Yield </span>
+
+										<!--Buttons - Info  -->
+										<a style="margin-left: 12px; margin-top: 8px"
+											class="button warning cycle mini" data-role="hint"
+											data-hint-text="Total Free Cash Flow / Change in Market Cap - Last 10 Years"
+											data-cls-hint="bg-white fg-black drop-shadow"
+											data-hint-position="right"><span
+											class="mif-info  fg-white"></span></a>
+
+										<!--Buttons - Info  -->
+
+									</div>
+
+									<div class="row d-flex flex-justify-center">
+
+										<span
+											th:if="${ss.quoteBasic.cps != 0 && !ss.quoteBasic.isFinancial()}"
+											style="color: #4A76D7; margin-top: 4px"
+											class="mif-inr mif-2x"></span> <span
+											th:if="${ss.quoteBasic.cps != 0}"
+											style="color: #4A76D7; font-weight: bold; font-size: 1.2em; margin: 6px; margin-left: 7px"
+											th:text="${ss.quoteBasic.cps}"></span> <span
+											style="color: #4A76D7; font-weight: medium; margin-top: 10px; margin-left: 5px">
+											Cash/Share</span>
+
+									</div>
+
+									<div class="row d-flex flex-justify-center">
+										<span
+											th:if="${ss.quoteBasic.cps != 0 && !ss.quoteBasic.isFinancial()}"
+											style="color: #2B5AC3; margin-top: 6px"
+											class="mif-dollar mif-2x"></span> <span
+											th:if="${ss.targetPrice.cashCmpRatio != 0}"
+											style="color: #2B5AC3; font-weight: bold; font-size: 1.2em; margin: 8px; margin-left: 7px"
+											th:text="${ss.targetPrice.cashCmpRatio}"></span> <span
+											style="color: #2B5AC3; font-weight: medium; margin-top: 10px; margin-left: 0px;">
+											% Cash of CMP </span>
+									</div>
+
+									<div class="row d-flex flex-justify-center">
+
+										<span th:if="${ss.quoteBasic.valratio != 0}"
+											style="color: #299DB8; margin-top: 4px"
+											class="mif-chart-bars2 mif-2x"></span> <span
+											th:if="${ss.quoteBasic.valratio != 0}"
+											style="color: #299DB8; font-weight: bold; font-size: 1.2em; margin: 6px; margin-left: 7px"
+											th:text="${ss.quoteBasic.valratio}"></span> <span
+											style="color: #299DB8; font-weight: medium; margin-top: 10px; margin-left: 5px">
+											Value Ratio</span>
+
+										<!--Buttons - Info  -->
+										<a style="margin-left: 12px; margin-top: 8px"
+											class="button warning cycle mini" data-role="hint"
+											data-hint-text="Change in Market Cap / Retained Earnings - Last 10 Yrs."
+											data-cls-hint="bg-white fg-black drop-shadow"
+											data-hint-position="right"><span
+											class="mif-info  fg-white"></span></a>
+
+										<!--Buttons - Info  -->
+									</div>
+								</blockquote>
+							</div>
+
+
+
+
+
+
+						</div>
+					</div>
+
+					<!-- Fundamentals Accordion - Starts  -->
+					<div class="frame">
+						<div class="heading">
+							<h6 style="color: #486590">
+								Important Ratios & Inferences
+
+								<!--Buttons - Info  -->
+								<a style="margin-left: 10px; margin-top: -5px"
+									class="button secondary cycle mini" data-role="hint"
+									data-hint-text="Return Profile, Cash Flows and Other Important Ratios "
+									data-cls-hint="bg-steel fg-white drop-shadow"
+									data-hint-position="right"><span class="mif-info  fg-white"></span></a>
+
+								<!--Buttons - Info  -->
+							</h6>
+						</div>
+						<div class="content">
+
+							<div class="colspan-12 " style="padding: 10px">
+								<div class="card" style="padding-top: -20px">
+									<div class="row flex-align-end">
+
+										<div class="cell">
+											<blockquote class="right-side">
+
+												<div class="cell flex-align-end"
+													th:if="${ss.quoteBasic.CFOPAT > 0}">
+													<label
+														style="color: #4289D8; font-weight: bold; font-size: 1.75em; margin-left: 10px"
+														th:text="${ss.quoteBasic.CFOPAT}"> </label>
+												</div>
+
+												<span style="color: #D89142; font-weight: medium;">
+													CFO-PAT Adh. % </span>
+
+
+
+
+												<div class="cell flex-align-end">
+													<label
+														style="color: #286FBF; font-weight: bold; font-size: 1.75em; margin-left: 10px"
+														th:text="${ss.quoteBasic.FCFCFO}"> </label>
+												</div>
+
+												<span style="color: #BF7828; font-weight: medium;">
+													CFO-FCF Conv. %</span>
+
+
+
+
+											</blockquote>
+										</div>
+
+
+										<div class="cell">
+											<blockquote class="right-side">
+
+												<div class="cell flex-align-end">
+													<label
+														style="color: #0F4F59; font-weight: bold; font-size: 1.75em; margin-left: 10px"
+														th:text="${ss.fundamentals.ROE3Y}"> </label>
+												</div>
+
+												<span style="color: #59190F; font-weight: medium;">
+													ROE (Last3Yr. Avg.) </span>
+
+
+
+
+												<div class="cell flex-align-end">
+													<label
+														style="color: #3F919C; font-weight: bold; font-size: 1.75em; margin-left: 10px"
+														th:text="${ss.fundamentals.ROCE3Y}"> </label>
+												</div>
+
+												<span style="color: #9C4A3F; font-weight: medium;">
+													ROCE (Last3Yr. Avg.)</span>
+
+
+
+
+											</blockquote>
+										</div>
+
+
+										<div class="cell">
+											<blockquote class="right-side">
+
+												<div class="cell flex-align-end">
+													<label
+														style="color: #0F4F59; font-weight: bold; font-size: 1.75em; margin-left: 10px"
+														th:text="${ss.fundamentals.recvInvBySales3Y}"> </label>
+												</div>
+
+												<span style="color: #59190F; font-weight: medium;">
+													(Rec+ Inv)/Sales - Last 3Yr </span>
+
+
+
+
+												<div class="cell flex-align-end">
+													<label
+														style="color: #618362; font-weight: bold; font-size: 1.75em; margin-left: 10px"
+														th:text="${ss.fundamentals.intDepByPAT3Y}"> </label>
+												</div>
+
+												<span style="color: #836182; font-weight: medium;">
+													(Int+ Dep)/PAT - Last 3Yr</span>
+
+
+
+
+											</blockquote>
+										</div>
+
+										<div class="cell">
+											<blockquote class="right-side">
+
+												<div class="cell flex-align-end">
+													<label
+														style="color: #D7814C; font-weight: bold; font-size: 1.75em; margin-left: 10px"
+														th:text="${ss.fundamentals.SGToCapex}"> </label>
+												</div>
+
+												<span style="color: #4CA2D7; font-weight: medium;">
+													Sales Gr./Capex (%) </span>
+
+
+
+
+												<div class="cell flex-align-end">
+													<label
+														style="color: #BA3D72; font-weight: bold; font-size: 1.75em; margin-left: 10px"
+														th:text="${ss.fundamentals.deRatio}"> </label>
+												</div>
+
+												<span style="color: #CB5F8D; font-weight: medium;">
+													Debt Equity Ratio</span>
+
+
+
+
+											</blockquote>
+										</div>
+
+										<div class="cell">
+											<blockquote class="right-side">
+
+												<div class="cell flex-align-end">
+													<label
+														style="color: #625B99; font-weight: bold; font-size: 1.75em; margin-left: 10px"
+														th:text="${ss.fundamentals.divGrowth3Y}"> </label>
+												</div>
+
+												<span style="color: #92995B; font-weight: medium;">
+													Div. Growth (%) - 3Yr Avg. </span>
+
+
+
+
+												<div class="cell flex-align-end">
+													<label
+														style="color: #7E78AF; font-weight: bold; font-size: 1.75em; margin-left: 10px"
+														th:text="${ss.fundamentals.divPayout3Y}"> </label>
+												</div>
+
+												<span style="color: #A9AF78; font-weight: medium;">
+													Div. Payout (%) - 3Yr Avg.</span>
+
+
+
+
+											</blockquote>
+										</div>
+
+
+										<div class="cell">
+											<blockquote class="right-side">
+
+												<div class="cell flex-align-end">
+													<label
+														style="color: #507E82; font-weight: bold; font-size: 1.75em; margin-left: 10px"
+														th:text="${ss.fundamentals.avgSSGR3Y}"> </label>
+												</div>
+
+												<span style="color: #825450; font-weight: medium;">
+													SSGR Avg. (Last 3Yr.) </span>
+
+
+
+
+												<div class="cell flex-align-end">
+													<label
+														style="color: #659BA0; font-weight: bold; font-size: 1.75em; margin-left: 10px"
+														th:text="${ss.fundamentals.salesG3Y}"> </label>
+												</div>
+
+												<span style="color: #A06A65; font-weight: medium;">
+													Sales Gr (Last 3Yr.) </span>
+
+
+
+
+											</blockquote>
+										</div>
+
+
+
+
+
+									</div>
+									<hr>
+									<!-- FCF - Row Starts -->
+									<div class="d-flex flex-justify-center"
+										th:if="${ss.quoteBasic.isFinancial() == false && ss.quoteBasic.getCFOPAT() >  0}">
+
+
+										<!-- Chart -->
+
+										<div class="cell-5">
+
+											<div id="chart_fund_fcf_div"></div>
+
+
+										</div>
+										<!-- Remarks  -->
+										<div class="cell-7 " style="align-content: center;">
+											<div class="remark success"
+												th:if="${ss.fundamentals.PATtoFCF >  0}">
+												<h6 style="color: #367342" th:text="${ss.msgs.fcf_infMsg}"></h6>
+
+											</div>
+
+
+
+										</div>
+
+
+									</div>
+
+								</div>
+								<!-- FCF - Row Ends-->
+
+
+							</div>
+						</div>
+					</div>
+					<!-- Fundamentals Accordion - Ends  -->
+
+					<!-- Strength Score Accordion - Starts  -->
+					<div class="frame">
+						<div class="heading">
+							<h6 style="color: #486590">
+								Strength Score Calculation
+
+								<!--Buttons - Info  -->
+								<a style="margin-left: 10px; margin-top: -5px"
+									class="button secondary cycle mini" data-role="hint"
+									data-hint-text="Calculation of Scrip Strength Score - Earnings/Dividend, ROCE, Cash Flows and finer calibrations via properietary framework "
+									data-cls-hint="bg-steel fg-white drop-shadow"
+									data-hint-position="right"><span class="mif-info  fg-white"></span></a>
+
+								<!--Buttons - Info  -->
+							</h6>
+						</div>
+						<div class="content">
+							<div class="grid">
+
+								<!--Top Row - Starts  -->
+								<div class="row">
+
+									<div class="colspan-5">
+										<h3
+											style="padding-top: 10px; margin: 2px; font-weight: medium; color: #4465a1">
+											Strength Score Details : <span th:text="${ss.summary.scCode}">BAJFINANCE</span>
+										</h3>
+
+									</div>
+
+									<div class="colspan-1" style="margin-left: 10px;">
+										<div class="remark alert"
+											style="padding-top: 10px; margin: 2px; margin-top: -10px; color: #E74C3C; font-weight: bold; font-size: x-large;">
+
+											<h3
+												style="padding-top: 10px; margin: 2px; font-weight: bold; color: #E74C3C"
+												th:text="${ss.summary.strengthScore}">30.3</h3>
+
+
+										</div>
+
+									</div>
+
+								</div>
+								<!--Top Row - Ends  -->
+
+
+								<!--Table Row - Starts -->
+								<div class="row">
+
+									<!-- ED Score - Col Start -->
+									<div class="colspan-4">
+										<div class="card" style="padding-top: -20px">
+											<div class="card-content p-2">
+
+												<h6
+													style="color: #325254; background-color: #faf0ff; padding: 10px">
+													Earnings & Dividend Score</h6>
+											</div>
+
+
+											<div class="row"
+												style="padding-top: -10px; padding-left: 10px; padding-right: 10px; padding-bottom: 10px">
+
+												<table class="table compact striped">
+													<thead>
+														<tr>
+															<th style="text-align: center;">Duration</th>
+															<th style="text-align: center;">Value</th>
+															<th style="text-align: center;">Wt.Value</th>
+
+														</tr>
+													</thead>
+													<tbody>
+														<tr
+															th:each="EDScoreI : ${ss.summary.scEDRC.earningsDivScore.durItems}">
+															<td style="text-align: center; font-weight: bolder;"
+																th:text="${EDScoreI.duration}">3Yr</td>
+															<td
+																style="text-align: center; font-weight: bolder; color: #E74C3C;"
+																th:text="${EDScoreI.value}">14.3</td>
+															<td style="text-align: center; font-weight: bolder;"
+																th:text="${EDScoreI.wv}">6.7</td>
+
+
+														</tr>
+													</tbody>
+												</table>
+
+												<div class="row flex-align-end">
+													<div class="cell">
+														<blockquote class="right-side">
+															<h5 style="color: #8000fc"
+																th:text="${ss.summary.scEDRC.earningsDivScore.nettValue}">
+															</h5>
+															<span style="color: #486590; font-weight: medium;">Earnings
+																Score</span>
+														</blockquote>
+
+													</div>
+
+
+													<div class="cell">
+														<blockquote class="right-side">
+															<h5 style="color: #32B480"
+																th:text="${ss.summary.scEDRC.earningsDivScore.divYield}">
+															</h5>
+															<span style="color: #486590; font-weight: medium;">Dividend
+																Yield</span>
+														</blockquote>
+													</div>
+
+													<div class="cell">
+														<blockquote class="right-side">
+															<h4 style="color: #D74A76"
+																th:text="${ss.summary.scEDRC.earningsDivScore.resValue}">
+															</h4>
+															<span style="color: #486590; font-weight: medium;">ED
+																Score </span>
+														</blockquote>
+													</div>
+
+												</div>
+
+
+											</div>
+										</div>
+
+									</div>
+									<!-- ED Score - Col Ends -->
+
+									<!-- RR Score - Col Start -->
+									<div class="colspan-4">
+										<div class="card" style="padding-top: -20px">
+											<div class="card-content p-2">
+
+												<h6
+													style="color: #325254; background-color: #faf0ff; padding: 10px">
+													Return Ratios (ROCE/ROE) Score</h6>
+											</div>
+
+
+											<div class="row"
+												style="padding-top: -10px; padding-left: 10px; padding-right: 10px; padding-bottom: 10px">
+
+												<table class="table compact striped">
+													<thead>
+														<tr>
+															<th style="text-align: center;">Duration</th>
+															<th style="text-align: center;">Value</th>
+															<th style="text-align: center;">Wt.Value</th>
+
+														</tr>
+													</thead>
+													<tbody>
+														<tr
+															th:each="EDScoreI : ${ss.summary.scEDRC.returnRatiosScore.durItems}">
+															<td style="text-align: center; font-weight: bolder;"
+																th:text="${EDScoreI.duration}">3Yr</td>
+															<td
+																style="text-align: center; font-weight: bolder; color: #E74C3C"
+																th:text="${EDScoreI.value}">14.3</td>
+															<td style="text-align: center; font-weight: bolder;"
+																th:text="${EDScoreI.wv}">6.7</td>
+
+
+														</tr>
+													</tbody>
+												</table>
+
+												<div class="row">
+													<div class="cell-2"></div>
+													<div class="cell-2"></div>
+
+													<div class="cell">
+														<blockquote class="right-side">
+															<h4 style="color: #D74A76"
+																th:text="${ss.summary.scEDRC.returnRatiosScore.nettValue}">
+															</h4>
+															<span style="color: #486590; font-weight: medium;">RR
+																Score </span>
+														</blockquote>
+
+
+													</div>
+
+												</div>
+											</div>
+										</div>
+
+
+									</div>
+									<!-- RR Score - Col Ends -->
+
+									<!-- CFO Score - Col Start -->
+
+									<div th:if="${ss.summary.scEDRC.cashflowsScore != null}"
+										class="colspan-4">
+										<div class="card" style="padding-top: -20px">
+											<div class="card-content p-2">
+
+												<h6
+													style="color: #325254; background-color: #faf0ff; padding: 10px">
+													Free Cash Flows (FCF/CFO) Score</h6>
+											</div>
+
+
+											<div class="row"
+												style="padding-top: -10px; padding-left: 10px; padding-right: 10px; padding-bottom: 10px">
+
+												<table class="table compact striped">
+													<thead>
+														<tr>
+															<th style="text-align: center;">Duration</th>
+															<th style="text-align: center;">Value</th>
+															<th style="text-align: center;">Wt.Value</th>
+
+														</tr>
+													</thead>
+													<tbody>
+														<tr
+															th:each="EDScoreI : ${ss.summary.scEDRC.cashflowsScore.durItems}">
+															<td style="text-align: center; font-weight: bolder;"
+																th:text="${EDScoreI.duration}">3Yr</td>
+															<td
+																style="text-align: center; font-weight: bolder; color: #E74C3C"
+																th:text="${EDScoreI.value}">14.3</td>
+															<td style="text-align: center; font-weight: bolder;"
+																th:text="${EDScoreI.wv}">6.7</td>
+
+
+														</tr>
+													</tbody>
+												</table>
+
+												<div class="row">
+													<div class="cell-2"></div>
+													<div class="cell-2"></div>
+
+													<div class="cell">
+														<blockquote class="right-side">
+															<h4 style="color: #D74A76"
+																th:text="${ss.summary.scEDRC.cashflowsScore.nettValue}">
+															</h4>
+															<span style="color: #486590; font-weight: medium;">CF
+																Score </span>
+														</blockquote>
+
+
+													</div>
+
+												</div>
+											</div>
+
+										</div>
+
+
+
+
+									</div>
+
+									<!-- CFO Score - Col Ends -->
+
+								</div>
+
+								<!--Table Row - Ends -->
+
+
+
+
+								<!-- Before Calibration Stats - Starts -->
+
+								<div class="row">
+
+									<div class="colspan-8 offset-2">
+										<div class="card" style="padding-top: -20px">
+
+											<div class="row flex-align-center">
+												<div class="cell">
+													<blockquote class="right-side">
+														<h4 style="color: #8000fc" th:text="${ss.summary.EDRC}"></h4>
+														<span style="color: #486590; font-weight: medium;">EDRC
+															Score</span>
+													</blockquote>
+
+												</div>
+
+
+												<div class="cell">
+													<blockquote class="right-side">
+														<h4 style="color: #32B480" th:text="${ss.summary.valR}"></h4>
+														<span style="color: #486590; font-weight: medium;">Value
+															Creation Ratio</span>
+													</blockquote>
+												</div>
+
+												<div class="cell">
+													<blockquote class="right-side">
+														<h3 style="color: #D74A76"
+															th:text="${ss.summary.strengthScoreb4Calibration}"></h3>
+														<span style="color: #486590; font-weight: medium;">Strength
+															Score before Calibration</span>
+													</blockquote>
+												</div>
+
+											</div>
+
+										</div>
+
+									</div>
+
+								</div>
+
+
+								<!-- Before Calibration Stats - Ends -->
+
+								<!-- Calibration - Starts -->
+
+								<div class="colspan-9 offset-1">
+									<div class="card" style="padding-top: -20px">
+										<div class="card-content p-2">
+
+											<h6
+												style="color: #325254; background-color: #faf0ff; padding: 10px">
+												Strength Score Calibration - Details</h6>
+										</div>
+
+
+										<div class="row"
+											style="padding-top: -10px; padding-left: 10px; padding-right: 10px; padding-bottom: 10px">
+
+											<table class="table compact striped">
+												<thead>
+													<tr>
+														<th style="text-align: center;">Header</th>
+														<th style="text-align: center;">Trigger Value</th>
+														<th style="text-align: center;">Score Before</th>
+														<th style="text-align: center;">Score After</th>
+														<th style="text-align: center;">Delta (%)</th>
+
+													</tr>
+												</thead>
+												<tbody>
+													<tr th:each="calibrationI : ${ss.summary.calibrations}">
+														<td
+															style="text-align: center; font-weight: bolder; color: #4465a1"
+															th:text="${calibrationI.calHeader}">3Yr</td>
+														<td
+															style="text-align: center; font-weight: bolder; color: #4465a1"
+															th:text="${calibrationI.triggerVal}">14.3</td>
+														<td
+															style="text-align: center; font-weight: bolder; color: #E74C3C"
+															th:text="${calibrationI.valB4}">14.3</td>
+														<td
+															style="text-align: center; font-weight: bolder; color: #E74C3C"
+															th:text="${calibrationI.valAfter}">14.3</td>
+
+														<td style="text-align: center;"
+															th:if="${calibrationI.delta} >= 0">
+															<!-- Positive Factor  --> <span
+															class="mif-arrow-drop-up mif-2x fg-green"><label
+																style="color: green; font-weight: bolder;"
+																th:text="${calibrationI.delta}">14.3</label></span>
+
+														</td>
+
+
+														<td style="text-align: center;"
+															th:if="${calibrationI.delta} < 0">
+															<!--Negative Factor  --> <span
+															class="mif-arrow-drop-down mif-2x fg-red"><label
+																style="color: red; font-weight: bolder;"
+																th:text="${calibrationI.delta}">14.3</label></span>
+
+														</td>
+													</tr>
+												</tbody>
+											</table>
+
+
+										</div>
+
+									</div>
+
+
+
+
+								</div>
+
+
+								<!-- Calibration - Ends -->
+
+
+							</div>
+
+
+
+
+						</div>
+					</div>
+
+					<!-- Strength Score Accordion - Ends  -->
+
+
+				</div>
+
+
+			</div>
+
+		</div>
+		<div id="valuations">
+			<div class="frame"
+				style="padding: 10px; height: 470px; overflow: auto;">
+				<div class="colspan-12 " style="padding: 10px">
+					<div class="card" style="padding-top: -20px">
+						<div class="row flex-align-end">
+
+							<div class="cell">
+								<blockquote class="right-side">
+									<div class="row flex-align-end">
+										<div class="cell flex-align-end">
+											<span class="mif-inr mif-2x"></span> <label
+												style="color: #a65965; font-weight: bold; font-size: 1.85em; margin-left: 7px"
+												th:text="${ss.quoteBasic.MCapTxt}"> </label>
+										</div>
+
+									</div>
+									<span style="color: #59A69A; font-weight: medium;">Current
+										Market Cap</span>
+
+									<div class="row flex-align-end">
+										<div class="cell flex-align-end">
+											<label
+												style="color: #8F7087; font-weight: bold; font-size: 1.75em; margin-left: 10px"
+												th:text="${ss.last4QData.McapToSales}"> </label>
+										</div>
+
+									</div>
+
+									<span style="color: #A58D9F; font-weight: medium;">Market
+										Cap To Sales - Last 4Q </span>
+
+
+
+
+
+								</blockquote>
+
+							</div>
+
+
+
+
+							<div class="cell ">
+								<blockquote class="right-side">
+									<div class="row flex-align-end">
+										<div class="cell flex-align-end">
+											<span class="mif-inr mif-2x"></span> <label
+												style="color: #8000fc; font-weight: bold; font-size: 1.85em; margin-left: 7px"
+												th:text="${ss.quoteBasic.cmp}"> </label>
+										</div>
+
+									</div>
+									<span style="color: #486590; font-weight: medium;">Current
+										Market Price</span>
+
+									<div class="row flex-align-end">
+										<div class="cell flex-align-end">
+											<label
+												style="color: #FC8000; font-weight: bold; font-size: 1.75em; margin-left: 10px"
+												th:text="${ss.quoteBasic.peRatio.doubleValue()}"> </label>
+										</div>
+
+									</div>
+
+									<span style="color: #486590; font-weight: medium;">Current
+										PE </span>
+								</blockquote>
+
+							</div>
+
+							<div class="cell">
+								<blockquote class="right-side">
+
+									<div class="row flex-align-end">
+										<div class="cell flex-align-end">
+											<span class="mif-inr mif-2x"></span> <label
+												style="color: #CB348C; font-weight: bold; font-size: 1.85em; margin-left: 10px"
+												th:text="${ss.targetPrice.price5Yr}"> </label>
+										</div>
+
+									</div>
+
+									<span style="color: #486590; font-weight: medium;">Target
+										Price (5yrs. hence)</span>
+
+									<div class="row flex-align-end">
+										<div class="cell flex-align-end">
+											<span th:if="${ss.targetPrice.ret5YrCAGR > 0}"
+												class="mif-thumbs-up mif-2x fg-darkGreen"></span> <span
+												th:if="${ss.targetPrice.ret5YrCAGR <= 0}"
+												class="mif-thumbs-down mif-2x fg-darkRed"></span> <label
+												style="color: #51ae78; font-weight: bold; font-size: 1.75em; margin-left: 7px"
+												th:text="${ss.targetPrice.ret5YrCAGR}"> </label> <span
+												style="color: #51ae78; font-weight: bold; font-size: 1.75em;">
+												%</span>
+										</div>
+
+									</div>
+
+									<span style="color: #6C9C28; font-weight: medium;">CAGR
+										Returns (5 Yrs. hence)</span>
+								</blockquote>
+
+							</div>
+
+
+							<div class="cell">
+								<blockquote class="right-side">
+									<h5 style="color: #32B480" th:text="${ss.targetPrice.EDScore}"></h5>
+									<span style="color: #486590; font-weight: medium;">
+										Weighted ED yield</span>
+
+									<h5 style="color: #D74A76"
+										th:text="${ss.targetPrice.weightedPE}"></h5>
+
+									<span style="color: #486590; font-weight: medium;">
+										Weighted Target PE</span>
+								</blockquote>
+							</div>
+
+
+
+						</div>
+
+					</div>
+
+					<div class="row">
+
+						<div class="cell-6 ">
+							<div class="d-flex flex-justify-center">
+								<h6 style="color: #486590;">Price Trends</h6>
+							</div>
+							<div class="d-flex flex-justify-center" id="pricebar_div"
+								style="margin-top: -10px"></div>
+						</div>
+
+						<div class="cell-6 ">
+							<div class="d-flex flex-justify-center">
+								<h6 style="color: #486590;">Price Delta w.r.t CMP</h6>
+							</div>
+							<div class="d-flex flex-justify-center" id="pricedeltabar_div"
+								style="margin-top: -10px"></div>
+						</div>
+
+					</div>
+
+					<div class="row">
+
+						<div class="cell-4">
+
+							<div class="d-flex flex-justify-center">
+								<h6 style="color: #486590;">Returns Summary</h6>
+							</div>
+							<div class="row d-flex flex-justify-center"
+								style="padding-top: -10px; padding-left: 10px; padding-right: 10px; padding-bottom: 10px">
+
+								<table class="table striped compact">
+									<thead>
+										<tr>
+											<th style="text-align: center; color: #37646a">Period:
+												Last</th>
+											<th style="text-align: center; color: #37646a">EPS
+												Growth (%)</th>
+											<th style="text-align: center; color: #37646a">PE
+												Growth(%)</th>
+											<th style="text-align: center; color: #37646a">Avg. PE</th>
+
+
+										</tr>
+									</thead>
+									<tbody>
+										<tr th:each="peTrend : ${ss.trends.peTrends}">
+
+											<td
+												style="text-align: center; color: #706F7E; font-weight: bolder;"
+												th:text="${peTrend.ptype}"></td>
+											<td
+												style="text-align: center;; color: #7998C5; font-weight: bolder;"
+												th:text="${peTrend.epsgr}"></td>
+
+											<td th:if="${peTrend.epsgr < peTrend.pegr}"
+												style="text-align: center; color: #C8819E; font-weight: bolder; background: #FAE6E7"
+												th:text="${peTrend.pegr}"></td>
+
+											<td th:if="${peTrend.epsgr >= peTrend.pegr}"
+												style="text-align: center; color: #C8819E; font-weight: bolder; background: #E6FAF0"
+												th:text="${peTrend.pegr}"></td>
+
+
+
+											<td
+												style="text-align: center;; color: #8ABC67; font-weight: bolder;"
+												th:text="${peTrend.avgpe}"></td>
+
+
+
+										</tr>
+									</tbody>
+								</table>
+
+							</div>
+
+
+
+
+						</div>
+
+						<div class="cell-4 ">
+							<div class="d-flex flex-justify-center">
+								<h6 style="color: #486590;">Returns CAGR</h6>
+							</div>
+							<div class="d-flex flex-justify-center" id="pestack_div"
+								style="margin-top: -10px"></div>
+						</div>
+
+						<div class="cell-4 ">
+							<div class="d-flex flex-justify-center">
+								<h6 style="color: #486590;">PE Ratio Trends</h6>
+							</div>
+							<div class="d-flex flex-justify-center" id="petrends_div"
+								style="margin-top: -10px"></div>
+						</div>
+
+					</div>
+
+
+
+				</div>
+
+			</div>
+
+
+
+
+		</div>
+		<div id="wc">
+
+			<div class="frame"
+				style="padding: 10px; height: 470px; overflow: auto;"
+				th:if="${ss.trends.revWCTrends.size() > 0 && ss.quoteBasic.isFinancial() == false}">
+				<div class="heading">
+					<h6 style="color: #486590">
+						Revenues and Working Capital Cycle
+
+						<!--Buttons - Info  -->
+						<a style="margin-left: 10px; margin-top: -5px"
+							class="button secondary cycle mini" data-role="hint"
+							data-hint-text="Compare Revenue Trends for Scrip with it's Working Capital Management "
+							data-cls-hint="bg-steel fg-white drop-shadow"
+							data-hint-position="right"><span class="mif-info  fg-white"></span></a>
+
+						<!--Buttons - Info  -->
+
+					</h6>
+				</div>
+				<div class="content">
+
+
+					<!-- WC cycle and Revenue - Starts -->
+					<div class="d-flex flex-justify-center">
+
+						<!-- Table Cell - Starts -->
+						<div class="cell">
+
+							<div class="d-flex flex-justify-center">
+								<h6 style="color: #486590;">Revenues & Working Capital
+									(Recv.+ Inventory)/Sales Trends</h6>
+							</div>
+							<div class="row d-flex flex-justify-center"
+								style="padding-top: -10px; padding-left: 10px; padding-right: 10px; padding-bottom: 10px">
+
+								<table class="table striped compact">
+									<thead>
+										<tr>
+											<th style="text-align: center; color: #37646a">Period:
+												Last</th>
+											<th style="text-align: center; color: #37646a">Sales
+												Growth(%)</th>
+											<th style="text-align: center; color: #37646a">Recv.
+												Growth(%)</th>
+											<th style="text-align: center; color: #37646a">(Inv.
+												+Recv.)/Sales Avg.</th>
+											<th style="text-align: center; color: #37646a">SSGR Avg.</th>
+
+										</tr>
+									</thead>
+									<tbody>
+										<tr th:each="revWcTrend : ${ss.trends.revWCTrends}">
+
+											<td
+												style="text-align: center; color: #706F7E; font-weight: bolder;"
+												th:text="${revWcTrend.period}"></td>
+											<td
+												style="text-align: center;; color: #7998C5; font-weight: bolder;"
+												th:text="${revWcTrend.revenue}"></td>
+
+											<td th:if="${revWcTrend.recv >= revWcTrend.revenue}"
+												style="text-align: center; color: #C8819E; font-weight: bolder; background: #FAE6E7"
+												th:text="${revWcTrend.recv}"></td>
+
+											<td th:if="${revWcTrend.recv < revWcTrend.revenue}"
+												style="text-align: center; color: #C8819E; font-weight: bolder; background: #E6FAF0"
+												th:text="${revWcTrend.recv}"></td>
+
+
+
+											<td
+												style="text-align: center;; color: #8ABC67; font-weight: bolder;"
+												th:text="${revWcTrend.wcByrev}"></td>
+
+											<td
+												style="text-align: center; color: #69B7BE; font-weight: bolder;"
+												th:text="${revWcTrend.ssgr}"></td>
+
+
+										</tr>
+									</tbody>
+								</table>
+
+							</div>
+
+
+
+
+						</div>
+
+						<!-- Table Cell - Ends-->
+
+						<!-- Chart Cell - Starts -->
+						<div class="cell">
+
+							<div class="d-flex flex-justify-center">
+								<h6 style="color: #486590;">WC Trends</h6>
+							</div>
+							<div id="chart_div" class=" flex-justify-center"></div>
+
+						</div>
+						<!-- Chart Cell -Ends -->
+					</div>
+
+					<!-- Capex to Sales,Capex to Debt and NFAt Chart -->
+					<div class="row">
+
+						<div class="colspan-10 offset-1">
+							<h6 style="color: #486590;">Capex, NFA & Debt Trends w.r.t
+								Sales</h6>
+						</div>
+
+						<div id="chart_nfat_trends" class="colspan-12"></div>
+
+					</div>
+
+
+					<!-- Receivables and ITR Chart -->
+					<div class="row">
+
+						<div class="colspan-10 offset-1">
+							<h6 style="color: #486590;">Receivable Days and Inventory
+								Turnover Trends</h6>
+						</div>
+
+						<div id="chart_itr_trends" class="colspan-12"></div>
+
+					</div>
+
+
+					<!-- WC cycle and Revenue - Ends -->
+
+
+				</div>
+
+
+			</div>
+
+
+		</div>
+		<div id="growth" class="frame"
+			style="padding: 10px; height: 470px; overflow: auto;">
+
+			<div class="content">
+				<div class="d-flex flex-justify-center">
+
+					<h6 style="color: #486590;">Broad Level Trends</h6>
+				</div>
+				<div id="chart_trends" class=" flex-justify-center"></div>
+
+
+				<div class="d-flex flex-justify-center" style="margin-top: 30px">
+
+					<h6 style="color: #486590;">Granular Trends- Last 10 Years</h6>
+				</div>
+				<div id="chart_bs_granular" class=" flex-justify-center"></div>
+
+				<div class="d-flex flex-justify-center" style="margin-top: -40px">
+
+					<span style="color: #486590;">All amounts in Cr. (10
+						Millions)</span>
+				</div>
+
+				<!-- Remarks  -->
+				<div class="d-flex flex-justify-center"
+					style="align-content: center; margin: 10px">
+					<div class="remark secondary"
+						th:if="${ss.msgs.getBsGranNos() != null}">
+						<h6 style="color: #706E6A" th:text="${ss.msgs.bsGranNos}"></h6>
+
+					</div>
+
+
+
+				</div>
+
+
+				<div class="d-flex flex-justify-center" style="margin-top: 30px">
+
+					<h6 style="color: #486590;">Per Share Trend</h6>
+				</div>
+				<div id="chart_eps" class=" flex-justify-center"></div>
+				<div class="d-flex flex-justify-center" style="margin-top: -40px">
+
+					<span style="color: #486590;">All amounts in INR</span>
+				</div>
+
+
+
+				<div class="d-flex flex-justify-center" style="margin-top: 30px">
+
+					<h6 style="color: #486590;">Margins Profile</h6>
+				</div>
+				<div id="chart_margins" class=" flex-justify-center"></div>
+
+
+				<div class="d-flex flex-justify-center" style="margin-top: 30px">
+
+					<h6 style="color: #486590;">Return Ratios & Cash Flow from
+						Operations Yield Trends</h6>
+				</div>
+				<div id="chart_rr" class=" flex-justify-center"></div>
+
+				<div class="d-flex flex-justify-center" style="margin-top: 30px">
+
+					<h6 style="color: #486590;">Dividend Payout and Tax Paid</h6>
+				</div>
+				<div id="chart_divtax" class=" flex-justify-center"></div>
+
+
+			</div>
+
+
+		</div>
+		<div id="margins">Press</div>
+		<div id="journal">Books</div>
+	</div>
+
+
+
+
+
+	<script th:inline="javascript">
+            var real_data2 = /*[[${chartData2}]]*/'noValue';
+            var real_data = /*[[${fcfFundData}]]*/'noValue';
+                var price_trends_data = /*[[${priceTrends}]]*/'noValue';
+                var pe_trends_data = /*[[${PETrends}]]*/'noValue';
+                var wc_nfa_data = /*[[${wcDetails}]]*/'noValue';
+                var gen_trends_data = /*[[${trendsGen}]]*/'noValue';
+                var bs_trends_gran = /*[[${bsGrNos}]]*/'noValue';
+                var eps_trends_data = /*[[${bsEPSNos}]]*/'noValue';
+                var margins_trends_data = /*[[${bsRatios}]]*/'noValue';
+
+
+            $(document).ready(function() {
+               google.charts.load('current', {
+                  packages : [ 'corechart', 'bar' ]
+               });
+               google.charts.setOnLoadCallback(drawComboChartWCRev);
+               google.charts.setOnLoadCallback(drawColumnChartFCFFund);
+                    google.charts.setOnLoadCallback(drawColumnChartPrices);
+                    google.charts.setOnLoadCallback(drawLineChartPrices);
+                    google.charts.setOnLoadCallback(StackedBarChartPE);
+                    google.charts.setOnLoadCallback( drawBarChartPE);
+                    google.charts.setOnLoadCallback( drawWCNFACombo);
+                    google.charts.setOnLoadCallback(drawLineChartITR);
+                    google.charts.setOnLoadCallback(trendsBarChart);
+                    google.charts.setOnLoadCallback(granBarChart);
+                    google.charts.setOnLoadCallback(epsBarChart);
+                    google.charts.setOnLoadCallback(drawLineChartMargins);
+                    google.charts.setOnLoadCallback(drawRRCFOYComboChart);
+                    google.charts.setOnLoadCallback(drawDivTaxChart);
+
+            });
+
+            function drawComboChartWCRev() {
+
+               var data = new google.visualization.DataTable();
+
+               data.addColumn('string', 'Period');
+               data.addColumn('number', 'Sales Gr. (%)');
+
+               data.addColumn('number', 'Receivables Gr. (%)');
+
+               data.addColumn('number', 'Inv + Recv. /Sales (%)');
+
+
+               var dataArray = [];
+
+               $.each(real_data2, function(i, obj) {
+                  dataArray.push([ obj.period, obj.revenue, obj.recv,
+                        obj.wcByrev ]);
+               });
+
+               data.addRows(dataArray);
+            
+
+               var options = {
+                  focusTarget : 'category',
+                  /*
+                  Trendlines NA for Combo Chart - but the below code can be used for Column Charts
+                   */
+                  trendlines : {
+                     0 : {
+                        type : 'linear',
+                        lineWidth : 5,
+                        opacity : .3
+                     },
+                     1 : {
+                        type : 'exponential',
+                        lineWidth : 10,
+                        opacity : .3
+                     }
+                  },
+                   legend: 'none',
+                  width : 520,
+                  height : 250,
+                  margin : 20,
+                  pointSize : 5,
+                  
+                  colors : [ '#7998C5', '#C8819E', '#8ABC67', '#69B7BE',
+                        '#8F89CB' ],
+                  seriesType : 'bars',
+                  series : {
+                     2 : {
+                        type : 'line'
+                     }
+                  }
+
+               };
+               var chartRev = new google.visualization.ComboChart(document
+                     .getElementById('chart_div'));
+               chartRev.draw(data, options);
+
+            
+            }
+
+            function drawColumnChartFCFFund() {
+
+               var data2 = new google.visualization.DataTable();
+               data2.addColumn('string', 'FCF By');
+               data2.addColumn('number', 'FCF in Rs.');
+               Object.keys(real_data).forEach(function(key) {
+                  data2.addRow([ key, real_data[key] ]);
+               });
+
+               /*
+               In case Data labels are needed on Bar Chart - Not working on combo*/
+               var view = new google.visualization.DataView(data2);
+               
+               view.setColumns([ 0, 1, {
+                  calc : "stringify",
+                  sourceColumn : 1,
+                  type : "string",
+                  role : "annotation"
+               }],
+                
+               
+               );
+
+               var options = {
+                  title : 'FCF per Rupee of PAT & Revenue',
+                  width : 380,
+                  height : 170,
+                  margin : 20,
+                  pointSize : 5,
+
+                  colors : [ '#3dc0c2' ],
+                  seriesType : 'line',
+                  legend : 'none',
+                  
+                  
+                  titleTextStyle:
+                  { color: '#C23F3D',
+                       fontName: 'Calibri',
+                       fontSize: 15,
+                       bold: true
+                      }
+
+               };
+               var chartFCFF = new google.visualization.LineChart(
+                     document.getElementById('chart_fund_fcf_div'));
+               //chartFCFF.draw(data2, options);
+
+               
+               //In case of Data points enabled on chart series
+               chartFCFF.draw(view, options);
+            }
+            
+            
+            
+            function drawColumnChartPrices() {
+
+               var data3 = new google.visualization.DataTable();
+               
+               data3.addColumn('string', 'Legend');
+               data3.addColumn('number', 'Price in Rs.');
+               
+               var dataArray3 = [];
+
+            
+                $.each(price_trends_data, function(i, obj) {
+                  dataArray3.push([ obj.ptype, obj.value]);
+               });
+
+               data3.addRows(dataArray3);
+               
+                       
+            
+               /*
+               In case Data labels are needed on Bar Chart - Not working on combo*/
+               var view3 = new google.visualization.DataView(data3);
+               
+               view3.setColumns([ 0, 1, {
+                  calc : "stringify",
+                  sourceColumn : 1,
+                  type : "string",
+                  role : "annotation"
+               }],
+                
+               
+               );
+
+               var options3 = {
+                  width : 730,
+                  height : 320,
+                  margin : 20,
+                  pointSize : 5,
+                  
+                  hAxis : {
+                     
+                     viewWindow : 
+                     {
+                        min : [ 7, 30, 0 ],
+                        max : [ 17, 30, 0 ]
+                     },
+                     textStyle:
+                     { 
+                       color: '#3DB3B8',
+                       fontName: 'Calibri',
+                       fontSize: 11,
+                       bold: true
+                      }
+                     
+                  },
+                  
+                  vAxis : {
+                     
+                     viewWindow : 
+                     {
+                        min : [ 7, 30, 0 ],
+                        max : [ 17, 30, 0 ]
+                     },
+                     textStyle:
+                     { 
+                       color: '#3DB3B8',
+                       fontName: 'Calibri',
+                       fontSize: 11,
+                       bold: true
+                      }
+                     
+                  },
+          
+                  colors : [ '#B8423D' ],
+                  seriesType : 'line',
+                  legend : 'none',
+                  
+                                   
+                  
+               };
+               var chartPrices = new google.visualization.LineChart(
+                     document.getElementById('pricebar_div'));
+        
+               
+               //In case of Data points enabled on chart series
+               chartPrices.draw(view3, options3);
+            }   
+            
+            function drawLineChartPrices() {
+
+               var data4 = new google.visualization.DataTable();
+               
+               data4.addColumn('string', 'Legend');
+               data4.addColumn('number', 'Delta from CMP (%)');
+               
+               var dataArray4 = [];
+               
+                $.each(price_trends_data, function(i, obj) {
+                  dataArray4.push([ obj.ptype, obj.deltacmp]);
+               });
+
+               data4.addRows(dataArray4);
+               
+               
+            
+
+               /*
+               In case Data labels are needed on Bar Chart - Not working on combo*/
+               var view4 = new google.visualization.DataView(data4);
+               
+               view4.setColumns([ 0, 1, {
+                  calc : "stringify",
+                  sourceColumn : 1,
+                  type : "string",
+                  role : "annotation"
+               }],
+                
+               
+               );
+
+               var options4 = {
+                  width : 730,
+                  height : 320,
+                  margin : 20,
+                  pointSize : 5,
+
+                  colors : [ '#B430AF' ],
+                  seriesType : 'line',
+                  legend : 'none',
+                  
+                    hAxis : {
+                     
+                     viewWindow : 
+                     {
+                        min : [ 7, 30, 0 ],
+                        max : [ 17, 30, 0 ]
+                     },
+                     textStyle:
+                     { 
+                       color: '#30B435',
+                       fontName: 'Calibri',
+                       fontSize: 11,
+                       bold: true
+                      }
+                     
+                  },
+                  
+                  vAxis : {
+                     
+                     viewWindow : 
+                     {
+                        min : [ 7, 30, 0 ],
+                        max : [ 17, 30, 0 ]
+                     },
+                     textStyle:
+                     { 
+                       color: '#30B435',
+                       fontName: 'Calibri',
+                       fontSize: 11,
+                       bold: true
+                      }
+                     
+                  },
+                  
+                  
+                  
+               };
+               var chartPricesDelta = new google.visualization.LineChart(
+                     document.getElementById('pricedeltabar_div'));
+        
+               
+               //In case of Data points enabled on chart series
+               chartPricesDelta.draw(view4, options4);
+            }   
+            
+            
+             function StackedBarChartPE() {
+
+               var data5 = new google.visualization.DataTable();
+               
+               data5.addColumn('string', 'Period');
+               data5.addColumn('number', 'EPS Growth (%)');
+               data5.addColumn('number', 'PE Growth (%)');
+               
+               var dataArray5 = [];
+               
+                $.each(pe_trends_data, function(i, obj) {
+                  dataArray5.push([ obj.ptype, obj.epsgr, obj.pegr]);
+               });
+
+               data5.addRows(dataArray5);
+               
+               
+            
+
+               /*
+               In case Data labels are needed on Bar Chart - Not working on combo*/
+                var view5 = new google.visualization.DataView(data5);
+               
+               view5.setColumns([ 0, 1, {
+                  calc : "stringify",
+                  sourceColumn : 1,
+                  type : "string",
+                  role : "annotation"
+               },2,{
+                calc : "stringify",
+                  sourceColumn : 2,
+                  type : "string",
+                  role : "annotation"
+               
+               }],
+                
+               
+               ); 
+
+               var options5 = {
+                  width : 450,
+                  height : 220,
+                  margin : 20,
+                  pointSize : 5,
+
+                  colors : [ '#7998C5', '#C8819E', '#8ABC67', '#69B7BE',
+                        '#8F89CB' ],
+                  legend: { position: 'bottom', maxLines: 3 ,
+                  textStyle:
+                   {
+                       color: '#3C6EB7',
+                       fontName: 'Calibri',
+                       fontSize: 12,
+                       bold: true
+
+                   }},
+                  
+                  
+                  
+                    hAxis : {
+                     
+                     viewWindow : 
+                     {
+                        min : [ 7, 30, 0 ],
+                        max : [ 17, 30, 0 ]
+                     },
+                     textStyle:
+                     { 
+                       color: ['#C5A679'],
+                       fontName: 'Calibri',
+                       fontSize: 12,
+                       bold: true
+                      }
+                     
+                  },
+                  
+                  vAxis : {
+                     
+                     viewWindow : 
+                     {
+                        min : [ 7, 30, 0 ],
+                        max : [ 17, 35, 0 ]
+                     },
+                     textStyle:
+                     { 
+                       color: '#C5A679',
+                       fontName: 'Calibri',
+                       fontSize: 12,
+                       bold: true
+                      }
+                     
+                  },
+                  isStacked: true,
+                  
+                  
+                  
+               };
+               var chartPEStack = new google.visualization.BarChart(
+                     document.getElementById('pestack_div'));
+        
+               
+               //In case of Data points enabled on chart series
+               chartPEStack.draw(view5, options5);
+            }   
+            
+            function drawBarChartPE() {
+
+               var data6 = new google.visualization.DataTable();
+               
+               data6.addColumn('string', 'Period');
+               data6.addColumn('number', 'Avg. PE');
+               
+               var dataArray6 = [];
+               
+                $.each(pe_trends_data, function(i, obj) {
+                  dataArray6.push([ obj.ptype, obj.avgpe]);
+               });
+
+               data6.addRows(dataArray6);
+               
+               
+            
+
+               /*
+               In case Data labels are needed on Bar Chart - Not working on combo*/
+               var view6 = new google.visualization.DataView(data6);
+               
+               view6.setColumns([ 0, 1, {
+                  calc : "stringify",
+                  sourceColumn : 1,
+                  type : "string",
+                  role : "annotation"
+               }],
+                
+               
+               );
+
+               var options6 = {
+                  width : 450,
+                  height : 220,
+                  margin : 20,
+                  pointSize : 5,
+
+                  colors : [ '#ffde69' ],
+                  legend : 'none',
+                  
+                    hAxis : {
+                     
+                     viewWindow : 
+                     {
+                        min : [ 7, 30, 0 ],
+                        max : [ 17, 30, 0 ]
+                     },
+                     textStyle:
+                     { 
+                       color: '#698AFF',
+                       fontName: 'Calibri',
+                       fontSize: 12,
+                       bold: true
+                      }
+                     
+                  },
+                  
+                  vAxis : {
+                     
+                     viewWindow : 
+                     {
+                        min : [ 7, 30, 0 ],
+                        max : [ 17, 30, 0 ]
+                     },
+                     textStyle:
+                     { 
+                       color: '#698AFF',
+                       fontName: 'Calibri',
+                       fontSize: 12,
+                       bold: true
+                      }
+                     
+                  },
+                  
+                  
+                  
+               };
+               var chartPEAvg = new google.visualization.BarChart(
+                     document.getElementById('petrends_div'));
+        
+               
+               //In case of Data points enabled on chart series
+               chartPEAvg.draw(view6, options6);
+            }   
+            
+            
+            function drawWCNFACombo() {
+
+               var data7 = new google.visualization.DataTable();
+
+               data7.addColumn('string', 'Year');
+               data7.addColumn('number', 'Capex/Sales');
+
+               data7.addColumn('number', 'NFA/Sales');
+
+               data7.addColumn('number', 'Debt/Sales');
+               
+               data7.addColumn('number', 'NFAT');
+
+
+               var dataArray7 = [];
+
+               $.each(wc_nfa_data, function(i, obj) {
+                  dataArray7.push([ obj.year, obj.capextoSales, obj.nfatoSales,
+                        obj.debttoSales, obj.nfat ]);
+               });
+
+               data7.addRows(dataArray7);
+            
+
+               var options7 = {
+                  focusTarget : 'category',
+                  width : 1210,
+                  height : 350,
+                  margin : 20,
+                  pointSize : 5,
+                   focusTarget : 'category',
+                   legend: { position: 'right', maxLines: 2 ,
+                   textStyle:
+                   {
+                       color: '#3C6EB7',
+                       fontName: 'Calibri',
+                       fontSize: 12,
+                       bold: true
+
+                   } } ,
+                   
+                    
+                   hAxis : {
+                     
+                     viewWindow : 
+                     {
+                        min : [ 7, 30, 0 ],
+                        max : [ 17, 30, 0 ]
+                     },
+                     textStyle:
+                     { 
+                       color: '#238126',
+                       fontName: 'Calibri',
+                       fontSize: 12,
+                       bold: true
+                      }
+                     
+                  },
+                  colors : [ '#7998C5', '#C8819E', '#8ABC67', '#69B7BE',
+                        '#8F89CB' ],
+                  seriesType : 'bars',
+                  series : {
+                     3 : {
+                        type : 'line'
+                     }
+                  }
+
+               };
+               var chartWCNFA = new google.visualization.ComboChart(document
+                     .getElementById('chart_nfat_trends'));
+               chartWCNFA.draw(data7, options7);
+
+            
+            }
+            
+            
+             function drawLineChartITR() {
+
+               var data8 = new google.visualization.DataTable();
+               
+               data8.addColumn('string', 'Year');
+               data8.addColumn('number', 'Rec. Days');
+               data8.addColumn('number', 'ITR');
+               
+               var dataArray8 = [];
+               
+                $.each(wc_nfa_data, function(i, obj) {
+                  dataArray8.push([ obj.year, obj.recvd, obj.itr]);
+               });
+
+               data8.addRows(dataArray8);
+               
+               
+            
+
+               /*
+               In case Data labels are needed on Bar Chart - Not working on combo*/
+               var view8 = new google.visualization.DataView(data8);
+               
+               view8.setColumns([ 0, 1, {
+                  calc : "stringify",
+                  sourceColumn : 1,
+                  type : "string",
+                  role : "annotation"
+               },
+               
+               2, {
+                  calc : "stringify",
+                  sourceColumn : 2,
+                  type : "string",
+                  role : "annotation"
+               },
+               ],
+                
+               
+               );
+
+               var options8 = {
+                  width : 1210,
+                  height : 350,
+                  margin : 20,
+                  pointSize : 5,
+
+                  colors : [ '#B430AF','#AFB430','#30AFB4' ],
+                  seriesType : 'line',
+                  legend: { position: 'right', maxLines: 2 ,
+                   textStyle:
+                   {
+                       color: '#3C6EB7',
+                       fontName: 'Calibri',
+                       fontSize: 12,
+                       bold: true
+
+                   } } ,
+                  
+                    hAxis : {
+                     
+                     viewWindow : 
+                     {
+                        min : [ 7, 30, 0 ],
+                        max : [ 17, 30, 0 ]
+                     },
+                     textStyle:
+                     { 
+                       color: '#238126',
+                       fontName: 'Calibri',
+                       fontSize: 12,
+                       bold: true
+                      }
+                     
+                  },
+                  
+                  vAxis : {
+                     
+                     viewWindow : 
+                     {
+                        min : [ 7, 30, 0 ],
+                        max : [ 17, 30, 0 ]
+                     },
+                     textStyle:
+                     { 
+                       color: '#30B435',
+                       fontName: 'Calibri',
+                       fontSize: 12,
+                       bold: true
+                      }
+                     
+                  },
+                  
+                  
+                  
+               };
+               
+                var chartITR = new google.visualization.LineChart(
+                     document.getElementById('chart_itr_trends'));
+        
+               
+               //In case of Data points enabled on chart series
+               chartITR.draw(view8, options8);
+          }
+          
+          
+           function trendsBarChart() {
+
+               var data9 = new google.visualization.DataTable();
+
+               data9.addColumn('string', 'Period');
+               data9.addColumn('number', 'Sales Gr. (%)');
+
+               data9.addColumn('number', 'PAT Gr. (%)');
+
+               data9.addColumn('number', 'Avg. OPM (%)');
+               
+               data9.addColumn('number', 'FCF/CFO Avg. (%)');
+               
+               data9.addColumn('number', 'Div. Payout (%)');
+               
+               data9.addColumn('number', '(Int + Dep)/PAT (%)');
+               
+
+
+               var dataArray9 = [];
+
+               $.each(gen_trends_data, function(i, obj) {
+                  dataArray9.push([ obj.period, obj.salesG, obj.patG,
+                        obj.opm, obj.fcfCfoAvg, obj.divPayO, obj.fiRatio ]);
+               });
+
+               data9.addRows(dataArray9);
+            
+               
+               var options9 = {
+                  focusTarget : 'category',
+                   legend: { position: 'right', maxLines: 2 ,
+                   textStyle:
+                   {
+                       color: '#3C6EB7',
+                       fontName: 'Calibri',
+                       fontSize: 12,
+                       bold: true
+
+                   } } ,
+                   
+                   hAxis : {
+                     
+                     viewWindow : 
+                     {
+                        min : [ 7, 30, 0 ],
+                        max : [ 17, 30, 0 ]
+                     },
+                     textStyle:
+                     { 
+                       color: '#238126',
+                       fontName: 'Calibri',
+                       fontSize: 12,
+                       bold: true
+                      }
+                     
+                  },
+               
+                 
+                  width : 1210,
+                  height : 350,
+                  margin : 20,
+                  pointSize : 5,
+                  colors : [ '#7998C5', '#C8819E', '#8ABC67', '#69B7BE',
+                        '#C5A679','#E16F52' ],
+                  seriesType : 'bars',
+                  series : {
+                     2 : {
+                        type : 'line'
+                     },
+                      3 : {
+                        type : 'line'
+                     }
+                  }
+
+               };
+               var chartTrendsGen = new google.visualization.ComboChart(document
+                     .getElementById('chart_trends'));
+               chartTrendsGen.draw(data9, options9);
+               
+              }
+/*
+      ----------------------  Quality of Growth - Granular Trends ----------------
+*/
+             function granBarChart() {
+
+               var data10 = new google.visualization.DataTable();
+
+               data10.addColumn('string', 'Year');
+               data10.addColumn('number', 'Sales');
+
+               data10.addColumn('number', 'PAT');
+
+               data10.addColumn('number', 'CFO');
+               
+               data10.addColumn('number', 'FCF');
+               
+               data10.addColumn('number', 'Cash + Inv.');
+               
+               data10.addColumn('number', 'Retained Earn.');
+               
+               data10.addColumn('number', 'Debt');
+               
+
+
+               var dataArray10 = [];
+
+               $.each(bs_trends_gran, function(i, obj) {
+                  dataArray10.push([ obj.year, obj.sales, obj.pat,
+                        obj.cfo, obj.fcf, obj.cashi, obj.re, obj.debt ]);
+               });
+
+               data10.addRows(dataArray10);
+            
+               
+               var options10 = {
+                  focusTarget : 'category',
+                   legend: { position: 'right', maxLines: 2 ,
+                   textStyle:
+                   {
+                       color: '#3C6EB7',
+                       fontName: 'Calibri',
+                       fontSize: 12,
+                       bold: true
+
+                   } } ,
+                   
+                   hAxis : {
+                     
+                     viewWindow : 
+                     {
+                        min : [ 7, 30, 0 ],
+                        max : [ 17, 30, 0 ]
+                     },
+                     textStyle:
+                     { 
+                       color: '#238126',
+                       fontName: 'Calibri',
+                       fontSize: 12,
+                       bold: true
+                      }
+                     
+                  },
+               
+                 
+                  width : 1210,
+                  height : 350,
+                  margin : 20,
+                  pointSize : 5,
+                  colors : [ '#7998C5', '#C8819E', '#8ABC67', '#69B7BE',
+                        '#C5A679','#E16F52','#DDAD3A' ],
+                  seriesType : 'bars',
+                  series : {
+                     3 : {
+                        type : 'line'
+                     },
+                      5 : {
+                        type : 'line'
+                     }
+                  }
+
+               };
+               var chartTrendsQGran = new google.visualization.ComboChart(document
+                     .getElementById('chart_bs_granular'));
+               chartTrendsQGran.draw(data10, options10);
+             
+            
+            
+            
+            
+            }
+            
+            
+            /*
+             ------------ EPS Trends Chart
+            */
+            
+             function epsBarChart() {
+
+               var data11 = new google.visualization.DataTable();
+               data11.addColumn('string', 'year');
+               data11.addColumn('number', 'EPS (INR)');
+               data11.addColumn('number', 'Cash + Inv. /Share');
+               data11.addColumn('number', 'Dividend/Share');
+               
+               var dataArray11 = [];
+               
+                $.each(eps_trends_data, function(i, obj) {
+                  dataArray11.push([ obj.year, obj.eps, obj.cips, obj.dps]);
+               });
+
+               data11.addRows(dataArray11);
+               
+               
+            
+
+               /*
+               In case Data labels are needed on Bar Chart */
+               var view11 = new google.visualization.DataView(data11);
+               
+                        
+          
+
+               var options11 = {
+                  width : 1210,
+                  height : 350,
+                  margin : 20,
+                  pointSize : 5,
+                  focusTarget : 'category', 
+
+                colors : ['#5886a5', '#ffde69', '#93003a'],
+                legend: { position: 'right', maxLines: 2 ,
+                   textStyle:
+                   {
+                       color: '#3C6EB7',
+                       fontName: 'Calibri',
+                       fontSize: 12,
+                       bold: true
+
+                   } } ,
+                  
+                    hAxis : {
+                     
+                     viewWindow : 
+                     {
+                        min : [ 7, 30, 0 ],
+                        max : [ 17, 30, 0 ]
+                     },
+                     textStyle:
+                     { 
+                       color: '#698AFF',
+                       fontName: 'Calibri',
+                       fontSize: 12,
+                       bold: true
+                      }
+                     
+                  },
+                  
+                  vAxis : {
+                     
+                     viewWindow : 
+                     {
+                        min : [ 7, 30, 0 ],
+                        max : [ 17, 30, 0 ]
+                     },
+                     textStyle:
+                     { 
+                       color: '#698AFF',
+                       fontName: 'Calibri',
+                       fontSize: 12,
+                       bold: true
+                      }
+                     
+                  },
+                  
+                  seriesType : 'bars',
+                  series : {
+                     2 : {
+                        type : 'line'
+                     }
+                  
+                  }
+                  
+               };
+               
+               
+               var chartEPS = new google.visualization.ComboChart(
+                     document.getElementById('chart_eps'));
+        
+               
+               //In case of Data points enabled on chart series
+               chartEPS.draw(view11, options11);
+            }   
+            
+            
+            /*
+            ----- MARGINS - OPM and NPM Line Chart ----------------
+            */
+            
+            function drawLineChartMargins() {
+
+                var data12 = new google.visualization.DataTable();
+                
+                data12.addColumn('string', 'Year');
+                data12.addColumn('number', 'OPM');
+                data12.addColumn('number', 'NPM');
+                
+                var dataArray12 = [];
+                
+                 $.each(margins_trends_data, function(i, obj) {
+                   dataArray12.push([ obj.year, obj.opm, obj.npm]);
+                });
+
+                data12.addRows(dataArray12);
+                
+                
+             
+
+                /*
+                In case Data labels are needed on Bar Chart - Not working on combo*/
+                var view12 = new google.visualization.DataView(data12);
+                
+                view12.setColumns([ 0, 1, {
+                   calc : "stringify",
+                   sourceColumn : 1,
+                   type : "string",
+                   role : "annotation"
+                },
+                
+                2, {
+                   calc : "stringify",
+                   sourceColumn : 2,
+                   type : "string",
+                   role : "annotation"
+                },
+                ],
+                 
+                
+                );
+
+                var options12 = {
+                   width : 1210,
+                   height : 300,
+                   margin : 20,
+                   pointSize : 5,
+
+                   colors : [ '#B430AF','#AFB430','#30AFB4' ],
+                   seriesType : 'line',
+                   legend: { position: 'right', maxLines: 2 ,
+                    textStyle:
+                    {
+                        color: '#3C6EB7',
+                        fontName: 'Calibri',
+                        fontSize: 12,
+                        bold: true
+
+                    } } ,
+                   
+                     hAxis : {
+                      
+                      viewWindow : 
+                      {
+                         min : [ 7, 30, 0 ],
+                         max : [ 17, 30, 0 ]
+                      },
+                      textStyle:
+                      { 
+                        color: '#238126',
+                        fontName: 'Calibri',
+                        fontSize: 12,
+                        bold: true
+                       }
+                      
+                   },
+                   
+                   vAxis : {
+                      
+                      viewWindow : 
+                      {
+                         min : [ 7, 30, 0 ],
+                         max : [ 17, 30, 0 ]
+                      },
+                      textStyle:
+                      { 
+                        color: '#30B435',
+                        fontName: 'Calibri',
+                        fontSize: 12,
+                        bold: true
+                       }
+                      
+                   },
+                   
+                   
+                   
+                };
+                
+                 var chartMargins = new google.visualization.LineChart(
+                      document.getElementById('chart_margins'));
+         
+                
+                //In case of Data points enabled on chart series
+                chartMargins.draw(view12, options12);
+           }
+           
+       /*
+            ----------------------  Return Ratios and CFO Yield ----------------
+      */
+                   function drawRRCFOYComboChart() {
+
+                     var data13 = new google.visualization.DataTable();
+
+                     data13.addColumn('string', 'Year');
+                     
+                     data13.addColumn('number', 'ROCE');
+                     data13.addColumn('number', 'ROE');
+                     data13.addColumn('number', 'CFO Yield');
+               
+                                       
+                   
+
+   
+                     var dataArray13 = [];
+
+                     $.each(margins_trends_data, function(i, obj) {
+                        dataArray13.push([ obj.year, obj.roce, obj.roe,
+                              obj.cfoy ]);
+                     });
+
+                     data13.addRows(dataArray13);
+                     
+                     /*
+                     In case Data labels are needed on Bar Chart */
+                     var view13 = new google.visualization.DataView(data13);
+                     
+                     view13.setColumns([ 0, 1, 2,
+                     
+                     3, {
+                         calc : "stringify",
+                         sourceColumn : 3,
+                         type : "string",
+                         role : "annotation"
+                      },
+                      
+                    
+                      
+                     ],
+                      
+                     
+                     );
+                  
+                     
+                     var options13 = {
+                        focusTarget : 'category',
+                         legend: { position: 'right', maxLines: 2 ,
+                         textStyle:
+                         {
+                             color: '#3C6EB7',
+                             fontName: 'Calibri',
+                             fontSize: 12,
+                             bold: true
+
+                         } } ,
+                         
+                         hAxis : {
+                           
+                           viewWindow : 
+                           {
+                              min : [ 7, 30, 0 ],
+                              max : [ 17, 30, 0 ]
+                           },
+                           textStyle:
+                           { 
+                             color: '#238126',
+                             fontName: 'Calibri',
+                             fontSize: 12,
+                             bold: true
+                            }
+                           
+                        },
+                     
+                       
+                        width : 1210,
+                        height : 350,
+                        margin : 20,
+                        pointSize : 5,
+                        colors : ['#ad8aff', '#d9c1fa', '#93003a'],
+                        seriesType : 'bars',
+                        series : {
+                            2 : {
+                               type : 'line'
+                            } 
+                         }
+
+                     };
+                     var chartRR = new google.visualization.ComboChart(document
+                           .getElementById('chart_rr'));
+                     chartRR.draw(view13, options13);
+                   
+                  
+                  
+                  
+                  
+                  }
+
+                   /*
+                   ----- Div PAYOUT & Tax Paid Line Chart ----------------
+                   */
+                   
+                   function drawDivTaxChart() {
+
+                       var data14 = new google.visualization.DataTable();
+                       
+                       data14.addColumn('string', 'Year');
+                       data14.addColumn('number', 'Div. Payout(%)');
+                       data14.addColumn('number', 'Tax Paid(%)');
+                       
+                       var dataArray14 = [];
+                       
+                        $.each(margins_trends_data, function(i, obj) {
+                          dataArray14.push([ obj.year, obj.divp, obj.taxper]);
+                       });
+
+                       data14.addRows(dataArray14);
+                       
+                       
+                    
+
+                       /*
+                       In case Data labels are needed on Bar Chart - Not working on combo*/
+                       var view14 = new google.visualization.DataView(data14);
+                       
+                       view14.setColumns([ 0, 1, {
+                          calc : "stringify",
+                          sourceColumn : 1,
+                          type : "string",
+                          role : "annotation"
+                       },
+                       
+                       2, {
+                          calc : "stringify",
+                          sourceColumn : 2,
+                          type : "string",
+                          role : "annotation"
+                       },
+                       ],
+                        
+                       
+                       );
+
+                       var options14 = {
+                          width : 1210,
+                          height : 300,
+                          margin : 20,
+                          pointSize : 5,
+
+                          colors : [ '#B430AF','#AFB430','#30AFB4' ],
+                          seriesType : 'line',
+                          legend: { position: 'right', maxLines: 2 ,
+                           textStyle:
+                           {
+                               color: '#3C6EB7',
+                               fontName: 'Calibri',
+                               fontSize: 12,
+                               bold: true
+
+                           } } ,
+                          
+                            hAxis : {
+                             
+                             viewWindow : 
+                             {
+                                min : [ 7, 30, 0 ],
+                                max : [ 17, 30, 0 ]
+                             },
+                             textStyle:
+                             { 
+                               color: '#238126',
+                               fontName: 'Calibri',
+                               fontSize: 12,
+                               bold: true
+                              }
+                             
+                          },
+                          
+                          vAxis : {
+                             
+                             viewWindow : 
+                             {
+                                min : [ 7, 30, 0 ],
+                                max : [ 17, 30, 0 ]
+                             },
+                             textStyle:
+                             { 
+                               color: '#30B435',
+                               fontName: 'Calibri',
+                               fontSize: 12,
+                               bold: true
+                              }
+                             
+                          },
+                          
+                          
+                          
+                       };
+                       
+                        var chartDivTax = new google.visualization.LineChart(
+                             document.getElementById('chart_divtax'));
+                
+                       
+                       //In case of Data points enabled on chart series
+                       chartDivTax.draw(view14, options14);
+                  }
+            
+        
+            
+            
+         </script>
+
+	<!-- Charts - ENDS -->
+
+
+
+
+
+
+	<!-- Metro 4 -->
+	<script src="https://cdn.metroui.org.ua/v4.3.2/js/metro.min.js"></script>
+</body>
+</html>

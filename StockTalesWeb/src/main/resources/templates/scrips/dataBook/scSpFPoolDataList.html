@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<div th:replace="fragments/header :: STHeader"></div>
+
+</head>
+<body>
+
+   <div style="min-height: 600px; overflow: hidden;">
+      <div data-role="navview" data-compact="md" data-expand="false"
+         data-active-state="true">
+         <div th:replace="fragments/navbar :: STNavbar"></div>
+
+
+
+         <div class="navview-content pl-4-md pr-4-md">
+
+            <div class="grid">
+
+               <div th:replace="fragments/brand :: STBrand"></div>
+
+               <!-- your Code Starts from Here  -->
+               <!--Main Content Grid - Starts  -->
+               <div class="grid">
+
+                  <!--Title Row - Starts  -->
+                  <div class="row">
+
+                     <div class="colspan-9 " style="margin-left: 50px">
+                        <h4
+                           style="margin-top: 50px; font-weight: medium; color: #4465a1">
+                           Scrip Specific FieldPool Details for : <span
+                              style="color: #B1365B" th:text="${scCode}"></span>
+
+                        </h4>
+                     </div>
+
+                     <!--  Button - Col Start -->
+                     <div class="colspan-2"
+                        style="margin-left: -150px; margin-top: 47px">
+
+
+
+                        <a href="#" class="button alert rounded outline"
+                           th:href="@{/{scCode}/fp ( scCode=${scCode})}"
+                           role="button" data-role="hint"
+                           data-hint-position="right"
+                           data-cls-hint="bg-red fg-white"
+                           data-hint-text="Add Field Pool Data for
+                           Scrip">
+                           <span class="mif-plus icon"
+                           style="margin-left: 0px"></span> <span
+                           style="margin-left: 3px">Add Data</span>
+
+
+                        </a>
+
+
+                     </div>
+                     <!--  Button - Col End -->
+
+
+                  </div>
+
+
+                  <!--Title Row - Ends -->
+
+                  <!--Accordion Row - Starts  -->
+                  <div class="row" style="margin-top: 50px">
+
+                     <div data-role="accordion" data-material="true"
+                        data-active-heading-class="bg-lightRed fg-white"
+                        data-active-content-class="bd-red bd-active">
+                        <div class="frame active">
+                           <div class="heading">Quarterly Data</div>
+                           <!-- Qtrly Data Content - Starts -->
+                           <div class="content">
+                              <!-- Null Case- Starts -->
+                              <div th:if="${QtrylList.size() == 0}">
+                                 <!--No Data Found -->
+                                 <div class="remark alert"
+                                    style="padding-top: 10px; margin: 2px">
+                                    <h3>No Data Found!</h3>
+                                 </div>
+                              </div>
+                              <!-- Null Case- Ends -->
+
+                              <!-- Not Null Case- Starts -->
+                              <div th:if="${QtrylList.size() > 0}">
+
+                                 <div class="colspan-12 ">
+
+                                    <!-- Table Row - Starts  -->
+
+
+                                    <div class="row">
+                                       <!--   Here goes your table -->
+
+                                       <table
+                                          class="table striped compact table-border row-hover mt-4"
+                                          data-show-search="true"
+                                          data-table-search-title="Search By Interval :"
+                                          data-show-rows-steps="false"
+                                          id="t-inspector"
+                                          data-showPagination="false"
+                                          data-role="table"
+                                          data-search-min-length="1"
+                                          data-search-threshold="300"
+                                          data-search-fields="year"
+                                          data-horizontal-scroll="true"
+                                          data-rows="-1"
+                                          data-info-wrapper=".my-info-wrapper"
+                                          data-thousand-separator=","
+                                          data-pagination-wrapper=".my-pagination-wrapper">
+
+                                          <thead>
+                                             <tr>
+
+                                                <th data-name="year"
+                                                   data-size="400"
+                                                   data-cls-column="text-center">Period</th>
+
+                                                <th
+                                                   data-cls-column="text-center"></th>
+
+                                                <th
+                                                   data-cls-column="text-center"></th>
+
+
+                                             </tr>
+                                          </thead>
+
+                                          <tr
+                                             th:each="qtrItem : ${QtrylList}">
+                                             <td><a
+                                                style="font-weight: bold; font-size: large;"
+                                                th:href="@{/{scCode}/{fpid} (scCode=${scCode}, fpid=${qtrItem.id})}"
+                                                th:text="${qtrItem.intervalText}">
+                                             </a></td>
+
+                                             <td
+                                                style="text-align: center;"><a
+                                                class="button rounded"
+                                                style="color: black; background: #c5e9fa"
+                                                th:href="@{/{sector}/{scrip}/{interval}/{valM}/{valD}  (sector=${sector}, scrip=${scCode}, interval=${qtrItem.interval}, valM=${qtrItem.valm},valD=${qtrItem.vald} )}"
+                                                data-role="hint"
+                                                data-hint-position="top"
+                                                data-cls-hint="bg-LightGreen fg-black"
+                                                data-hint-text="View/Edit Scrip Sector Sp. Data"><span
+                                                   class="mif-news"
+                                                   style="margin-left: 0px">
+                                                </span> <span
+                                                   style="margin-left: 3px">Scrip
+                                                      Sector Sp. Data</span></a></td>
+                                             <!--Buttons - OCA  -->
+
+
+
+                                          </tr>
+
+                                       </table>
+
+
+                                    </div>
+
+                                    <!--Table Row - Ends  -->
+
+                                 </div>
+
+                                 <!-- Not Null Case- Ends -->
+
+                              </div>
+
+                              <!-- Qtrly Data Content - Ends -->
+                           </div>
+                        </div>
+                        <div class="frame">
+                           <div class="heading">Annual Data</div>
+                           <!-- Annual Data Content - Starts -->
+                           <div class="content">
+
+                              <!-- Null Case- Starts -->
+                              <div th:if="${AnnualList.size() == 0}">
+                                 <!--No Data Found -->
+                                 <div class="remark alert"
+                                    style="padding-top: 10px; margin: 2px">
+                                    <h3>No Data Found!</h3>
+                                 </div>
+                              </div>
+                              <!-- Null Case- Ends -->
+                              <!-- Not Null Case- Starts -->
+                              <div th:if="${AnnualList.size() > 0}">
+
+                                 <div class="colspan-12 ">
+
+                                    <!-- Table Row - Starts  -->
+
+
+                                    <div class="row">
+                                       <!--   Here goes your table -->
+
+                                       <table
+                                          class="table striped compact table-border row-hover mt-4"
+                                          data-show-search="true"
+                                          data-table-search-title="Search By Interval :"
+                                          data-show-rows-steps="false"
+                                          id="t-inspector"
+                                          data-showPagination="false"
+                                          data-role="table"
+                                          data-search-min-length="1"
+                                          data-search-threshold="300"
+                                          data-search-fields="year"
+                                          data-horizontal-scroll="true"
+                                          data-rows="-1"
+                                          data-info-wrapper=".my-info-wrapper"
+                                          data-thousand-separator=","
+                                          data-pagination-wrapper=".my-pagination-wrapper">
+
+                                          <thead>
+                                             <tr>
+
+                                                <th data-name="year"
+                                                   data-size="400"
+                                                   data-cls-column="text-center">Period</th>
+
+                                                <th
+                                                   data-cls-column="text-center"></th>
+
+                                                <th
+                                                   data-cls-column="text-center"></th>
+
+
+                                             </tr>
+                                          </thead>
+
+                                          <tr
+                                             th:each="annItem : ${AnnualList}">
+                                             <td><a
+                                                style="font-weight: bold; font-size: large;"
+                                                th:href="@{/{scCode}/{fpid} (scCode=${scCode}, fpid=${annItem.id})}"
+                                                th:text="${annItem.intervalText}">
+                                             </a></td>
+
+                                             <td
+                                                style="text-align: center;"><a
+                                                class="button rounded"
+                                                style="color: black; background: #c5e9fa"
+                                                th:href="@{/{sector}/{scrip}/{interval}/{valM}/{valD}  (sector=${sector}, scrip=${scCode}, interval=${annItem.interval}, valM=${annItem.valm},valD=${annItem.vald} )}"
+                                                data-role="hint"
+                                                data-hint-position="top"
+                                                data-cls-hint="bg-LightGreen fg-black"
+                                                data-hint-text="View/Edit Scrip Sector Sp. Data"><span
+                                                   class="mif-news"
+                                                   style="margin-left: 0px">
+                                                </span> <span
+                                                   style="margin-left: 3px">Scrip
+                                                      Sector Sp. Data</span></a></td>
+                                             <!--Buttons - OCA  -->
+
+
+
+                                          </tr>
+
+                                       </table>
+
+
+                                    </div>
+
+                                    <!--Table Row - Ends  -->
+
+                                 </div>
+
+                                 <!-- Not Null Case- Ends -->
+
+                              </div>
+
+                           </div>
+                           <!-- Annual Data Content - Ends -->
+                        </div>
+
+                     </div>
+
+                  </div>
+
+                  <!--Accordion Row - Ends  -->
+
+               </div>
+               <!--Main Content Grid - Ends  -->
+
+            </div>
+         </div>
+      </div>
+   </div>
+
+
+   <!-- Metro 4 -->
+   <script src="https://cdn.metroui.org.ua/v4.3.2/js/metro.min.js"></script>
+</body>
+</html>

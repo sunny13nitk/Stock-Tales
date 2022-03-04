@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+
+</head>
+<body>
+
+	<div th:fragment="IDSMenu"
+		class="head-bar pos-absolute bg-transparent fg-darkteal text-bold">
+		<div class="cell-3 flex-align-center">
+			<label
+				style="margin-left: 5px; margin-top: 5px; font-weight: bold; font-size: 1.2em">
+				<img th:src="@{/images/PF.png}" src="../../static/images/PF.png"
+				width="50" height="40" style="margin-left: 5px; margin-right: 10px">
+				Core PF + IDS
+			</label>
+
+		</div>
+
+		<div class="cell-8 flex-align-center" style="margin-left: 10px;">
+			<ul class="t-menu open horizontal compact">
+				<li><a th:href="@{'/ids/buyP'}" data-role="hint"
+					data-hint-position="bottom" data-cls-hint="bg-white fg-dark"
+					data-hint-text="Buy Proposals"><span
+						class="mif-opencart icon fg-orange"></span></a></li>
+				<li><a th:href="@{'/ids/launch'}" data-role="hint"
+					data-hint-position="bottom" data-cls-hint="bg-white fg-dark"
+					data-hint-text="Dashboard"><span
+						class="mif-phonelink icon mif-3x fg-mauve"></span></a></li>
+				<li><a th:href="@{'/ids/updateSchema'}" data-role="hint"
+					data-hint-position="bottom" data-cls-hint="bg-white fg-dark"
+					data-hint-text="Update Schema"> <span
+						class="mif-compass2 icon mif-4x fg-red"></span></a></li>
+				<li><a th:href="@{'/ids/vprofile'}" data-role="hint"
+					data-hint-position="bottom" data-cls-hint="bg-white fg-dark"
+					data-hint-text="Volatility Profile(s)"> <span
+						class="mif-air icon mif-4x fg-magenta"></span></a></li>
+				<li><a href="#"><span class="mif-user icon"></span></a></li>
+			</ul>
+		</div>
+
+		<div class="cell flex-align-end">
+			<a href="#" class="button steel rounded outline"
+				style="border: none;" th:href="@{/}" role="button"> <span
+				class="mif-home  mif-3x"></span>
+			</a>
+		</div>
+	</div>
+
+
+
+
+</body>
+</html>

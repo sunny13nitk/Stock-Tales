@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<div th:replace="fragments/header :: STHeader"></div>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script type="text/javascript"
+	src="https://www.gstatic.com/charts/loader.js"></script>
+</head>
+<body>
+
+
+	<!-- Header div - Start  -->
+	<div class="head-bar pos-absolute bg-transparent fg-darkteal text-bold">
+
+		<div class="cell-11">
+			<label style="margin-left: 5px; font-weight: bold; font-size: 1.3em">
+				<img th:src="@{/images/nfs.png}" src="../../static/images/nfs.png"
+				width="45" height="40" style="margin-left: 5px; margin-right: 10px">
+				NFS: Need for Speed !!!
+			</label>
+
+
+		</div>
+		<div class="cell-1">
+			<a href="#" class="button steel rounded outline"
+				style="border: none;" th:href="@{/}" role="button"> <span
+				class="mif-home  mif-3x"></span>
+			</a>
+		</div>
+
+	</div>
+
+	<!-- Header div - End  -->
+
+	<!-- Content Row - Starts -->
+	<div class="grid" style="margin-top: 40px">
+		<div class="row">
+			<div class="cell-2" th:if="${alloc.newPF != true}">
+				<div th:replace="fragments/NFSMenu :: NFSSideMenu"></div>
+			</div>
+
+
+			<div class="cell-10">
+
+				<div class="grid" style="padding: 20px">
+
+					<!--Salutation Row - Starts  -->
+					<div class="row">
+
+						<div class="colspan-11 " style="margin-left: 10px">
+							<h4 th:if="${alloc.newPF != true}" style="color: #4465a1">
+								Invest More to your NFS Portfolio <span class="mif-eyedropper"></span>
+							</h4>
+
+
+							<h5 th:if="${alloc.newPF == true}"
+								style="color: #4465a1; margin-top: 20px">
+								Create your NFS Portfolio based on your Selection! <span
+									style="color: #CE225F" class="mif-steps mif-2x"></span>
+							</h5>
+
+
+						</div>
+					</div>
+
+					<!-- Quick Stats Row - Starts -->
+
+					<div class="row flex-align-center">
+
+						<div class="colspan-10 offset-1">
+							<div class="card" style="padding-top: -20px">
+
+								<div class="row flex-align-center">
+									<div class="cell">
+										<blockquote class="right-side">
+											<h3 style="color: #8000fc" th:text="${pfDetails.numScrips}"></h3>
+											<span style="color: #486590; font-weight: medium;">Number
+												of Scrips</span>
+										</blockquote>
+
+									</div>
+
+
+									<div class="cell">
+										<blockquote class="right-side">
+											<h4 style="color: #32B480" th:text="${pfDetails.perAlloc}"></h4>
+											<span style="color: #486590; font-weight: medium;">Each
+												% Allocation</span>
+										</blockquote>
+									</div>
+
+									<div class="cell" th:if="${alloc.newPF != true}">
+										<blockquote class="right-side">
+											<h3 style="color: #3F32B4" th:text="${pfDetails.currInvStr}"></h3>
+
+											<span style="color: #486590; font-weight: medium;">Current
+												Investments</span>
+										</blockquote>
+									</div>
+
+
+									<div class="cell">
+										<blockquote class="right-side">
+											<h3 style="color: #D74A76" th:text="${pfDetails.minInvStr}"></h3>
+
+											<span style="color: #486590; font-weight: medium;">Min'm.
+												Investment</span>
+										</blockquote>
+									</div>
+
+
+
+								</div>
+
+							</div>
+
+						</div>
+
+					</div>
+
+
+
+
+					<!-- Salutation Row - Ends  -->
+
+					<!-- PF Config Not maintained  -->
+					<div th:if="${alloc != null }">
+
+
+						<!--Error Messages Row - Starts -->
+
+						<div class="col-xs-15">
+							<div th:if="${formError != null}">
+
+								<!-- Check for Form error -->
+
+								<div class="remark alert" style="padding-top: 10px; margin: 2px">
+									<label th:text="'Portfolio Error - ' + ${formError}"></label>
+								</div>
+							</div>
+						</div>
+
+
+						<div class="col-xs-15">
+							<div th:if="${formSucc != null}">
+
+
+								<div class="remark success"
+									style="padding-top: 10px; margin: 2px">
+									<label th:text=" ${formSucc}"></label>
+								</div>
+
+
+
+							</div>
+						</div>
+
+						<!--Error Messages Row - Ends -->
+
+						<!-- PF Config Form Row - Starts  -->
+
+						<div class="colspan-10 offset-1" style="margin-top: 5px">
+
+							<div class="card">
+
+								<h6 style="color: #4465a1; margin-left: 10px">Maintain
+									Amount you would like to Invest more</h6>
+
+								<form th:object="${alloc}" th:action="@{'/nfs/pf/save'} "
+									method="post">
+
+									<!--Hidden fields Retained - from Model -->
+									<input type="hidden" th:field="*{newPF}" /> <input
+										type="hidden" th:field="*{exisProp}" /> <input type="hidden"
+										th:field="*{newProp}" /> <input type="hidden"
+										th:field="*{minInv}" />
+
+									<div class="colspan-7 offset-1"
+										style="margin-top: 15px; margin-bottom: 10px;">
+										<label>Incremental Investment </label> <input
+											class="metro-input input-large" type="text" data-role="input"
+											data-prepend="<span style = 'padding-top:7px' class='mif-inr mif-3x'></span>"
+											data-append="<span style = 'padding-top:30px'>0.00</span>"
+											title="" th:field="*{incInvestment}" /> <small
+											class="text-muted">Enter the amount you would like to
+											invest more to your Portfolio!</small>
+									</div>
+
+
+
+									<div class="colspan-1 offset-10"
+										style="margin-top: 10px; margin-bottom: 10px;">
+										<button class="button rounded"
+											style="background-color: #38CA9F; color: white; margin-top: 5px; margin-bottom: 10px">
+											<span class="mif-floppy-disk" style="margin-left: 0px">
+											</span> <span style="margin-left: 3px">Save</span>
+										</button>
+
+									</div>
+								</form>
+							</div>
+						</div>
+
+						<!-- PF config Form Row - Ends  -->
+
+
+
+					</div>
+				</div>
+
+
+			</div>
+
+
+
+
+		</div>
+	</div>
+
+
+
+
+	<!-- Metro 4 -->
+	<script src="https://cdn.metroui.org.ua/v4.3.2/js/metro.min.js"></script>
+
+</body>
+</html>

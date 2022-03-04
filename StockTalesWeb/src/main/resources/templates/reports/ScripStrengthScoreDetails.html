@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<div th:replace="fragments/header :: STHeader"></div>
+
+</head>
+<body>
+
+	<div style="min-height: 600px; overflow: hidden;">
+		<div data-role="navview" data-compact="md" data-expand="false"
+			data-active-state="true">
+			<div th:replace="fragments/navbar :: STNavbar"></div>
+
+
+
+			<div class="navview-content pl-4-md pr-4-md">
+
+				<div class="grid">
+
+					<div th:replace="fragments/brand :: STBrand"></div>
+
+					<div class="grid">
+
+						<!--Top Row - Starts  -->
+						<div class="row">
+
+							<div class="colspan-5">
+								<h3
+									style="padding-top: 10px; margin: 2px; font-weight: medium; color: #4465a1">
+									Strength Score Details : <span th:text="${summary.scCode}">BAJFINANCE</span>
+								</h3>
+
+							</div>
+
+							<div class="colspan-1" style="margin-left: 10px;">
+								<div class="remark alert"
+									style="padding-top: 10px; margin: 2px; margin-top: -10px; color: #E74C3C; font-weight: bold; font-size: x-large;">
+
+									<h3
+										style="padding-top: 10px; margin: 2px; font-weight: bold; color: #E74C3C"
+										th:text="${summary.strengthScore}">30.3</h3>
+
+
+								</div>
+
+							</div>
+
+							<!--Scrip Sp. Other Actions  -->
+							<div class="colspan-5" style="margin-left: 50px;">
+								<div class="multi-action">
+									<button
+										class="action-button rotate-minus bg-transparent fg-mauve"
+										onclick="$(this).toggleClass('active')" data-role="hint"
+										data-hint-text="More"
+										data-cls-hint="bg-transparent fg-steelblue drop-shadow"
+										data-hint-position="top">
+										<span class="icon"><span class="mif-plus"></span></span>
+									</button>
+									<ul class="actions drop-right">
+										<li class="bg-transparent fg-mauve"><a
+											th:href="@{/hc/{scCode}(scCode=${summary.scCode})}"
+											data-role="hint" data-hint-text="Health Check"
+											data-cls-hint="bg-transparent fg-steelblue drop-shadow"
+											data-hint-position="top"><span class="mif-heartbeat"></span></a></li>
+										<!--  <li class="bg-transparent fg-mauve"><a
+                                 th:href="@{/pf/BonusShow}"
+                                 data-role="hint" data-hint-text="Bonus"
+                                 data-cls-hint="bg-transparent fg-steelblue drop-shadow"
+                                 data-hint-position="bottom"><span
+                                    class="mif-magic-wand"></span></a></li>
+                              <li class="bg-transparent fg-mauve"><a
+                                 th:href="@{/pf/SplitShow}"
+                                 data-role="hint" data-hint-text="Split"
+                                 data-cls-hint="bg-transparent fg-steelblue drop-shadow"
+                                 data-hint-position="bottom"><span
+                                    class="mif-flow-branch"></span></a></li> -->
+									</ul>
+								</div>
+							</div>
+
+
+
+						</div>
+						<!--Top Row - Ends  -->
+
+
+						<!--Table Row - Starts -->
+						<div class="row">
+
+							<!-- ED Score - Col Start -->
+							<div class="colspan-4">
+								<div class="card" style="padding-top: -20px">
+									<div class="card-content p-2">
+
+										<h6
+											style="color: #325254; background-color: #faf0ff; padding: 10px">
+											Earnings & Dividend Score</h6>
+									</div>
+
+
+									<div class="row"
+										style="padding-top: -10px; padding-left: 10px; padding-right: 10px; padding-bottom: 10px">
+
+										<table class="table compact striped">
+											<thead>
+												<tr>
+													<th style="text-align: center;">Duration</th>
+													<th style="text-align: center;">Value</th>
+													<th style="text-align: center;">Wt.Value</th>
+
+												</tr>
+											</thead>
+											<tbody>
+												<tr
+													th:each="EDScoreI : ${summary.scEDRC.earningsDivScore.durItems}">
+													<td style="text-align: center; font-weight: bolder;"
+														th:text="${EDScoreI.duration}">3Yr</td>
+													<td
+														style="text-align: center; font-weight: bolder; color: #E74C3C;"
+														th:text="${EDScoreI.value}">14.3</td>
+													<td style="text-align: center; font-weight: bolder;"
+														th:text="${EDScoreI.wv}">6.7</td>
+
+
+												</tr>
+											</tbody>
+										</table>
+
+										<div class="row flex-align-end">
+											<div class="cell">
+												<blockquote class="right-side">
+													<h5 style="color: #8000fc"
+														th:text="${summary.scEDRC.earningsDivScore.nettValue}">
+													</h5>
+													<span style="color: #486590; font-weight: medium;">Earnings
+														Score</span>
+												</blockquote>
+
+											</div>
+
+
+											<div class="cell">
+												<blockquote class="right-side">
+													<h5 style="color: #32B480"
+														th:text="${summary.scEDRC.earningsDivScore.divYield}">
+													</h5>
+													<span style="color: #486590; font-weight: medium;">Dividend
+														Yield</span>
+												</blockquote>
+											</div>
+
+											<div class="cell">
+												<blockquote class="right-side">
+													<h4 style="color: #D74A76"
+														th:text="${summary.scEDRC.earningsDivScore.resValue}">
+													</h4>
+													<span style="color: #486590; font-weight: medium;">ED
+														Score </span>
+												</blockquote>
+											</div>
+
+										</div>
+
+
+									</div>
+								</div>
+
+							</div>
+							<!-- ED Score - Col Ends -->
+
+							<!-- RR Score - Col Start -->
+							<div class="colspan-4">
+								<div class="card" style="padding-top: -20px">
+									<div class="card-content p-2">
+
+										<h6
+											style="color: #325254; background-color: #faf0ff; padding: 10px">
+											Return Ratios (ROCE/ROE) Score</h6>
+									</div>
+
+
+									<div class="row"
+										style="padding-top: -10px; padding-left: 10px; padding-right: 10px; padding-bottom: 10px">
+
+										<table class="table compact striped">
+											<thead>
+												<tr>
+													<th style="text-align: center;">Duration</th>
+													<th style="text-align: center;">Value</th>
+													<th style="text-align: center;">Wt.Value</th>
+
+												</tr>
+											</thead>
+											<tbody>
+												<tr
+													th:each="EDScoreI : ${summary.scEDRC.returnRatiosScore.durItems}">
+													<td style="text-align: center; font-weight: bolder;"
+														th:text="${EDScoreI.duration}">3Yr</td>
+													<td
+														style="text-align: center; font-weight: bolder; color: #E74C3C"
+														th:text="${EDScoreI.value}">14.3</td>
+													<td style="text-align: center; font-weight: bolder;"
+														th:text="${EDScoreI.wv}">6.7</td>
+
+
+												</tr>
+											</tbody>
+										</table>
+
+										<div class="row">
+											<div class="cell-2"></div>
+											<div class="cell-2"></div>
+
+											<div class="cell">
+												<blockquote class="right-side">
+													<h4 style="color: #D74A76"
+														th:text="${summary.scEDRC.returnRatiosScore.nettValue}">
+													</h4>
+													<span style="color: #486590; font-weight: medium;">RR
+														Score </span>
+												</blockquote>
+
+
+											</div>
+
+										</div>
+									</div>
+								</div>
+
+
+							</div>
+							<!-- RR Score - Col Ends -->
+
+							<!-- CFO Score - Col Start -->
+
+							<div th:if="${summary.scEDRC.cashflowsScore != null}"
+								class="colspan-4">
+								<div class="card" style="padding-top: -20px">
+									<div class="card-content p-2">
+
+										<h6
+											style="color: #325254; background-color: #faf0ff; padding: 10px">
+											Cash Flow Operations(CFO) Growth Score</h6>
+									</div>
+
+
+									<div class="row"
+										style="padding-top: -10px; padding-left: 10px; padding-right: 10px; padding-bottom: 10px">
+
+										<table class="table compact striped">
+											<thead>
+												<tr>
+													<th style="text-align: center;">Duration</th>
+													<th style="text-align: center;">Value</th>
+													<th style="text-align: center;">Wt.Value</th>
+
+												</tr>
+											</thead>
+											<tbody>
+												<tr
+													th:each="EDScoreI : ${summary.scEDRC.cashflowsScore.durItems}">
+													<td style="text-align: center; font-weight: bolder;"
+														th:text="${EDScoreI.duration}">3Yr</td>
+													<td
+														style="text-align: center; font-weight: bolder; color: #E74C3C"
+														th:text="${EDScoreI.value}">14.3</td>
+													<td style="text-align: center; font-weight: bolder;"
+														th:text="${EDScoreI.wv}">6.7</td>
+
+
+												</tr>
+											</tbody>
+										</table>
+
+										<div class="row">
+											<div class="cell-2"></div>
+											<div class="cell-2"></div>
+
+											<div class="cell">
+												<blockquote class="right-side">
+													<h4 style="color: #D74A76"
+														th:text="${summary.scEDRC.cashflowsScore.nettValue}">
+													</h4>
+													<span style="color: #486590; font-weight: medium;">CF
+														Score </span>
+												</blockquote>
+
+
+											</div>
+
+										</div>
+									</div>
+
+								</div>
+
+
+
+
+							</div>
+
+							<!-- CFO Score - Col Ends -->
+
+						</div>
+
+						<!--Table Row - Ends -->
+
+
+
+
+						<!-- Before Calibration Stats - Starts -->
+
+						<div class="row">
+
+							<div class="colspan-8 offset-2">
+								<div class="card" style="padding-top: -20px">
+
+									<div class="row flex-align-center">
+										<div class="cell">
+											<blockquote class="right-side">
+												<h4 style="color: #8000fc" th:text="${summary.EDRC}"></h4>
+												<span style="color: #486590; font-weight: medium;">EDRC
+													Score</span>
+											</blockquote>
+
+										</div>
+
+
+										<div class="cell">
+											<blockquote class="right-side">
+												<h4 style="color: #32B480" th:text="${summary.valR}"></h4>
+												<span style="color: #486590; font-weight: medium;">Value
+													Creation Ratio</span>
+											</blockquote>
+										</div>
+
+										<div class="cell">
+											<blockquote class="right-side">
+												<h3 style="color: #D74A76"
+													th:text="${summary.strengthScoreb4Calibration}"></h3>
+												<span style="color: #486590; font-weight: medium;">Strength
+													Score before Calibration</span>
+											</blockquote>
+										</div>
+
+									</div>
+
+								</div>
+
+							</div>
+
+						</div>
+
+
+						<!-- Before Calibration Stats - Ends -->
+
+						<!-- Calibration - Starts -->
+
+						<div class="colspan-9 offset-1">
+							<div class="card" style="padding-top: -20px">
+								<div class="card-content p-2">
+
+									<h6
+										style="color: #325254; background-color: #faf0ff; padding: 10px">
+										Strength Score Calibration - Details</h6>
+								</div>
+
+
+								<div class="row"
+									style="padding-top: -10px; padding-left: 10px; padding-right: 10px; padding-bottom: 10px">
+
+									<table class="table compact striped">
+										<thead>
+											<tr>
+												<th style="text-align: center;">Header</th>
+												<th style="text-align: center;">Trigger Value</th>
+												<th style="text-align: center;">Score Before</th>
+												<th style="text-align: center;">Score After</th>
+												<th style="text-align: center;">Delta (%)</th>
+
+											</tr>
+										</thead>
+										<tbody>
+											<tr th:each="calibrationI : ${summary.calibrations}">
+												<td
+													style="text-align: center; font-weight: bolder; color: #4465a1"
+													th:text="${calibrationI.calHeader}">3Yr</td>
+												<td
+													style="text-align: center; font-weight: bolder; color: #4465a1"
+													th:text="${calibrationI.triggerVal}">14.3</td>
+												<td
+													style="text-align: center; font-weight: bolder; color: #E74C3C"
+													th:text="${calibrationI.valB4}">14.3</td>
+												<td
+													style="text-align: center; font-weight: bolder; color: #E74C3C"
+													th:text="${calibrationI.valAfter}">14.3</td>
+
+												<td style="text-align: center;"
+													th:if="${calibrationI.delta} >= 0">
+													<!-- Positive Factor  --> <span
+													class="mif-arrow-drop-up mif-2x fg-green"><label
+														style="color: green; font-weight: bolder;"
+														th:text="${calibrationI.delta}">14.3</label></span>
+
+												</td>
+
+
+												<td style="text-align: center;"
+													th:if="${calibrationI.delta} < 0">
+													<!--Negative Factor  --> <span
+													class="mif-arrow-drop-down mif-2x fg-red"><label
+														style="color: red; font-weight: bolder;"
+														th:text="${calibrationI.delta}">14.3</label></span>
+
+												</td>
+											</tr>
+										</tbody>
+									</table>
+
+
+								</div>
+
+							</div>
+
+
+
+
+						</div>
+
+
+						<!-- Calibration - Ends -->
+
+
+					</div>
+
+
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Metro 4 -->
+	<script src="https://cdn.metroui.org.ua/v4.3.2/js/metro.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<div th:replace="fragments/header :: STHeader"></div>
+
+</head>
+<body>
+
+	<div class="grid" style="padding: 5px">
+
+		<div class="row">
+
+			<div class="colspan-12">
+
+				<div class="card" style="padding-top: -40px">
+
+					<div class="row flex-align-center">
+						<div class="cell-10">
+							<blockquote class="left-side">
+								<h5 style="color: #8000fc">Mass Update - Portolio</h5>
+								<span style="color: #486590; font-weight: medium;">Change
+									the PPU/Units value for Scrip(s) and Save to Update Portfolio!
+								</span> <br> <span style="color: #486590; font-weight: medium;">
+									Click on Back button if you do not want to make any changes to
+									the Portfolio!</span>
+
+							</blockquote>
+
+						</div>
+
+						<!-- Customize Button - Col Start -->
+						<div class="cell -1" style="margin-left: 10px; margin-top: 30px">
+
+							<a href="#" class="button primary rounded outline"
+								th:href="@{/nfs/pf/list}" role="button"> <span
+								class="mif-backward icon" style="margin-left: 0px"></span> <span
+								style="margin-left: 3px">Back</span>
+							</a>
+
+
+						</div>
+						<!-- Customize Button - Col End -->
+
+
+					</div>
+				</div>
+
+
+
+			</div>
+		</div>
+
+		<!-- Heading -->
+		<div class="colspan-9 offset -2">
+			<h6 style="color: #4465a1">Scrips in Current Portfolio</h6>
+		</div>
+
+
+
+
+		<!-- Table Row - Starts -->
+		<div class="row flex-align-center" style="padding: 5px">
+			<div class="cell-md-auto">
+
+				<form method="post" th:action="@{/nfs/procMassUpdate}"
+					th:object="${scSelList}">
+
+
+					<!-- Here goes your table -->
+
+					<table class="table subcompact striped table-border row-hover "
+						data-show-search="false" data-show-rows-steps="false"
+						id="t-inspector" data-showPagination="false" data-role="table"
+						data-horizontal-scroll="true" data-rows="-1"
+						data-info-wrapper=".my-info-wrapper" data-thousand-separator=","
+						data-pagination-wrapper=".my-pagination-wrapper">
+
+						<thead style="text-align: center;">
+							<tr>
+								<th data-name="sccode" class="sortable-column "
+									data-cls-column=" text-left">Scrip Code</th>
+
+
+								<th data-name="priceincl" data-format="number"
+									data-cls-column=" text-left" data-size="170">PPU</th>
+
+								<th data-name="units" data-format="number"
+									data-cls-column=" text-left" data-size="170">Units</th>
+
+
+
+
+							</tr>
+						</thead>
+
+
+
+
+						<tr th:each="scAllocI , stat :  *{currPf} ">
+
+
+							<td><span th:text="${scAllocI.sccode}"></span> <input
+								type="hidden" th:field="*{currPf[__${stat.index}__].sccode}" /></td>
+
+							<td><input type="text" class="input-small alert metro-input"
+								th:field="*{currPf[__${stat.index}__].priceincl}" />
+							<td><input type="text" class="input-small alert metro-input"
+								th:field="*{currPf[__${stat.index}__].units}" />
+						</tr>
+
+					</table>
+
+
+
+					<div class="row flex-justify-end"
+						style="padding-right: 20px; padding-top: 5px; padding-bottom: 20px">
+						<div class="form-group" style="margin-top: 10px">
+
+
+
+							<button class="button rounded" type="submit" name="action"
+								style="background-color: #38CA9F; color: white; margin-top: 5px; margin-bottom: 10px">
+								<span class="mif-floppy-disk" style="margin-left: 0px"> </span>
+								<span style="margin-left: 3px">Save</span>
+							</button>
+
+
+						</div>
+					</div>
+
+
+
+				</form>
+
+			</div>
+
+		</div>
+		<!-- Table Row - Ends -->
+
+
+
+	</div>
+
+
+	<!-- Metro 4 -->
+	<script src="https://cdn.metroui.org.ua/v4.3.2/js/metro.min.js"></script>
+</body>
+</html>

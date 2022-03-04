@@ -1,0 +1,1149 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<WorkBookMetadata>
+
+	<!-- General -->
+	<sheetMetadata>
+		<sheetName>General</sheetName>
+		<bobjName>EN_SC_General</bobjName>
+		<isReqdCreate>true</isReqdCreate>
+		<isBaseSheet>true</isBaseSheet>
+		<isCollection>false</isCollection>
+		<colToScanStart>0</colToScanStart>
+		<colToScanEnd>0</colToScanEnd>
+		<entPKey>SCCode</entPKey>
+		<assembly>stocktales.scripsEngine.uploadEngine.entities.EN_SC_General
+		</assembly>
+		<fldsMdt>
+			<sheetField>COMPANY NAME</sheetField>
+			<objField>SCName</objField>
+			<isMandatory>true</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<isUnModifiable>true</isUnModifiable>
+			<dataType>String</dataType>
+		</fldsMdt>
+		<fldsMdt>
+			<sheetField>Scrip Code</sheetField>
+			<objField>SCCode</objField>
+			<isMandatory>true</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<isUnModifiable>true</isUnModifiable>
+			<isKey>true</isKey>
+			<dataType>String</dataType>
+		</fldsMdt>
+		<fldsMdt>
+			<sheetField>Sector</sheetField>
+			<objField>Sector</objField>
+			<isMandatory>true</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<isUnModifiable>true</isUnModifiable>
+			<dataType>String</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>Unpledged Prom. Holding</sheetField>
+			<objField>UPH</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Decimal</dataType>
+		</fldsMdt>
+
+
+		<fldsMdt>
+			<sheetField>CMP</sheetField>
+			<objField>CMP</objField>
+			<isMandatory>true</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Decimal</dataType>
+		</fldsMdt>
+		<fldsMdt>
+			<sheetField>PE</sheetField>
+			<objField>CurrPE</objField>
+			<isMandatory>true</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Decimal</dataType>
+		</fldsMdt>
+		<fldsMdt>
+			<sheetField>PB</sheetField>
+			<objField>CurrPB</objField>
+			<isMandatory>true</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Decimal</dataType>
+		</fldsMdt>
+		<fldsMdt>
+			<sheetField>Div Yield</sheetField>
+			<objField>DivYield</objField>
+			<isMandatory>true</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Decimal</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>Market Cap</sheetField>
+			<objField>MktCap</objField>
+			<isMandatory>true</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Decimal</dataType>
+		</fldsMdt>
+		<fldsMdt>
+			<sheetField>MCapToSales</sheetField>
+			<objField>MCapToSales</objField>
+			<isMandatory>true</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Decimal</dataType>
+		</fldsMdt>
+		<fldsMdt>
+			<sheetField>EPS TTM</sheetField>
+			<objField>EPS</objField>
+			<isMandatory>true</isMandatory>
+			<isSplitAware>true</isSplitAware>
+			<isBonusAware>true</isBonusAware>
+			<dataType>Decimal</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>PEG</sheetField>
+			<objField>PEG</objField>
+			<isMandatory>true</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Decimal</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>Cash Per Share</sheetField>
+			<objField>CPS</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Decimal</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>SG to Capex</sheetField>
+			<objField>SGToCapex</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Decimal</dataType>
+		</fldsMdt>
+
+
+		<fldsMdt>
+			<sheetField>Number of Shares</sheetField>
+			<objField>NumShares</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>true</isSplitAware>
+			<isBonusAware>true</isBonusAware>
+			<dataType>Decimal</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>Debt/Equity</sheetField>
+			<objField>DERatio</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Decimal</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>TTM Sales</sheetField>
+			<objField>TTMSales</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Decimal</dataType>
+		</fldsMdt>
+
+	</sheetMetadata>
+
+
+	<!-- Analysis -->
+	<sheetMetadata>
+
+		<!--Sheet Properties -->
+		<sheetName>Analysis</sheetName>
+		<bobjName>EN_SC_BalSheet</bobjName>
+		<isReqdCreate>false</isReqdCreate>
+		<isBaseSheet>false</isBaseSheet>
+		<isCollection>true</isCollection>
+		<updHeaderDeltaMode>true</updHeaderDeltaMode>
+		<colToScanStart>2</colToScanStart>
+		<colToScanEnd>11</colToScanEnd>
+		<entPKey>BalSheet_ID</entPKey>
+		<assembly>stocktales.scripsEngine.uploadEngine.entities.EN_SC_BalSheet
+		</assembly>
+
+		<!--Header Properties -->
+		<headScanConfig>
+			<rowToScan>2</rowToScan>
+			<colToScanStart>2</colToScanStart>
+			<colToScanEnd>11</colToScanEnd>
+			<rowScanType>Continous</rowScanType>
+			<rowDataType>Date</rowDataType>
+			<valrowDataType>Numerical</valrowDataType>
+			<checkNullVals>true</checkNullVals>
+			<nullValRowPos>3</nullValRowPos>
+			<headerValsConvBean>Analysis_HeadersConvSrv</headerValsConvBean>
+			<objField>Year</objField>
+			<headerDataType>Numerical</headerDataType>
+		</headScanConfig>
+
+		<!-- Fields Details -->
+
+		<fldsMdt>
+			<sheetField>Sales</sheetField>
+			<objField>Sales</objField>
+			<isMandatory>true</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Numerical</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>Operating Profit</sheetField>
+			<objField>OP</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Numerical</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>Operating Profit Margin (OPM%)</sheetField>
+			<objField>OPM</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Numerical</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>Other Income</sheetField>
+			<objField>OI</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Numerical</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>EBITDA</sheetField>
+			<objField>EBITDA</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Numerical</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>Interest</sheetField>
+			<objField>Interest</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Numerical</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>Depreciation</sheetField>
+			<objField>Depreciation</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Numerical</dataType>
+		</fldsMdt>
+
+
+		<fldsMdt>
+			<sheetField>Profit before tax (PBT)</sheetField>
+			<objField>PBT</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Numerical</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>Tax</sheetField>
+			<objField>Tax</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Numerical</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>Tax%</sheetField>
+			<objField>taxper</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Numerical</dataType>
+		</fldsMdt>
+
+
+		<fldsMdt>
+			<sheetField>Net profit after tax (PAT)</sheetField>
+			<objField>PAT</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Numerical</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>Net Profit Margin (NPM%)</sheetField>
+			<objField>NPM</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Numerical</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>Cash from Operating Activity (CFO)</sheetField>
+			<objField>CFO</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Numerical</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>Capex (NFA+WIP change+Dep)</sheetField>
+			<objField>Capex</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Numerical</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>Total Debt (D)</sheetField>
+			<objField>Debt</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Numerical</dataType>
+		</fldsMdt>
+
+
+		<fldsMdt>
+			<sheetField>Cash + Investments (CI +NCI)</sheetField>
+			<objField>CashI</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Numerical</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>EPS</sheetField>
+			<objField>EPS</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Decimal</dataType>
+		</fldsMdt>
+
+
+		<fldsMdt>
+			<sheetField>Self-Sustainable Growth Rate (SSGR)</sheetField>
+			<objField>SSGR</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Numerical</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>ROE on Avg Equity </sheetField>
+			<objField>ROE</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Numerical</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>ROCE (EBIT on Avg CE/TA) </sheetField>
+			<objField>ROCE</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Numerical</dataType>
+		</fldsMdt>
+
+
+		<fldsMdt>
+			<sheetField>Net Fixed Asset Turnover (High is better)</sheetField>
+			<objField>NFAT</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Decimal</dataType>
+		</fldsMdt>
+
+
+		<fldsMdt>
+			<sheetField>Receivables days (Low is better)</sheetField>
+			<objField>ReceivableD</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Numerical</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>Inventory Turnover (High is better)</sheetField>
+			<objField>ITR</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Numerical</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>Net Fixed Assets (NFA)</sheetField>
+			<objField>NFA</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Numerical</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>Capital Work in Progress (CWIP)</sheetField>
+			<objField>CWIP</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Numerical</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>Share Capital</sheetField>
+			<objField>ShareCapital</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Numerical</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>Dividend Paid (Div) Without DDT</sheetField>
+			<objField>DividendPaid</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Numerical</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>Dividend Payout (Div/PAT)</sheetField>
+			<objField>DividendPayout</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Numerical</dataType>
+		</fldsMdt>
+
+
+		<fldsMdt>
+			<sheetField>Retained Earnings (RE=PAT-Div)</sheetField>
+			<objField>RE</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Numerical</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>Price to earning</sheetField>
+			<objField>PE</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Decimal</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>Mcap</sheetField>
+			<objField>MCap</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Numerical</dataType>
+		</fldsMdt>
+
+
+		<fldsMdt>
+			<sheetField>Face Value</sheetField>
+			<objField>FaceValue</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>true</isSplitAware>
+			<isBonusAware>true</isBonusAware>
+			<dataType>Decimal</dataType>
+		</fldsMdt>
+
+
+
+		<fldsMdt>
+			<sheetField>Book Value</sheetField>
+			<objField>BookValue</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>true</isSplitAware>
+			<isBonusAware>true</isBonusAware>
+			<dataType>Decimal</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>Total Equity (E)</sheetField>
+			<objField>Equity</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Numerical</dataType>
+		</fldsMdt>
+
+
+		<fldsMdt>
+			<sheetField>Debt to Equity ratio (D/E)</sheetField>
+			<objField>DERatio</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Decimal</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>Interest Coverage (OP/Int. Out)</sheetField>
+			<objField>ICR</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Decimal</dataType>
+		</fldsMdt>
+
+
+		<fldsMdt>
+			<sheetField>Cash from Investing Activity (CFI)</sheetField>
+			<objField>CFI</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Numerical</dataType>
+		</fldsMdt>
+
+
+		<fldsMdt>
+			<sheetField>Cash from Financing Activity (CFF)</sheetField>
+			<objField>CFF</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Numerical</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>Net Cash Flow (CFO+CFI+CFF)</sheetField>
+			<objField>NCF</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Numerical</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>Raw Materials</sheetField>
+			<objField>RawMToSales</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Decimal</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>Employee Costs</sheetField>
+			<objField>EmpCToSales</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Decimal</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>Power and Fuel</sheetField>
+			<objField>PowFToSales</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Decimal</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>Seliing Admin</sheetField>
+			<objField>MktgToSales</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Decimal</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>Other Expenses</sheetField>
+			<objField>OtherToSales</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Decimal</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>Depreciation Percentage</sheetField>
+			<objField>DepToSales</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Decimal</dataType>
+		</fldsMdt>
+
+	</sheetMetadata>
+
+
+	<!-- Last 4QData -->
+	<sheetMetadata>
+		<sheetName>Last 4QData</sheetName>
+		<bobjName>EN_SC_Last4QData</bobjName>
+		<isReqdCreate>false</isReqdCreate>
+		<isBaseSheet>false</isBaseSheet>
+		<isCollection>false</isCollection>
+		<colToScanStart>0</colToScanStart>
+		<colToScanEnd>0</colToScanEnd>
+		<entPKey>TTM_ID</entPKey>
+		<assembly>stocktales.scripsEngine.uploadEngine.entities.EN_SC_Last4QData</assembly>
+
+
+		<fldsMdt>
+			<sheetField>Sales</sheetField>
+			<objField>Sales4Q</objField>
+			<isMandatory>true</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Decimal</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>Operating Profit</sheetField>
+			<objField>OP4Q</objField>
+			<isMandatory>true</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<isKey>true</isKey>
+			<dataType>Decimal</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>Operating Profit Margin (OPM%)</sheetField>
+			<objField>OPM4Q</objField>
+			<isMandatory>true</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Numerical</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>Other Income</sheetField>
+			<objField>OI4Q</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Numerical</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>EBITDA</sheetField>
+			<objField>EBITDA4Q</objField>
+			<isMandatory>true</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Numerical</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>Interest</sheetField>
+			<objField>Int4Q</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Numerical</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>Depreciation</sheetField>
+			<objField>Dep4Q</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Numerical</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>Profit before tax (PBT)</sheetField>
+			<objField>PBT4Q</objField>
+			<isMandatory>true</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Numerical</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>Tax</sheetField>
+			<objField>Tax4Q</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Numerical</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>Tax%</sheetField>
+			<objField>TaxP4Q</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Numerical</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>Net profit after tax (PAT)</sheetField>
+			<objField>PAT4Q</objField>
+			<isMandatory>true</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Decimal</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>Net Profit Margin (NPM%)</sheetField>
+			<objField>NPM4Q</objField>
+			<isMandatory>true</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Numerical</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>EPS</sheetField>
+			<objField>EPS4Q</objField>
+			<isMandatory>true</isMandatory>
+			<isSplitAware>true</isSplitAware>
+			<isBonusAware>true</isBonusAware>
+			<dataType>Decimal</dataType>
+		</fldsMdt>
+
+
+	</sheetMetadata>
+
+
+	<!-- Trends -->
+	<sheetMetadata>
+		<sheetName>Trends</sheetName>
+		<bobjName>EN_SC_Trends</bobjName>
+		<isReqdCreate>false</isReqdCreate>
+		<isBaseSheet>false</isBaseSheet>
+		<isCollection>true</isCollection>
+		<colToScanStart>1</colToScanStart>
+		<colToScanEnd>6</colToScanEnd>
+		<entPKey>Trend_ID</entPKey>
+		<assembly>stocktales.scripsEngine.uploadEngine.entities.EN_SC_Trends
+		</assembly>
+		<headScanConfig>
+			<rowToScan>1</rowToScan>
+			<colToScanStart>2</colToScanStart>
+			<colToScanEnd>6</colToScanEnd>
+			<rowScanType>Continous</rowScanType>
+			<rowDataType>String</rowDataType>
+			<valrowDataType>Numerical</valrowDataType>
+			<checkNullVals>true</checkNullVals>
+			<nullValRowPos>2</nullValRowPos>
+			<objField>Period</objField>
+			<headerDataType>String</headerDataType>
+		</headScanConfig>
+
+		<fldsMdt>
+			<sheetField>Sales Growth</sheetField>
+			<objField>SalesGR</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Numerical</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>Receivables Trend</sheetField>
+			<objField>RecvTR</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Numerical</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>OPM</sheetField>
+			<objField>OPMAvg</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Numerical</dataType>
+		</fldsMdt>
+		<fldsMdt>
+			<sheetField>PAT Growth</sheetField>
+			<objField>PATGR</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Numerical</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>PE Growth</sheetField>
+			<objField>PEGR</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Numerical</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>Div Growth</sheetField>
+			<objField>DivGR</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Numerical</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>Debt</sheetField>
+			<objField>DebtGR</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Numerical</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>Book Value</sheetField>
+			<objField>BVGR</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Numerical</dataType>
+		</fldsMdt>
+
+
+		<fldsMdt>
+			<sheetField>Avg. PE</sheetField>
+			<objField>AvgPE</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Decimal</dataType>
+		</fldsMdt>
+
+
+
+		<fldsMdt>
+			<sheetField>Div Payout</sheetField>
+			<objField>DivPayAvg</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Decimal</dataType>
+		</fldsMdt>
+
+
+
+		<fldsMdt>
+			<sheetField>ROCE</sheetField>
+			<objField>ROCEAvg</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Decimal</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>ROE</sheetField>
+			<objField>ROEAvg</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Decimal</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>FCF by CFO Growth</sheetField>
+			<objField>FCF_CFO_Avg</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Numerical</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>Avg. SSGR</sheetField>
+			<objField>SSGRAvg</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Numerical</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>(Int+Dep)/PAT</sheetField>
+			<objField>FViabAvg</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Numerical</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>(Recv+Inv)/Sales</sheetField>
+			<objField>WCCAvg</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Decimal</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>CFO Growth</sheetField>
+			<objField>CFOGrowth</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Numerical</dataType>
+		</fldsMdt>
+
+
+	</sheetMetadata>
+
+
+	<!-- 10YData -->
+	<sheetMetadata>
+		<sheetName>10YData</sheetName>
+		<bobjName>EN_SC_10YData</bobjName>
+		<isReqdCreate>false</isReqdCreate>
+		<isBaseSheet>false</isBaseSheet>
+		<isCollection>false</isCollection>
+		<colToScanStart>0</colToScanStart>
+		<colToScanEnd>0</colToScanEnd>
+		<entPKey>ID_10YData</entPKey>
+		<assembly>stocktales.scripsEngine.uploadEngine.entities.EN_SC_10YData
+		</assembly>
+
+		<fldsMdt>
+			<sheetField>Gross PAT</sheetField>
+			<objField>PATG10Y</objField>
+			<isMandatory>true</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Decimal</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>Gross CFO</sheetField>
+			<objField>CFOG10</objField>
+			<isMandatory>true</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Decimal</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>PAT CFO Adherence</sheetField>
+			<objField>CFOPATR</objField>
+			<isMandatory>true</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Numerical</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>Gross Capex</sheetField>
+			<objField>CapexG10Y</objField>
+			<isMandatory>true</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Decimal</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>FCF</sheetField>
+			<objField>FCF</objField>
+			<isMandatory>true</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Numerical</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>FCF/CFO</sheetField>
+			<objField>FCFCFOR</objField>
+			<isMandatory>true</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Numerical</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>Total Dividend</sheetField>
+			<objField>Div10Y</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Numerical</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>Cash + Investments</sheetField>
+			<objField>CashI10Y</objField>
+			<isMandatory>true</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Numerical</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>Total RE</sheetField>
+			<objField>RE10Y</objField>
+			<isMandatory>true</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Numerical</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>Total Inc. Mcap</sheetField>
+			<objField>McapI10Y</objField>
+			<isMandatory>true</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Numerical</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>Value Ratio</sheetField>
+			<objField>ValR</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Decimal</dataType>
+		</fldsMdt>
+
+
+	</sheetMetadata>
+
+
+	<!-- Data Sheet -->
+	<sheetMetadata>
+
+		<!--Sheet Properties -->
+		<sheetName>Data Sheet</sheetName>
+		<bobjName>EN_SC_Quarters</bobjName>
+		<isReqdCreate>false</isReqdCreate>
+		<isBaseSheet>false</isBaseSheet>
+		<isCollection>true</isCollection>
+		<updHeaderDeltaMode>true</updHeaderDeltaMode>
+		<colToScanStart>2</colToScanStart>
+		<colToScanEnd>11</colToScanEnd>
+		<headerDataType>String</headerDataType>
+		<entPKey>QTR_ID</entPKey>
+		<assembly>stocktales.scripsEngine.uploadEngine.entities.EN_SC_Quarters
+		</assembly>
+		<!--Header Properties -->
+		<headScanConfig>
+			<rowToScan>41</rowToScan>
+			<colToScanStart>2</colToScanStart>
+			<colToScanEnd>11</colToScanEnd>
+			<rowScanType>Continous</rowScanType>
+			<rowDataType>Date</rowDataType>
+			<valrowDataType>Decimal</valrowDataType>
+			<checkNullVals>true</checkNullVals>
+			<nullValRowPos>42</nullValRowPos>
+			<headerValsConvBean>DataSheet_HeadersConvSrv</headerValsConvBean>
+			<objField>YearQ</objField>
+		</headScanConfig>
+
+		<!-- Fields Details -->
+
+		<fldsMdt>
+			<sheetField>SalesQ</sheetField>
+			<objField>SalesQ</objField>
+			<isMandatory>true</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Decimal</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>ExpensesQ</sheetField>
+			<objField>Expenses</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Decimal</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>Other IncomeQ</sheetField>
+			<objField>OI</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Decimal</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>Profit before taxQ</sheetField>
+			<objField>PBTQ</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Decimal</dataType>
+		</fldsMdt>
+
+		<fldsMdt>
+			<sheetField>Net profitQ</sheetField>
+			<objField>NPQ</objField>
+			<isMandatory>false</isMandatory>
+			<isSplitAware>false</isSplitAware>
+			<isBonusAware>false</isBonusAware>
+			<dataType>Decimal</dataType>
+		</fldsMdt>
+
+
+
+	</sheetMetadata>
+
+
+
+
+
+
+
+</WorkBookMetadata>

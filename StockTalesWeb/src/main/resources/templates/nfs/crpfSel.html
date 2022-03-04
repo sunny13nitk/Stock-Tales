@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<div th:replace="fragments/header :: STHeader"></div>
+
+</head>
+<body>
+
+	<div class="grid" style="padding: 5px">
+
+		<div class="row">
+
+			<div class="colspan-12">
+
+				<div class="card" style="padding-top: -40px">
+
+					<div class="row flex-align-center">
+						<div class="cell-10">
+							<blockquote class="left-side">
+								<h5 style="color: #8000fc">Create Portfolio - Choose
+									Scrips!</h5>
+								<span style="color: #486590; font-weight: medium;">You
+									are about to create a new Portfolio based on Proposal Generated
+									on </span> <label th:if="${genDate != null}"
+									style="color: #E84C5B; font-weight: bold; font-size: 1.25em; margin-left: 5px"
+									th:text="${genDate}"> </label> <br> <span
+									style="color: #486590; font-weight: medium;"> Remove the
+									Scrips from Inclusion that you do not want to proceed with. </span> <br>
+								<span style="color: #486590; font-weight: medium;"> Click
+									on Back button if you want to see an Option to Create a Fesh
+									Proposal based on Latest Market Momentum!</span>
+
+							</blockquote>
+
+						</div>
+
+						<!-- Customize Button - Col Start -->
+						<div class="cell -1" style="margin-left: 10px; margin-top: 30px">
+
+							<a href="#" class="button primary rounded outline"
+								th:href="@{/nfs/launch}" role="button"> <span
+								class="mif-backward icon" style="margin-left: 0px"></span> <span
+								style="margin-left: 3px">Back</span>
+							</a>
+
+
+						</div>
+						<!-- Customize Button - Col End -->
+
+
+					</div>
+				</div>
+
+
+
+			</div>
+		</div>
+
+		<!-- Heading -->
+		<div class="colspan-9 offset -2">
+			<h6 style="color: #4465a1">Scrips in Current Proposal</h6>
+		</div>
+
+
+
+
+		<!-- Table Row - Starts -->
+		<div class="row flex-align-center" style="padding: 5px">
+			<div class="cell-md-auto">
+
+				<form method="post" th:action="@{/nfs/crpf_staging_1}"
+					th:object="${scSelList}">
+
+
+					<!-- Here goes your table -->
+
+					<table class="table subcompact striped table-border row-hover "
+						data-show-search="false" data-show-rows-steps="false"
+						id="t-inspector" data-showPagination="false" data-role="table"
+						data-horizontal-scroll="true" data-rows="-1"
+						data-info-wrapper=".my-info-wrapper" data-thousand-separator=","
+						data-pagination-wrapper=".my-pagination-wrapper">
+
+						<thead style="text-align: center;">
+							<tr>
+								<th data-name="sccode" class="sortable-column "
+									data-cls-column=" text-left">Scrip Code</th>
+
+								<th data-name="rank" data-format="number"
+									data-cls-column=" text-left">Rank</th>
+
+								<th data-name="consolscore" data-format="number"
+									data-cls-column=" text-left">Score</th>
+
+								<th data-cls-column=" text-center"></th>
+
+								<th data-name="isincluded" data-cls-column=" text-left">Is
+									Included</th>
+							</tr>
+						</thead>
+
+
+
+
+						<tr th:each="scAllocI , stat :  *{scSel} ">
+
+
+							<td><span th:text="${scAllocI.sccode}"></span> <input
+								type="hidden" th:field="*{scSel[__${stat.index}__].sccode}" /></td>
+
+							<td><span th:text="${scAllocI.rank}"></span> <input
+								type="hidden" th:field="*{scSel[__${stat.index}__].rank}" />
+							<td><span th:text="${scAllocI.consolscore}"></span> <input
+								type="hidden" th:field="*{scSel[__${stat.index}__].consolscore}" />
+							<td><input type="hidden"
+								th:field="*{scSel[__${stat.index}__].screenerUrl}" /> <a
+								th:href="${scAllocI.screenerUrl}" th:target="_blank"
+								class="button rounded outline"
+								style="border: none; align-content: top;"> <img
+									th:src="@{/images/screener.png}"
+									src="../../static/images/screener.png" width="35" height="85"
+									style="margin-left: 5px; margin-bottom: 5px">
+							</a></td>
+
+
+							<td><input type="checkbox" data-role="switch"
+								th:field="*{scSel[__${stat.index}__].isincluded}" checked
+								data-material="true" data-cls-caption="fg-teal text-bold" />
+						</tr>
+
+					</table>
+
+
+					<div class="row flex-align-end">
+						<div class="cell-1 offset-11">
+							<div class="form-group" style="margin-top: 10px">
+
+								<button class="button yellow rounded" type="submit"
+									name="action" value="refresh">
+									<span class="mif-checkmark"></span> Next
+								</button>
+
+
+							</div>
+						</div>
+					</div>
+
+
+				</form>
+
+			</div>
+
+		</div>
+		<!-- Table Row - Ends -->
+
+
+
+	</div>
+
+
+	<!-- Metro 4 -->
+	<script src="https://cdn.metroui.org.ua/v4.3.2/js/metro.min.js"></script>
+</body>
+</html>

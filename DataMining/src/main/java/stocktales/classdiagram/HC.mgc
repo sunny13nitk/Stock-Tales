@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ClassDiagram>
+    <Class name="stocktales.healthcheck.model.helperpojo.HCComboResult"
+        x="414" y="138">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Association
+            destinationClassName="stocktales.healthcheck.model.helperpojo.HCEvalResult"
+            endpointName="evalResult" kind="Simple"/>
+        <Association
+            destinationClassName="stocktales.healthcheck.model.helperpojo.HCBeanReturn"
+            endpointName="beanProcResult" kind="Simple"/>
+    </Class>
+    <Class
+        name="stocktales.healthcheck.model.entity.Cfg_ScripHealthCheck"
+        x="1190" y="-1">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+    <Class name="stocktales.healthcheck.annotations.HealthCheckCriteria"
+        x="1678" y="394">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="true"
+            accessors-accepted="true" constructors-accepted="true"/>
+    </Class>
+    <Class name="stocktales.healthcheck.model.helperpojo.HCBeanReturn"
+        x="853" y="464">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Association
+            destinationClassName="stocktales.healthcheck.model.helperpojo.HCDataContainer"
+            endpointName="dataContainers" kind="Simple"/>
+        <Association
+            destinationClassName="stocktales.healthcheck.model.helperpojo.HCMsg"
+            endpointName="messages" kind="Simple"/>
+    </Class>
+    <Class name="stocktales.healthcheck.model.helperpojo.HCSubSrvRes"
+        x="1583" y="482">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Association
+            destinationClassName="stocktales.healthcheck.model.helperpojo.HCMsg"
+            endpointName="messages" kind="Simple"/>
+        <Association
+            destinationClassName="stocktales.healthcheck.model.helperpojo.HCDataContainer"
+            endpointName="containers" kind="Simple"/>
+    </Class>
+    <Class name="stocktales.healthcheck.model.helperpojo.HCEvalResult"
+        x="771" y="16">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+    <Class name="stocktales.healthcheck.intf.IHC_GetEvaluationResults"
+        x="311" y="487">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+    <Class
+        name="stocktales.healthcheck.aspects.SCHealthCheckEvaluateAspect"
+        x="279" y="741">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Association
+            destinationClassName="stocktales.healthcheck.intf.IHC_GetEvaluationResults"
+            endpointName="srvInstance" kind="Simple"/>
+        <Communication destinationClassName="stocktales.healthcheck.annotations.HealthCheckCriteria"/>
+        <Communication destinationClassName="stocktales.healthcheck.intf.IHC_SubSrvRes"/>
+    </Class>
+    <Class name="stocktales.healthcheck.intf.IHC_SubSrvRes" x="1530" y="321">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+    <Class name="stocktales.factsheet.impl.FactSheetBufferSrv" x="1056" y="730">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+    <Class
+        name="stocktales.healthcheck.model.helperpojo.HCDataContainer"
+        x="1184" y="345">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+    <Class name="stocktales.healthcheck.intf.IHC_Srv" x="70" y="26">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+    <Class
+        name="stocktales.healthcheck.aspects.SCHealthCheckFinalResultsGenerationAspect"
+        x="70" y="252">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Association
+            destinationClassName="stocktales.healthcheck.intf.IHC_Srv"
+            endpointName="hcSrv" kind="Simple"/>
+        <Association
+            destinationClassName="stocktales.healthcheck.model.helperpojo.HCComboResult"
+            endpointName="results" kind="Simple"/>
+        <Communication destinationClassName="stocktales.healthcheck.model.entity.Cfg_ScripHealthCheck"/>
+        <Communication destinationClassName="stocktales.healthcheck.model.helperpojo.HCComboResult"/>
+        <Communication destinationClassName="stocktales.healthcheck.model.helperpojo.HCBeanReturn"/>
+        <Communication destinationClassName="stocktales.healthcheck.model.helperpojo.HCEvalResult"/>
+    </Class>
+    <Class name="stocktales.healthcheck.model.helperpojo.HCMsg" x="1191" y="577">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+    <Note x="352" y="50">Health check Service Returns</Note>
+    <Note x="997" y="99">From hcconfig table</Note>
+    <Note x="21" y="551">Beans must follow this Interface</Note>
+    <Note x="699" y="284">Main Srv Bean as defined in Cfg_ScripHealthCheck</Note>
+    <Note x="1508" y="148">Weaved SubServices that return HCSubSrvRes &#xd;
+&amp; weaved to Main Srv using class level &#xd;
+annotation @HealthCheckCriteria to specify&#xd;
+matching EnumHCCriteria as specied in Main Srv&#xd;
+Service Bean. </Note>
+    <Note x="1715" y="453">Contains EnumHCCriteria and&#xd;
+boolean flag forFinancials to ensure &#xd;
+whether a Subservice is applicable&#xd;
+ for Financial Scrips</Note>
+    <Note x="1690" y="334">Annotated with</Note>
+    <Note x="564" y="595">Processes Each MainSrvBean that implements&#xd;
+ IHC_GetEvaluationResults and also sub Service&#xd;
+Beans that implement IHC_SubSrvRes for respective&#xd;
+HealthCheckCriteria. </Note>
+    <Note x="10" y="380">Results Preperation Aspect for Main Srv Bean after all computaitons of SubServices&#xd;
+Populates Messages, Repurcurssions and Tags as per Main Srv Configured in hcconfig</Note>
+    <Note x="1454" y="816">Session Bean Injected from HC_Srv&#xd;
+ for the Scrip Code, &#xd;
+can be referred to in any of the&#xd;
+ Sub Services to get the Data Container&#xd;
+and entities for the Scrip</Note>
+</ClassDiagram>

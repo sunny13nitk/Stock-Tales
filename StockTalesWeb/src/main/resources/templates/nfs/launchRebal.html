@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<div th:replace="fragments/header :: STHeader"></div>
+
+</head>
+<body>
+
+	<div class="grid" style="padding: 5px">
+
+		<div class="row">
+
+			<div class="colspan-3 flex-align-self-center">
+
+				<img th:src="@{/images/coffe.png}"
+					src="../../static/images/coffe.png" width="300" height="500"
+					style="margin-left: 10px; margin-top: 30px">
+
+			</div>
+
+			<div class="colspan-9">
+
+				<div class="card" style="padding-top: -40px">
+
+					<div class="row flex-align-center">
+						<div class="cell-6">
+							<blockquote class="left-side">
+								<h3 style="color: #8000fc">Create a Portfolio!</h3>
+								<span style="color: #486590; font-weight: medium;"> You
+									can generate a new Portfolio proposal (around 20 mins.) or Use
+									Existing proposal saved Earlier to Get Started! </span><span
+									style="margin-left: 40 px; color: #486590"
+									class="mif-spinner5 ani-spin"></span>
+							</blockquote>
+
+						</div>
+
+						<!-- Customize Button - Col Start -->
+						<div class="cell-5" style="margin-left: 10px; margin-top: 30px">
+
+							<a href="#" class="button primary rounded outline"
+								th:href="@{/nfs/start}" role="button"> <span
+								class="mif-enter icon" style="margin-left: 0px"></span> <span
+								style="margin-left: 3px">New Proposal</span>
+							</a> <a href="#" class="button success rounded outline"
+								th:href="@{/nfs/crExisProp}" role="button"
+								style="margin-left: 5px"> <span class="mif-beenhere  icon"
+								style="margin-left: 0px;"></span> <span style="margin-left: 3px">Use
+									Existing Proposal</span>
+							</a>
+
+
+						</div>
+
+
+
+
+						<!-- Customize Button - Col End -->
+
+					</div>
+				</div>
+
+				<div class="row " style="margin-top: -10px">
+					<blockquote style="width: 900px;">
+						<h6
+							style="color: #000058; background: #F1F2FF; padding: 5px; font-size: .9em; font-weight: medium;">
+							<span style="color: #585800">Step 1 - Set up Data Pool </span>
+
+						</h6>
+						<span
+							style="color: #486590; font-size: .9em; font-weight: medium;">
+							We'll fetch the monthly returns data for around 1700 NSE listed
+							scrips for the last 30 Months.</span>
+					</blockquote>
+
+				</div>
+
+				<div class="row " style="margin-top: -15px">
+					<blockquote style="width: 900px;">
+						<h6
+							style="color: #000058; background: #F1F2FF; padding: 5px; font-size: .9em; font-weight: medium;">
+							<span style="color: #585800">Step 2 - Market Cap & Active
+								Traded Days Filter </span>
+
+						</h6>
+						<span
+							style="color: #486590; font-size: .9em; font-weight: medium;">
+							We'll filter out the Scrips below 1000 Cr. Mcap or the ones that
+							have not traded for atleast last 6 Months.</span>
+					</blockquote>
+
+				</div>
+
+				<div class="row " style="margin-top: -15px">
+					<blockquote style="width: 900px;">
+						<h6
+							style="color: #000058; background: #F1F2FF; padding: 5px; font-size: .9em; font-weight: medium;">
+							<span style="color: #585800">Step 3 - Consistency Filter </span>
+
+						</h6>
+						<span
+							style="color: #486590; font-size: .9em; font-weight: medium;">
+							We'll filter out the Scrips that have avg. monthly returns below
+							our proprietary Consistency Score Algo. </span>
+					</blockquote>
+
+				</div>
+
+				<div class="row " style="margin-top: -15px">
+					<blockquote style="width: 900px;">
+						<h6
+							style="color: #000058; background: #F1F2FF; padding: 5px; font-size: .9em; font-weight: medium;">
+							<span
+								style="color: #585800; font-size: .9em; font-weight: medium;">Step
+								4 - Momentum Filter </span>
+
+						</h6>
+						<span
+							style="color: #486590; font-size: .9em; font-weight: medium;">
+							We'll filter out the Scrips that do not exhibit positive momentum
+							as per our proprietary Momentum Score Algo. </span>
+					</blockquote>
+
+				</div>
+
+				<div class="row " style="margin-top: -15px">
+					<blockquote style="width: 900px;">
+						<h6
+							style="color: #000058; background: #F1F2FF; padding: 5px; font-size: .9em; font-weight: medium;">
+							<span style="color: #585800">Step 5 - Removing Price
+								Manipulated Scrips </span>
+
+						</h6>
+						<span
+							style="color: #486590; font-size: .9em; font-weight: medium;">
+							Our in house Algo will weed out the scrips where a price
+							manipulation is detected though they might have made it through
+							the filters. </span>
+					</blockquote>
+
+				</div>
+
+				<div class="row " style="margin-top: -15px">
+					<blockquote style="width: 900px;">
+						<h6
+							style="color: #000058; background: #F1F2FF; padding: 5px; font-size: .9em; font-weight: medium;">
+							<span style="color: #585800">Step 5 - Consolidated Scores
+								and Ranking </span>
+
+						</h6>
+						<span
+							style="color: #486590; font-size: .9em; font-weight: medium;">
+							We'll calculate Consolidated Scores based on Consistency and
+							Momentum and Rank the final sieved Scrips for Easier Selection! </span>
+					</blockquote>
+
+				</div>
+
+			</div>
+
+		</div>
+	</div>
+
+
+
+
+	<!-- Metro 4 -->
+	<script src="https://cdn.metroui.org.ua/v4.3.2/js/metro.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<div th:replace="fragments/header :: STHeader"></div>
+
+</head>
+<body>
+
+   <div style="min-height: 600px; overflow: hidden;">
+      <div data-role="navview" data-compact="md" data-expand="false"
+         data-active-state="true">
+         <div th:replace="fragments/navbar :: STNavbar"></div>
+
+
+
+         <div class="navview-content pl-4-md pr-4-md">
+
+            <div class="grid">
+
+               <div th:replace="fragments/brand :: STBrand"></div>
+
+               <!-- your Code Starts from Here  -->
+               <div class="grid" style="padding: 20px">
+
+                  <!--Salutation Row - Starts  -->
+                  <div class="row">
+
+                     <div class="colspan-11 " style="margin-left: 10px">
+                        <h3 style="color: #4465a1">
+                           Hi <span style="color: #B1365B"
+                              th:text="${pfConfig.username}"></span> ! <span
+                              class="mif-user-check"></span>
+                        </h3>
+                     </div>
+
+
+
+                  </div>
+                  <!-- Salutation Row - Ends  -->
+
+                  <!-- PF Config Not maintained  -->
+                  <div th:if="${pfConfig.cid >=0 }">
+
+                     <blockquote th:if="${message != null }">
+                        <h6
+                           style="color: #000058; background: #F1F2FF; padding: 10px">
+                           <span style="color: #585800"
+                              th:text=" ${message} "></span>
+
+                        </h6>
+                     </blockquote>
+
+
+                  </div>
+
+
+                  <div class="col-xs-15">
+                     <div th:if="${formSucc != null}">
+
+
+                        <div class="remark success"
+                           style="padding-top: 10px; margin: 2px">
+                           <label th:text=" ${formSucc}"></label>
+                        </div>
+
+
+
+                     </div>
+                  </div>
+
+
+
+                  <!-- PF Config Form Row - Starts  -->
+
+                  <div class="colspan-10 offset-1"
+                     style="margin-top: 5px">
+
+                     <div class="card">
+
+                        <h6 style="color: #4465a1; margin-left: 10px">Maintain
+                           below Details to Plan you Equity Allocations</h6>
+
+                        <form th:object="${pfConfig}"
+                           th:action="@{'/pf/saveConfig'} "
+                           method="post">
+
+                           <!--Error Messages Row - Starts -->
+
+                           <div th:if="${#fields.hasErrors('*')}"
+                              data-role="panel" style="padding: 15px"
+                              data-title-caption="Please correct the errors below!"
+                              data-title-icon="<span class='mif-apps'></span>"
+                              data-collapsible="true"
+                              data-cls-panel="shadow-3"
+                              data-cls-title="bg-red fg-white"
+                              data-cls-title-icon="bg-red fg-white"
+                              data-cls-content="bg-transparent"
+                              data-cls-collapse-toggle="bg-dark fg-white marker-light">
+                              <div
+                                 th:each="err : ${#fields.errors('*')}">
+                                 <div class="remark alert"
+                                    style="padding-top: 10px; margin: 2px">
+                                    <label th:text=" ${err}"></label>
+                                 </div>
+                              </div>
+                           </div>
+
+                           <!--Error Messages Row - Ends -->
+
+                           <!--User Name Retained - from Model -->
+                           <input type="hidden" th:field="*{username}" />
+                           <input type="hidden" th:field="*{cid}" />
+
+                           <div class="colspan-7 offset-1"
+                              style="margin-top: 35px; margin-bottom: 10px;">
+                              <label>Current Cash Balance </label> <input
+                                 class="metro-input input-large"
+                                 type="text" data-role="input"
+                                 data-prepend="<span style = 'padding-top:7px' class='mif-inr mif-3x'></span>"
+                                 data-append="<span style = 'padding-top:30px'>0.00</span>"
+                                 title="" th:field="*{cashbalance}" />
+                              <small class="text-muted">Enter
+                                 any Initial Balance you have ready to
+                                 be deployed!</small>
+                           </div>
+
+                           <div class="colspan-7 offset-1"
+                              style="margin-top: 15px; margin-bottom: 10px;">
+                              <label>Average Annual Incremental
+                                 Funds Inflow </label> <input
+                                 class="metro-input input-large"
+                                 type="text" data-role="input"
+                                 data-prepend="<span style = 'padding-top:7px' class='mif-inr mif-3x'></span>"
+                                 data-append="<span style = 'padding-top:30px'>0.00</span>"
+                                 title="" th:field="*{avgannualcorpus}" />
+                              <small class="text-muted">Enter
+                                 the Amount you can deploy on an Average
+                                 Annually- For Position sizing!</small>
+                           </div>
+
+                           <div class="row"
+                              style="margin-top: 10px; margin-bottom: 10px">
+
+                              <div class="cell-md-3 offset-1">
+                                 <label style="margin-left: 5px">
+                                    Min'm CAGR threshold </label> <input
+                                    type="text" data-role="spinner"
+                                    data-step="1" data-fixed="0"
+                                    data-min-value="5"
+                                    data-max-value="25"
+                                    data-cls-spinner-value="text-bold bg-cyan fg-white"
+                                    data-cls-spinner-button="secondary"
+                                    data-plus-icon=" <span class='mif-plus fg-white'</span>"
+                                    data-minus-icon="<span class='mif-minus fg-white'</span>"
+                                    th:field="*{mincagr}"> <small
+                                    class="text-muted">Deploy
+                                    Only in Scrips where next 5Yr CAGR
+                                    is greater then above!</small>
+                              </div>
+
+                              <div class="cell-md-3 ">
+                                 <label style="margin-left: 5px">
+                                    Roll Over Years (Position Sizing) </label> <input
+                                    type="text" data-role="spinner"
+                                    data-step="1" data-fixed="0"
+                                    data-min-value="2"
+                                    data-max-value="5"
+                                    data-cls-spinner-value="text-bold bg-cyan fg-white"
+                                    data-cls-spinner-button="secondary"
+                                    data-plus-icon=" <span class='mif-plus fg-white'</span>"
+                                    data-minus-icon="<span class='mif-minus fg-white'</span>"
+                                    th:field="*{yrsrollover}"> <small
+                                    class="text-muted"># Years
+                                    Annuals FundFlows Can be rolled for
+                                    Calculating Positions!</small>
+                              </div>
+
+                              <div class="cell-md-3 ">
+                                 <label style="margin-left: 5px">
+                                    Allocation Breach Allowed (Strategy)
+                                 </label> <input type="text" data-role="spinner"
+                                    data-step="1" data-fixed="0"
+                                    data-min-value="0"
+                                    data-max-value="25"
+                                    data-cls-spinner-value="text-bold bg-cyan fg-white"
+                                    data-cls-spinner-button="secondary"
+                                    data-plus-icon=" <span class='mif-plus fg-white'</span>"
+                                    data-minus-icon="<span class='mif-minus fg-white'</span>"
+                                    th:field="*{maxposbreach}">
+                                 <small class="text-muted">Deviation
+                                    in % from Strategy permissible for a
+                                    particular Scrip!</small>
+                              </div>
+
+                           </div>
+
+                           <div class="colspan-7 offset-1"
+                              style="margin-top: 5px; margin-bottom: 10px">
+                              <label>Select Broker</label> <select
+                                 data-role="select" name="brokercode"
+                                 th:field="*{brokercode}"
+                                 data-add-empty-value="true"
+                                 class="input">
+                                 <!-- Param List Beans -->
+                                 <option th:each="broker : ${brokers}"
+                                    th:value="${broker}"
+                                    th:selected="${broker}"
+                                    th:text="${broker}"></option>
+                              </select>
+                           </div>
+
+                           <div class="colspan-7 offset-1"
+                              style="margin-top: 15px; margin-bottom: 10px;">
+                              <label>Broker Url </label> <input
+                                 class="metro-input" type="text"
+                                 data-role="input"
+                                 data-prepend="<span  class='mif-link '></span>"
+                                 th:field="*{brokerurl}" /> <small
+                                 class="text-muted">Maintain
+                                 Broker Url to Trigger Orders Directly!</small>
+                           </div>
+
+
+                           <div class="colspan-7 offset-1">
+                              <input type="checkbox" data-role="switch"
+                                 th:field="*{confirmb4deploy}" checked
+                                 data-material="true"
+                                 data-caption-position="left"
+                                 data-cls-caption="fg-teal text-bold"
+                                 data-caption="Always Allow to Modify Balance before Deployment">
+                           </div>
+
+
+                           <div class="colspan-1 offset-10"
+                              style="margin-top: 10px; margin-bottom: 10px;">
+                              <button class="button rounded"
+                                 style="background-color: #59D3AF; color: white; margin-top: 5px; margin-bottom: 10px">
+                                 <span class="mif-floppy-disk"
+                                    style="margin-left: 0px"> </span> <span
+                                    style="margin-left: 3px">Save</span>
+                              </button>
+
+                           </div>
+                        </form>
+                     </div>
+                  </div>
+
+                  <!-- PF config Form Row - Ends  -->
+
+
+
+               </div>
+            </div>
+
+         </div>
+      </div>
+   </div>
+
+   <!-- Metro 4 -->
+   <script src="https://cdn.metroui.org.ua/v4.3.2/js/metro.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<div th:replace="fragments/header :: STHeader"></div>
+
+</head>
+<body>
+
+   <div class="grid" style="margin: 20px">
+
+      <!-- Top Row - Starts -->
+      <div class="row">
+
+         <div class="colspan-3">
+            <h3 style="margin-left: 15px;">
+               <img th:src="@{/images/dice.png}"
+                  src="../../static/images/dice.png" width="80"
+                  height="80"
+                  style="margin-left: 5px; margin-right: 10px">
+               Stock Tales
+            </h3>
+
+         </div>
+         <!--ICOn - Ends -->
+
+         <div class="colspan-7">
+            <h4 style="font-weight: medium; color: #4465a1">
+               Notes for <span style="color: #B1365B"
+                  th:text="${scCode}"></span> Period: <span
+                  style="color: #B1365B" th:text="${interval}"></span>
+            </h4>
+         </div>
+         <!-- Text  -->
+
+         <!--Buttons - Start  -->
+         <div class="colspan-2">
+
+            <div class="multi-action">
+               <button
+                  class="action-button rotate-minus bg-red fg-white"
+                  onclick="$(this).toggleClass('active')"
+                  data-role="hint"
+                  data-hint-text="Click to View Actions"
+                  data-cls-hint="bg-red fg-white drop-shadow"
+                  data-hint-position="top">
+                  <span class="icon"><span class="mif-plus"></span></span>
+               </button>
+               <ul class="actions drop-right">
+
+                  <li class="bg-blue"><a
+                     th:href="@{/databook/scrip/secsp/{scCode}(scCode=${scCode})}"
+                     data-role="hint" data-hint-text="Back"
+                     data-cls-hint="bg-cyan fg-white drop-shadow"
+                     data-hint-position="bottom"><span
+                        class="mif-backward"></span></a></li>
+
+                  <li class="bg-orange"><a th:href="@{/}"
+                     data-role="hint" data-hint-text="Home"
+                     data-cls-hint="bg-orange fg-white drop-shadow"
+                     data-hint-position="bottom"><span
+                        class="mif-home"></span></a></li>
+
+
+               </ul>
+            </div>
+
+         </div>
+
+         <!--Buttons - End -->
+
+      </div>
+      <!-- Top Row - Ends -->
+
+
+      <!-- Content Row - Starts -->
+
+      <div class="row">
+
+         <!-- Form - Starts -->
+
+         <form th:object="${idNotes}"
+            th:action="@{/databook/scrip/Notes}" method="post">
+
+            <div class="d-flex flex-row-r">
+               <button class="button rounded yellow" data-role="hint"
+                  data-hint-position="left"
+                  data-cls-hint="bg-LightGreen fg-black"
+                  data-hint-text="Save Notes">
+                  <span class="mif-floppy-disk" style="margin-left: 0px">
+                  </span> <span style="margin-left: 3px">Save</span>
+               </button>
+
+            </div>
+
+            <!--Hidden fieldPoolId & Scrip Code field to be passed on to   -->
+            <input type="hidden" th:field="*{id}" /> <input
+               type="hidden" th:field="*{sector}" />
+
+            <div class="col-md-12 form-group">
+               <p class="fg-mauve" id="chars-counter">Length- 0
+                  char(s)</p>
+               <textarea data-role="textarea" data-auto-size="true"
+                  data-chars-counter="#chars-counter"
+                  style="width: 1300px; height: 1000px"
+                  data-chars-counter-template="Length- $1 char(s)"
+                  th:field="*{notes}"></textarea>
+            </div>
+
+         </form>
+      </div>
+
+
+      <!-- Content Row - Ends -->
+
+   </div>
+
+   <!-- Metro 4 -->
+   <script src="https://cdn.metroui.org.ua/v4.3.2/js/metro.min.js"></script>
+</body>
+</html>

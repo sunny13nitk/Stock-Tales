@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<div th:replace="fragments/header :: STHeader"></div>
+
+</head>
+<body>
+
+	<div class="grid" style="padding: 5px">
+
+
+		<div class="row flex-align-center">
+
+			<div class="card" style="padding-top: -40px">
+
+				<div class="row flex-align-center">
+					<div class="cell-1">
+						<span class="mif-warning mif-7x fg-red" style="margin-left: 20px;"></span>
+					</div>
+					<div class="cell-8">
+						<blockquote class="left-side">
+							<h3 style="color: #8000fc">Risk Reward ratio not favorable
+								for Portfolio Creation Currently!</h3>
+							<span style="color: #486590; font-weight: medium;">Number
+								of Scrips Identified </span> <span
+								style="color: #CB5F8D; margin-left: 1px; font-weight: bold;"
+								th:text="${selScrips}"></span><span
+								style="color: #486590; font-weight: medium; margin-left: 4px">are
+								less than </span> <br> <span
+								style="color: #486590; font-weight: medium;"> minimum
+								scrips needed </span> <span
+								style="color: #CB5F8D; margin-left: 2px; font-weight: bold;"
+								th:text="${minSize}"></span> <span
+								style="margin-left: 2px; color: #486590"> to start a
+								momentum portfolio. No Cash will be thus deployed. Try Later!</span>
+						</blockquote>
+
+					</div>
+
+					<!-- Customize Button - Col Start -->
+					<div class="cell -2" style="margin-left: 10px; margin-top: 30px">
+
+
+						<a href="#" class="button primary rounded outline"
+							th:href="@{/nfs/launch}" role="button"> <span
+							class="mif-next icon" style="margin-left: 0px"></span> <span
+							style="margin-left: 3px">Launch Again</span>
+						</a> <a href="#" class="button steel rounded outline"
+							style="border: none; margin-left: 10px" th:href="@{/}"
+							role="button"> <span class="mif-home  mif-3x"></span>
+						</a>
+
+
+					</div>
+					<!-- Customize Button - Col End -->
+				</div>
+			</div>
+		</div>
+
+
+
+
+
+
+
+
+	</div>
+
+	</div>
+
+
+
+	<!-- Metro 4 -->
+	<script src="https://cdn.metroui.org.ua/v4.3.2/js/metro.min.js"></script>
+</body>
+</html>

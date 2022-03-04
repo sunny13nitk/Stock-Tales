@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<div th:replace="fragments/header :: STHeader"></div>
+
+</head>
+<body>
+
+   <div style="height: 800px">
+      <div data-role="navview" data-compact="md" data-expand="false"
+         data-active-state="true">
+         <div th:replace="fragments/navbar :: STNavbar"></div>
+
+
+
+         <div class="navview-content pl-4-md pr-4-md">
+
+            <div class="grid">
+
+               <div th:replace="fragments/brand :: STBrand"></div>
+
+               <!-- your Code Starts from Here  -->
+
+               <!-- Select Site Panel Row - Starts  -->
+
+               <div class="colspan-10 offset-1">
+
+                  <div class="card" style="padding: 10px">
+
+                     <h4
+                        style="margin-top: 20px; font-weight: medium; color: #4465a1">
+                        URL Title : <span style="color: #B1365B"
+                           th:text="${sitePath.title}"></span> has an
+                        obligatory Parameter <span
+                           style="color: #B1365B"
+                           th:text="${sitePath.paramdesc}"></span>
+                     </h4>
+
+
+                     <h6
+                        style="color: #4465a1; margin-left: 10px; margin-top: 40px">Select
+                        Parameter Value to Continue</h6>
+
+
+                     <form th:object="${urlParam}"
+                        th:action="@{'/qnav/siteParam'}" method="post">
+                        <input type="hidden" th:field="*{url}" />
+
+
+                        <div class="colspan-7 offset-1"
+                           style="margin-top: 5px; margin-bottom: 10px">
+                           <select data-role="select" name="param"
+                              th:field="*{param}"
+                              data-add-empty-value="true" class="input">
+                              <!-- Params list to be pushed via Model -->
+                              <option th:each="paramVal : ${paramList}"
+                                 th:value="${paramVal}"
+                                 th:selected="${paramVal}"
+                                 th:text="${paramVal}"></option>
+                           </select>
+                        </div>
+                        <button class="button rounded" type="submit"
+                           style="background-color: #59D3AF; color: white; margin-top: 5px; margin-bottom: 10px"
+                           data-role="hint" data-hint-position="bottom"
+                           data-cls-hint="bg-Lightgreen fg-black"
+                           data-hint-text="Navigate">
+                           <span class="mif-flash-auto"
+                              style="margin-left: 0px"> </span> <span
+                              style="margin-left: 3px">Navigate</span>
+                        </button>
+
+                     </form>
+                  </div>
+               </div>
+
+               <!-- Select Scrip Panel Row - Ends  -->
+
+
+
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <!-- Metro 4 -->
+   <script src="https://cdn.metroui.org.ua/v4.3.2/js/metro.min.js"></script>
+</body>
+</html>

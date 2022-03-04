@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<div th:replace="fragments/header :: STHeader"></div>
+
+</head>
+<body>
+
+   <div style="height: 800px; overflow: hidden;">
+      <div data-role="navview" data-compact="md" data-expand="false"
+         data-active-state="true">
+         <div th:replace="fragments/navbar :: STNavbar"></div>
+
+
+
+         <div class="navview-content pl-4-md pr-4-md">
+
+            <div class="grid">
+
+               <div th:replace="fragments/brand :: STBrand"></div>
+
+               <div style="margin-top: 10px">
+
+
+
+                  <div class="row">
+                     <div class="card" style="width: 800px;">
+                        <div class="card-header">
+
+                           <div class="remark alert "
+                              style="padding-top: 10px; margin: 2px">
+                              <h4>Upload Image for Scrip Journal
+                                 Entry</h4>
+                           </div>
+
+
+
+
+
+                           <form action="#" method="post"
+                              enctype="multipart/form-data"
+                              th:action="@{'/scJournal/upload'}"
+                              class="form-horizontal">
+
+                              <!-- Place for messages: error, alert etc ... -->
+                              <div class="form-group">
+                                 <div class="col-xs-15">
+                                    <div th:if="${formError != null}">
+
+                                       <!-- Check for Form error -->
+
+                                       <div class="remark alert"
+                                          style="padding-top: 10px; margin: 2px">
+                                          <label
+                                             th:text="'Error Loading Image' + ${formError}"></label>
+                                       </div>
+                                    </div>
+                                 </div>
+
+                                 <div class="col-xs-15">
+                                    <div th:if="${formSucc != null}">
+
+
+                                       <div class="remark success"
+                                          style="padding-top: 10px; margin: 2px">
+                                          <label th:text=" ${formSucc}"></label>
+                                       </div>
+
+
+
+                                    </div>
+                                 </div>
+                              </div>
+
+
+
+                              <div style="padding: 40px">
+                                 <input type="file" data-role="file"
+                                    name="file"
+                                    data-prepend="Select Image for Journal Entry:">
+                              </div>
+
+
+                              <div class="form-group">
+
+
+
+                                 <button class="button success"
+                                    style="background-color: #59D3AF; color: white">Upload</button>
+
+                              </div>
+
+                           </form>
+                        </div>
+
+
+                     </div>
+                  </div>
+
+               </div>
+
+            </div>
+
+
+         </div>
+      </div>
+   </div>
+   </div>
+
+   <!-- Metro 4 -->
+   <script src="https://cdn.metroui.org.ua/v4.3.2/js/metro.min.js"></script>
+</body>
+</html>

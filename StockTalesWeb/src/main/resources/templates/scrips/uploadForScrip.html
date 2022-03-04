@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<div th:replace="fragments/header :: STHeader"></div>
+
+</head>
+<body>
+
+	<div style="height: 800px; overflow: hidden;">
+		<div data-role="navview" data-compact="md" data-expand="false"
+			data-active-state="true">
+			<div th:replace="fragments/navbar :: STNavbar"></div>
+
+
+
+			<div class="navview-content pl-4-md pr-4-md">
+
+				<div class="grid">
+
+					<div th:replace="fragments/brand :: STBrand"></div>
+
+					<div style="margin-top: 10px">
+
+
+
+						<div class="row">
+							<div class="card" style="width: 800px;">
+								<div class="card-header">
+
+									<div class="remark alert "
+										style="padding-top: 10px; margin: 2px">
+										<h4 style="color: #4465a1">
+											Upload Data for - <span style="color: #B1365B"
+												th:text="${scCode}"></span> ! <span class="mif-external"></span>
+										</h4>
+									</div>
+
+									<div style="margin-top: 20px; margin-left: 20px">
+
+										<a
+											th:href="'https://www.screener.in/company/' + ${scCode}+ '/consolidated/'"
+											th:target="_blank" class="button rounded outline"
+											style="border: none"> <img
+											th:src="@{/images/screener.png}"
+											src="../../static/images/screener.png" width="25" height="40"
+											style="margin-left: -15px;"> D/L the Scrip Excel from
+											Screener, maintain General Data and Upload
+										</a>
+									</div>
+
+
+
+									<form action="#" method="post" enctype="multipart/form-data"
+										th:action="@{'/admin/sc/uploadScrip'}" class="form-horizontal">
+
+										<!-- Place for messages: error, alert etc ... -->
+										<div class="form-group">
+											<div class="col-xs-15">
+												<div th:if="${formError != null}">
+
+													<!-- Check for Form error -->
+
+													<div class="remark alert"
+														style="padding-top: 10px; margin: 2px">
+														<label th:text="'Error Loading Scrip' + ${formError}"></label>
+													</div>
+												</div>
+											</div>
+
+											<div class="col-xs-15">
+												<div th:if="${formSucc != null}">
+
+
+													<div class="remark success"
+														style="padding-top: 10px; margin: 2px">
+														<label th:text=" ${formSucc}"></label>
+													</div>
+
+
+
+												</div>
+											</div>
+										</div>
+
+
+
+										<div
+											style="padding-top: 20px; padding-bottom: 45px; padding-left: 10px; padding-right: 20px">
+											<input type="file" data-role="file" name="file"
+												data-prepend="Select Scrip Workbook:">
+										</div>
+
+
+										<div class="form-group">
+
+											<button class="button success"
+												style="background-color: #59D3AF; color: white">Upload</button>
+
+										</div>
+
+									</form>
+								</div>
+
+
+							</div>
+						</div>
+
+					</div>
+
+				</div>
+
+
+			</div>
+		</div>
+	</div>
+	</div>
+
+	<!-- Metro 4 -->
+	<script src="https://cdn.metroui.org.ua/v4.3.2/js/metro.min.js"></script>
+</body>
+</html>

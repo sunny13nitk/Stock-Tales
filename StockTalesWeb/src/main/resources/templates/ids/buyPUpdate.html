@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<div th:replace="fragments/header :: STHeader"></div>
+
+</head>
+<body>
+
+	<div class="grid" style="padding: 5px">
+
+		<div class="row">
+
+			<div class="colspan-12">
+
+				<div class="card" style="padding-top: -40px">
+
+					<div class="row flex-align-center">
+
+						<blockquote class="left-side">
+							<h5 style="color: #8000fc">Commit the Proposals after
+								executing purchases at Broker</h5>
+							<h5 style="color: #486590">Review Proposals & change as per
+								actual transaction Cost/Units</h5>
+
+
+
+						</blockquote>
+
+					</div>
+
+					<!--Error and Success Messages On DashBoard  -->
+					<div class="row flex-justify-center">
+						<div class="form-group">
+							<div class="col-xs-15">
+								<div th:if="${formError != null}">
+
+									<!-- Check for Form error -->
+
+									<div class="remark alert"
+										style="padding-top: 10px; margin: 2px">
+										<label th:text="'ERROR : ' + ${formError}"></label>
+									</div>
+								</div>
+							</div>
+
+							<div class="col-xs-15">
+								<div th:if="${formSucc != null}">
+
+
+									<div class="remark success"
+										style="padding-top: 10px; margin: 2px">
+										<label th:text=" ${formSucc}"></label>
+									</div>
+
+
+
+								</div>
+							</div>
+						</div>
+
+					</div>
+
+
+
+
+
+
+
+				</div>
+			</div>
+
+
+
+
+		</div>
+
+		<!-- Heading -->
+		<div class="colspan-9 offset -2">
+			<h6 style="color: #4465a1">Transactions as per Today's
+				Proposal(s)</h6>
+		</div>
+
+
+
+
+		<!-- Table Row - Starts -->
+		<div class="row flex-align-center" style="padding: 5px">
+			<div class="cell-md-auto">
+
+				<form method="post" th:action="@{/ids/procMassUpdatebuyP}"
+					th:object="${propList}">
+
+
+					<!-- Here goes your table -->
+
+					<table class="table subcompact striped table-border row-hover "
+						data-show-search="false" data-show-rows-steps="false"
+						id="t-inspector" data-showPagination="false" data-role="table"
+						data-horizontal-scroll="true" data-rows="-1"
+						data-info-wrapper=".my-info-wrapper" data-thousand-separator=","
+						data-pagination-wrapper=".my-pagination-wrapper">
+
+						<thead style="text-align: center;">
+							<tr>
+
+								<th data-size="1"></th>
+								<th data-size="1"></th>
+
+								<th data-name="sccode" class="sortable-column "
+									data-cls-column=" text-left">Scrip Code</th>
+
+
+								<th data-name="txnppu" data-format="number"
+									data-cls-column=" text-left" data-size="170">Price/Share</th>
+
+								<th data-name="units" data-format="number"
+									data-cls-column=" text-left" data-size="170"># Shares</th>
+
+
+
+
+							</tr>
+						</thead>
+
+
+
+
+						<tr th:each="propI , stat :  *{buyList} ">
+
+							<!-- Only Hidden Form Fields - No Display : Begin  -->
+
+
+							<td><input type="hidden"
+								th:field="*{buyList[__${stat.index}__].txntype}" /></td>
+
+							<td><input type="hidden"
+								th:field="*{buyList[__${stat.index}__].smarank}" /></td>
+
+							<!-- Only Hidden Form Fields - No Display : End  -->
+
+							<td><span th:text="${propI.sccode}"></span> <input
+								type="hidden" th:field="*{buyList[__${stat.index}__].sccode}" /></td>
+
+							<td><input type="text" class="input-small alert metro-input"
+								th:field="*{buyList[__${stat.index}__].txnppu}" />
+							<td><input type="text" class="input-small alert metro-input"
+								th:field="*{buyList[__${stat.index}__].units}" />
+						</tr>
+
+					</table>
+
+
+
+					<div class="row flex-justify-end"
+						style="padding-right: 20px; padding-top: 5px; padding-bottom: 20px">
+						<div class="form-group" style="margin-top: 10px">
+
+
+
+							<button class="button rounded" type="submit" name="action"
+								style="background-color: #38CA9F; color: white; margin-top: 5px; margin-bottom: 10px">
+								<span class="mif-floppy-disk" style="margin-left: 0px"> </span>
+								<span style="margin-left: 3px">Save</span>
+							</button>
+
+
+						</div>
+					</div>
+
+
+
+				</form>
+
+			</div>
+
+		</div>
+		<!-- Table Row - Ends -->
+
+
+
+	</div>
+
+
+	<!-- Metro 4 -->
+	<script src="https://cdn.metroui.org.ua/v4.3.2/js/metro.min.js"></script>
+</body>
+</html>

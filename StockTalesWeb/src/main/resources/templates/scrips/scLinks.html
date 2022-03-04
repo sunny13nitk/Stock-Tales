@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<div th:replace="fragments/header :: STHeader"></div>
+
+</head>
+<body>
+
+   <div style="min-height: 600px; overflow: hidden;">
+      <div data-role="navview" data-compact="md" data-expand="false"
+         data-active-state="true">
+         <div th:replace="fragments/navbar :: STNavbar"></div>
+
+
+
+         <div class="navview-content pl-4-md pr-4-md">
+
+            <div class="grid">
+
+               <div th:replace="fragments/brand :: STBrand"></div>
+
+               <!-- your Code Starts from Here  -->
+               <div class="grid" style="padding: 20px">
+
+                  <!--Salutation Row - Starts  -->
+                  <div class="row">
+
+                     <div class="colspan-11 " style="margin-left: 10px">
+                        <h3 style="color: #4465a1">
+                           Links for <span style="color: #B1365B"
+                              th:text="${scLinks.sccode}"></span> <span
+                              class="mif-link"></span>
+                        </h3>
+                     </div>
+
+
+
+                  </div>
+                  <!-- Salutation Row - Ends  -->
+
+
+
+                  <!-- URL Config Form Row - Starts  -->
+
+                  <div class="colspan-10 offset-1"
+                     style="margin-top: 5px">
+
+                     <div class="card">
+
+                        <h6 style="color: #4465a1; margin-left: 10px">Maintain
+                           Important Links for Scrip</h6>
+
+                        <form th:object="${scLinks}"
+                           th:action="@{'/scrips/saveLink'} "
+                           method="post">
+
+
+                           <!--Scrip Code Retained - from Model -->
+                           <input type="hidden" th:field="*{sccode}" />
+
+
+                           <div class="colspan-9 offset-1"
+                              style="margin-top: 35px; margin-bottom: 10px;">
+                              <img th:src="@{/images/IR2.png}"
+                                 src="../../static/images/IR2.png"
+                                 width="40" height="40"
+                                 style="margin-left: 5px;"> <label>Company's
+                                 Investor Relations Url </label> <input
+                                 class="metro-input input-large"
+                                 type="text" data-role="input" title=""
+                                 th:field="*{urlcompany}" /> <small
+                                 class="text-muted">Maintain Url
+                                 or Company's Investor Relations</small>
+                           </div>
+
+                           <div class="colspan-9 offset-1"
+                              style="margin-top: 35px; margin-bottom: 10px;">
+                              <img th:src="@{/images/NSE.png}"
+                                 src="../../static/images/NSE.png"
+                                 width="40" height="40"
+                                 style="margin-left: 5px;"> <label>Company's
+                                 NSE Url </label> <input
+                                 class="metro-input input-large"
+                                 type="text" data-role="input" title=""
+                                 th:field="*{urlnse}" /> <small
+                                 class="text-muted">Maintain Url
+                                 of Company as on NSE Portal</small>
+                           </div>
+
+                           <div class="colspan-9 offset-1"
+                              style="margin-top: 35px; margin-bottom: 10px;">
+                              <img th:src="@{/images/screener.png}"
+                                 src="../../static/images/NSE.png"
+                                 width="40" height="40"
+                                 style="margin-left: 5px;"> <label>Company's
+                                 Screener Url </label> <input
+                                 class="metro-input input-large"
+                                 type="text" data-role="input" title=""
+                                 th:field="*{urlscreener}" /> <small
+                                 class="text-muted">Maintain Url
+                                 of Company from Screener</small>
+                           </div>
+
+
+                           <div class="colspan-9 offset-1"
+                              style="margin-top: 35px; margin-bottom: 10px;">
+                              <img th:src="@{/images/vp.png}"
+                                 src="../../static/images/vp.png"
+                                 width="40" height="40"
+                                 style="margin-left: 5px;"> <label>Company's
+                                 Value Pickr Forum Url </label> <input
+                                 class="metro-input input-large"
+                                 type="text" data-role="input" title=""
+                                 th:field="*{urlvp}" /> <small
+                                 class="text-muted">Maintain Url
+                                 of Company as on Value Pickr discussion
+                                 Forum</small>
+                           </div>
+
+
+                           <div class="colspan-9 offset-1"
+                              style="margin-top: 35px; margin-bottom: 10px;">
+                              <img th:src="@{/images/tr.png}"
+                                 src="../../static/images/tr.png"
+                                 width="40" height="40"
+                                 style="margin-left: 5px;"> <label>Company's
+                                 Trendlyne Research Reports Url </label> <input
+                                 class="metro-input input-large"
+                                 type="text" data-role="input" title=""
+                                 th:field="*{urltrendlyne}" /> <small
+                                 class="text-muted">Maintain
+                                 Trendlyne Research Reports Url of
+                                 Company </small>
+                           </div>
+
+
+
+
+
+
+
+
+                           <div class="colspan-1 offset-10"
+                              style="margin-top: 10px; margin-bottom: 10px;">
+                              <button class="button rounded"
+                                 style="background-color: #59D3AF; color: white; margin-top: 5px; margin-bottom: 10px">
+                                 <span class="mif-floppy-disk"
+                                    style="margin-left: 0px"> </span> <span
+                                    style="margin-left: 3px">Save</span>
+                              </button>
+
+                           </div>
+                        </form>
+                     </div>
+                  </div>
+
+                  <!-- URL config Form Row - Ends  -->
+
+
+
+               </div>
+            </div>
+
+         </div>
+      </div>
+   </div>
+
+   <!-- Metro 4 -->
+   <script src="https://cdn.metroui.org.ua/v4.3.2/js/metro.min.js"></script>
+</body>
+</html>

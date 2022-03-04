@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<div th:replace="fragments/header :: STHeader"></div>
+
+</head>
+<body>
+
+
+   <div data-role="navview" data-compact="md" data-expand="false"
+      data-active-state="true">
+      <div th:replace="fragments/navbar :: STNavbar"></div>
+
+
+
+      <div class="navview-content pl-4-md pr-4-md">
+
+         <div class="grid">
+
+            <div th:replace="fragments/brand :: STBrand"></div>
+
+            <!-- your Code Starts from Here  -->
+            <div class="grid" style="padding: 20px">
+
+               <!--Salutation Row - Starts  -->
+               <div class="row">
+
+                  <div class="colspan-11 " style="margin-left: 10px">
+                     <h3 style="color: #4465a1">You can subscribe
+                        to below Strategy(s)</h3>
+                  </div>
+
+
+
+               </div>
+               <!-- Salutation Row - Ends  -->
+
+               <!--Loop Starts  -->
+               <div th:each="summaryStgy : ${summaryList}">
+                  <!-- Each Strategy Row - Starts -->
+
+                  <div class="row">
+
+                     <div class="colspan-12 ">
+
+
+                        <div class="card" style="padding-top: -20px">
+
+                           <div class="row flex-align-center">
+                              <!-- Stgy Details - subscribe Button Starts -->
+                              <div class="d-flex flex-justify-around">
+                                 <blockquote class="right-side"
+                                    style="padding: 30px">
+                                    <h1 style="color: #486590"
+                                       th:text="${summaryStgy.stgyDetails.getName()}"></h1>
+
+                                    <h2 style="color: #4F4890">
+                                       Scrips <span
+                                          style="color: #655DAE"
+                                          th:text="${summaryStgy.scripAllocations.size()}"></span>
+                                       <span class="mif-user-list2"></span>
+                                    </h2>
+
+
+
+                                    <h2 style="color: #904865">
+                                       Sectors <span
+                                          style="color: #659048"
+                                          th:text="${summaryStgy.sectorAllocations.size()}"></span>
+                                       <span class="mif-user-list2"></span>
+                                    </h2>
+
+
+
+                                    <!-- Subscribe Button - Col Start -->
+                                    <div class="colspan-2"
+                                       style="margin-left: 20px; margin-top: 30px">
+
+                                       <a href="#"
+                                          class="button success rounded outline"
+                                          th:href="@{/pf/addSubscription/{stid} ( stid=${summaryStgy.stgyDetails.getStid()})}"
+                                          role="button"> <span
+                                          class="mif-dice icon"
+                                          style="margin-left: 0px"></span>
+                                          <span style="margin-left: 3px">Subscribe</span>
+                                       </a>
+
+
+                                    </div>
+                                    <!-- Subscribe Button - Col End -->
+                                 </blockquote>
+
+                              </div>
+                              <!-- Stgy Details - subscribe Button Ends -->
+
+                              <!-- Stgy Returns -  Starts -->
+                              <div class="cell">
+
+                                 <blockquote class="right-side">
+
+                                    <div
+                                       class="row d-flex flex-justify-center">
+
+                                       <h6
+                                          style="color: #000058; background: #F1F2FF; padding: 10px; margin-left: 5px center;">
+                                          <span style="color: #585800">Returns
+                                             Factsheet</span>
+
+                                       </h6>
+                                    </div>
+
+                                    <!-- For Each Returns CAGR Entity -->
+                                    <div
+                                       th:each="cagrVal : ${summaryStgy.stgyNiftyCagrVals}">
+
+                                       <div
+                                          class="row d-flex flex-justify-center">
+                                          <span
+                                             style="color: #41729F; font-weight: bolder;"
+                                             th:text="${cagrVal.durationVal}"></span>
+
+                                       </div>
+                                       <div
+                                          class="row d-flex flex-justify-center">
+
+                                          <div class="cell-3"
+                                             style="margin-top: 8px">
+                                             <div data-role="progress"
+                                                data-type="buffer"
+                                                data-cls-bar="bg-pink"
+                                                data-cls-buffer="bg-white"
+                                                data-small="true"
+                                                th:attr="data-value=${cagrVal.stgyCAGR}">
+                                             </div>
+                                             <span
+                                                style="color: #C26DBC; font-weight: bolder;"
+                                                th:text="${cagrVal.stgyCAGR}"></span>
+                                          </div>
+                                          <div class="cell-1"></div>
+
+                                          <div class="cell-3"
+                                             style="margin-top: 8px">
+                                             <div data-role="progress"
+                                                data-type="buffer"
+                                                data-cls-bar="bg-grayBlue"
+                                                data-cls-buffer="bg-white"
+                                                data-small="true"
+                                                th:attr="data-value=${cagrVal.niftyCAGR}">
+                                             </div>
+                                             <span
+                                                style="color: #78859E; font-weight: bolder;"
+                                                th:text="${cagrVal.niftyCAGR}"></span>
+                                          </div>
+
+                                       </div>
+
+                                    </div>
+                                    <div
+                                       class="row d-flex flex-justify-center">
+                                       <span
+                                          style="color: #C26DBC; font-weight: bolder; margin-left: 0px">
+                                          Strategy </span> <span
+                                          style="color: #9A8C73; font-weight: bolder; margin-left: 8px">
+                                          v/s </span> <span
+                                          style="color: #78859E; font-weight: bolder; margin-left: 8px">
+                                          Nifty </span>
+
+                                    </div>
+
+                                 </blockquote>
+
+                              </div>
+
+                              <!-- Stgy Returns - Ends -->
+
+                              <!-- Scrip Allocations -  Starts -->
+                              <div class="cell">
+
+
+                                 <blockquote class="right-side">
+
+                                    <div
+                                       class="row d-flex flex-justify-center">
+
+                                       <h6
+                                          style="color: #000058; background: #F1F2FF; padding: 10px; margin-left: 5px; text-align: center;">
+                                          <span style="color: #585800">Scrips
+                                             Allocations</span>
+
+                                       </h6>
+                                    </div>
+
+                                    <!-- For Each Scrip Allocations Entity -->
+
+
+                                    <div class="row"
+                                       style="padding-top: -10px; padding-left: 10px; padding-right: 10px; padding-bottom: 10px">
+
+                                       <table
+                                          class="table compact striped">
+                                          <thead>
+                                             <tr>
+                                                <th
+                                                   style="text-align: center;">Scrip</th>
+                                                <th
+                                                   style="text-align: center;">Allocation</th>
+
+
+                                             </tr>
+                                          </thead>
+                                          <tbody>
+                                             <tr
+                                                th:each="scripAlloc : ${summaryStgy.scripAllocations}">
+
+                                                <td
+                                                   style="text-align: center; color: #5D6A81; font-weight: bolder;"
+                                                   th:text="${scripAlloc.getSccode()}"></td>
+                                                <td
+                                                   style="text-align: center;; color: #81745D; font-weight: bolder;"
+                                                   th:text="${scripAlloc.getAlloc()}"></td>
+
+
+                                             </tr>
+                                          </tbody>
+                                       </table>
+
+                                    </div>
+
+                                 </blockquote>
+
+
+                              </div>
+                              <!-- Scrip Allocations -  Ends -->
+
+                              <!-- Sector Allocations -  Starts -->
+                              <div class="cell">
+
+
+                                 <blockquote class="right-side">
+
+                                    <div
+                                       class="row d-flex flex-justify-center">
+
+                                       <h6
+                                          style="color: #000058; background: #F1F2FF; padding: 10px; margin-left: 5px; text-align: center;">
+                                          <span style="color: #585800">Sector
+                                             Allocations</span>
+
+                                       </h6>
+                                    </div>
+
+                                    <!-- For Each Scrip Allocations Entity -->
+
+
+                                    <div class="row"
+                                       style="padding-top: -10px; padding-left: 10px; padding-right: 10px; padding-bottom: 10px">
+
+                                       <table
+                                          class="table compact striped">
+                                          <thead>
+                                             <tr>
+                                                <th
+                                                   style="text-align: center;">Sector</th>
+                                                <th
+                                                   style="text-align: center;">Allocation</th>
+
+
+                                             </tr>
+                                          </thead>
+                                          <tbody>
+                                             <tr
+                                                th:each="sectorAlloc : ${summaryStgy.sectorAllocations}">
+
+                                                <td
+                                                   style="text-align: center; color: #5D6A81; font-weight: bolder;"
+                                                   th:text="${sectorAlloc.sector}"></td>
+                                                <td
+                                                   style="text-align: center;; color: #81745D; font-weight: bolder;"
+                                                   th:text="${sectorAlloc.alloc}"></td>
+
+
+                                             </tr>
+                                          </tbody>
+                                       </table>
+
+                                    </div>
+
+                                 </blockquote>
+
+
+                              </div>
+                              <!-- Sector Allocations -  Ends -->
+
+                           </div>
+
+
+                        </div>
+
+
+
+                     </div>
+
+                  </div>
+
+                  <!-- Each Strategy Row - Ends -->
+               </div>
+
+            </div>
+            <!--Loop Ends  -->
+         </div>
+      </div>
+   </div>
+
+   <!-- Metro 4 -->
+   <script src="https://cdn.metroui.org.ua/v4.3.2/js/metro.min.js"></script>
+</body>
+</html>

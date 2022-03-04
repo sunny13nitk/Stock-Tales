@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+	<xs:element name="EntityListHeadScannerConfig"
+		type="entityListHeadScannerConfig" />
+
+	<xs:element name="FieldDetails" type="sheetFieldsMetadata" />
+
+	<xs:element name="SheetMetadata" type="scSheetMetadata" />
+
+	<xs:element name="WorkBookMetadata" type="scwbMetadata" />
+
+	<xs:complexType name="scwbMetadata">
+		<xs:sequence>
+			<xs:element name="sheetMetadata" type="scSheetMetadata"
+				nillable="true" minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="scSheetMetadata">
+		<xs:sequence>
+			<xs:element name="sheetName" type="xs:string"
+				minOccurs="0" />
+			<xs:element name="bobjName" type="xs:string" minOccurs="0" />
+			<xs:element name="isReqdCreate" type="xs:boolean" />
+			<xs:element name="isBaseSheet" type="xs:boolean" />
+			<xs:element name="isCollection" type="xs:boolean" />
+			<xs:element name="colToScanStart" type="xs:int" />
+			<xs:element name="colToScanEnd" type="xs:int" />
+			<xs:element name="updateReqdProcessorBean"
+				type="xs:string" minOccurs="0" />
+			<xs:element name="headScanConfig"
+				type="entityListHeadScannerConfig" minOccurs="0" />
+			<xs:element name="assembly" type="xs:string" minOccurs="0" />
+			<xs:element name="fldsMdt" type="sheetFieldsMetadata"
+				nillable="true" minOccurs="0" maxOccurs="unbounded" />
+
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="entityListHeadScannerConfig">
+		<xs:sequence>
+			<xs:element name="rowToScan" type="xs:int" />
+			<xs:element name="colToScanStart" type="xs:int" />
+			<xs:element name="colToScanEnd" type="xs:int" />
+			<xs:element name="rowScanType" type="rowScanType"
+				minOccurs="0" />
+			<xs:element name="rowDataType" type="rowDataType"
+				minOccurs="0" />
+			<xs:element name="valrowDataType" type="rowDataType"
+				minOccurs="0" />
+			<xs:element name="checkNullVals" type="xs:boolean" />
+			<xs:element name="nullValRowPos" type="xs:int" />
+			<xs:element name="headerValsConvBean" type="xs:string"
+				minOccurs="0" />
+			<xs:element name="objField" type="xs:string" minOccurs="0" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="sheetFieldsMetadata">
+		<xs:sequence>
+			<xs:element name="sheetField" type="xs:string"
+				minOccurs="0" />
+			<xs:element name="objField" type="xs:string" minOccurs="0" />
+			<xs:element name="isMandatory" type="xs:boolean" />
+			<xs:element name="isSplitAware" type="xs:boolean" />
+			<xs:element name="isBonusAware" type="xs:boolean" />
+			<xs:element name="dataType" type="rowDataType"
+				minOccurs="0" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:simpleType name="rowScanType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Continous" />
+			<xs:enumeration value="Specific" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="rowDataType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="String" />
+			<xs:enumeration value="Decimal" />
+			<xs:enumeration value="Numerical" />
+			<xs:enumeration value="Date" />
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>
+

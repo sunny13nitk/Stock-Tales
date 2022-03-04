@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<div th:replace="fragments/header :: STHeader"></div>
+
+</head>
+<body>
+
+   <div>
+      <div data-role="navview" data-compact="md" data-expand="false"
+         data-active-state="true">
+         <div th:replace="fragments/navbar :: STNavbar"></div>
+
+
+
+         <div class="navview-content pl-4-md pr-4-md">
+
+            <div class="grid">
+
+               <div th:replace="fragments/brand :: STBrand"></div>
+
+               <!-- your Code Starts from Here  -->
+
+               <div class="grid" style="padding: 20px">
+
+
+
+                  <!-- Top Row - Starts -->
+                  <div class="row">
+
+                     <div class="colspan-9 " style="margin-left: 10px">
+                        <h3 style="color: #4465a1">Site Paths</h3>
+                     </div>
+
+                     <!-- Create Strategy Button - Col Start -->
+                     <div class="colspan-2"
+                        style="margin-left: 20px; margin-top: 30px">
+
+
+                        <a href="#" class="button alert rounded outline"
+                           th:href="@{/siteconfig/qvsp}" role="button"
+                           data-role="hint" data-hint-position="bottom"
+                           data-cls-hint="bg-Lightgreen fg-black"
+                           data-hint-text="Create New Navigation Path">
+                           <span class="mif-link icon"
+                           style="margin-left: 0px"></span> <span
+                           style="margin-left: 3px">Add Path</span>
+
+
+                        </a>
+
+
+                     </div>
+                     <!-- Create Strategy Button - Col End -->
+
+
+
+                  </div>
+                  <!-- Top Row - Ends Current Selected Scrips Row --Starts -->
+
+                  <div class="colspan-11 offset-1 ">
+
+                     <!-- Table Row - Starts  -->
+
+
+                     <div class="row">
+                        <!--   Here goes your table -->
+
+                        <table
+                           class="table striped compact table-border row-hover mt-4"
+                           data-show-search="true"
+                           data-table-search-title="Search By Title/Path :"
+                           data-show-rows-steps="false" id="t-inspector"
+                           data-showPagination="false" data-role="table"
+                           data-search-min-length="1"
+                           data-search-threshold="300"
+                           data-search-fields="title"
+                           data-horizontal-scroll="true" data-rows="-1"
+                           data-info-wrapper=".my-info-wrapper"
+                           data-thousand-separator=","
+                           data-pagination-wrapper=".my-pagination-wrapper">
+
+                           <thead>
+                              <tr>
+
+                                 <th data-name="title"
+                                    data-cls-column="text-center">Title</th>
+
+                                 <th data-name="url"
+                                    data-cls-column="text-center">Url
+                                    - Site Path</th>
+
+
+                                 <th data-name="param"
+                                    data-cls-column="text-center">Param.
+                                    Desc.</th>
+                                 <th data-cls-column=" text-center">
+                                    Is Admin?</th>
+
+                                 <th data-cls-column=" text-center"></th>
+                              </tr>
+                           </thead>
+
+
+
+
+                           <tr th:each="pathI : ${sitepaths}">
+                              <td><a
+                                 th:href="@{'/siteconfig/qvsp/' + ${pathI.pathid}}"
+                                 th:text="${pathI.title}"> </a></td>
+
+                              <td th:text="${pathI.url}"></td>
+
+                              <td th:text="${pathI.paramdesc}"></td>
+
+                              <td><input type="checkbox"
+                                 data-role="switch"
+                                 th:checked="${pathI.isadmin}"
+                                 disabled="true"></td>
+                              <td style="text-align: center;"><a
+                                 class="button orange cycle small outline"
+                                 th:href="@{'/siteconfig/qvsp/delete/' + ${pathI.pathid}}"
+                                 data-role="hint"
+                                 data-hint-text="Delete Url Config"
+                                 data-cls-hint="bg-lightyellow fg-black drop-shadow"
+                                 data-hint-position="bottom"><span
+                                    class="mif-bin fg-orange"></span></a>
+                           </tr>
+
+                        </table>
+
+
+                     </div>
+
+                     <!--Table Row - Ends  -->
+
+
+
+
+
+                  </div>
+
+               </div>
+
+
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <!-- Metro 4 -->
+   <script src="https://cdn.metroui.org.ua/v4.3.2/js/metro.min.js"></script>
+</body>
+</html>

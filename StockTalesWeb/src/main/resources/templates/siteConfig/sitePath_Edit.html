@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<div th:replace="fragments/header :: STHeader"></div>
+
+</head>
+<body>
+
+   <div style="height: 800px; overflow: hidden;">
+      <div data-role="navview" data-compact="md" data-expand="false"
+         data-active-state="true">
+         <div th:replace="fragments/navbar :: STNavbar"></div>
+
+
+
+         <div class="navview-content pl-4-md pr-4-md">
+
+            <div class="grid">
+
+               <div th:replace="fragments/brand :: STBrand"></div>
+
+               <!--Error Messages Row - Starts -->
+
+               <div class="col-xs-15">
+                  <div th:if="${formError != null}">
+
+                     <!-- Check for Form error -->
+
+                     <div class="remark alert"
+                        style="padding-top: 10px; margin: 2px">
+                        <label
+                           th:text="'Error Loading Scrip' + ${formError}"></label>
+                     </div>
+                  </div>
+               </div>
+
+
+               <div class="col-xs-15">
+                  <div th:if="${formSucc != null}">
+
+
+                     <div class="remark success"
+                        style="padding-top: 10px; margin: 2px">
+                        <label th:text=" ${formSucc}"></label>
+                     </div>
+
+
+
+                  </div>
+               </div>
+
+               <!--Error Messages Row - Ends -->
+
+
+               <!-- SitePath Form Row - Starts  -->
+
+               <div class="colspan-10 offset-1" style="margin-top: 5px">
+
+                  <div class="card">
+
+                     <h6 style="color: #4465a1; margin-left: 10px">Maintain
+                        Site Navigation Paths</h6>
+
+                     <form th:object="${sitepath}"
+                        th:action="@{'/siteconfig/path'} " method="post">
+
+                        <!--Hidden SitePath Id field to be passed on to   -->
+                        <input type="hidden" th:field="*{pathid}" />
+
+                        <div class="colspan-7 offset-1"
+                           style="margin-top: 10px; margin-bottom: 10px;">
+                           <label>Title</label> <input type="text"
+                              class="metro-input" th:field="*{title}" />
+                        </div>
+
+                        <div class="colspan-7 offset-1"
+                           style="margin-top: 10px; margin-bottom: 10px;">
+                           <label>Mapped to Site Url</label> <input
+                              type="text" class="metro-input"
+                              th:field="*{url}" />
+                        </div>
+
+                        <div class="colspan-7 offset-1"
+                           style="margin-top: 10px; margin-bottom: 10px;">
+                           <label>Parameter Description</label> <input
+                              type="text" class="metro-input"
+                              th:field="*{paramdesc}" />
+                        </div>
+
+
+                        <div class="colspan-7 offset-1"
+                           style="margin-top: 5px; margin-bottom: 10px">
+                           <label>Parameters List Bean</label> <select
+                              data-role="select" name="paramslistbean"
+                              th:field="*{paramslistbean}"
+                              data-add-empty-value="true" class="input">
+                              <!-- Param List Beans -->
+                              <option th:each="name : ${paramBeanNames}"
+                                 th:value="${name}"
+                                 th:selected="${name}" th:text="${name}"></option>
+                           </select>
+                        </div>
+
+                        <div class="colspan-7 offset-1"
+                           style="margin-top: 10px; margin-bottom: 10px;">
+                           <input type="checkbox" data-role="switch"
+                              th:field="*{isadmin}"
+                              data-caption="Is Admin Url?">
+                        </div>
+
+
+                        <div class="colspan-1 offset-10"
+                           style="margin-top: 10px; margin-bottom: 10px;">
+                           <button class="button rounded"
+                              style="background-color: #59D3AF; color: white; margin-top: 5px; margin-bottom: 10px"
+                              data-role="hint"
+                              data-hint-position="bottom"
+                              data-cls-hint="bg-LightGreen fg-black"
+                              data-hint-text="Save Site Path">
+                              <span class="mif-floppy-disk"
+                                 style="margin-left: 0px"> </span> <span
+                                 style="margin-left: 3px">Save</span>
+                           </button>
+
+                        </div>
+                     </form>
+                  </div>
+               </div>
+
+               <!-- SitePath Form Row - Ends  -->
+
+
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <!-- Metro 4 -->
+   <script src="https://cdn.metroui.org.ua/v4.3.2/js/metro.min.js"></script>
+</body>
+</html>

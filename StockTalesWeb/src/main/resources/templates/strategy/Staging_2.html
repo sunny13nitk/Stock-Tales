@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<div th:replace="fragments/header :: STHeader"></div>
+
+</head>
+<body>
+
+   <div style="min-height: 600px; overflow: hidden;">
+      <div data-role="navview" data-compact="md" data-expand="false"
+         data-active-state="true">
+         <div th:replace="fragments/navbar :: STNavbar"></div>
+
+
+
+         <div class="navview-content pl-4-md pr-4-md">
+
+            <div class="grid">
+
+               <div th:replace="fragments/brand :: STBrand"></div>
+
+               <!-- your Code Starts from Here  -->
+               <div class="grid" style="padding: 20px">
+
+                  <!--Top Row - Starts  -->
+                  <div class="row">
+
+                     <div class="colspan-11 " style="margin-left: 10px">
+                        <h3 style="color: #4465a1">Strategy Staging
+                           - Continued..</h3>
+                     </div>
+
+
+
+                  </div>
+                  <!--Top Row - Ends  -->
+
+
+                  <!--Error Messages Row - Starts -->
+
+                  <div class="col-xs-15">
+                     <div th:if="${formError != null}">
+
+                        <!-- Check for Form error -->
+
+                        <div class="remark alert"
+                           style="padding-top: 10px; margin: 2px">
+                           <label
+                              th:text="'Error Loading Scrip' + ${formError}"></label>
+                        </div>
+                     </div>
+                  </div>
+
+
+                  <div class="col-xs-15">
+                     <div th:if="${formSucc != null}">
+
+
+                        <div class="remark success"
+                           style="padding-top: 10px; margin: 2px">
+                           <label th:text=" ${formSucc}"></label>
+                        </div>
+
+
+
+                     </div>
+                  </div>
+
+                  <!--Error Messages Row - Ends -->
+
+
+                  <!-- Quick Stats Row - Starts -->
+
+                  <div class="row">
+
+                     <div class="colspan-8 offset-2">
+                        <div class="card" style="padding-top: -20px">
+
+                           <div class="row flex-align-center">
+                              <div class="cell">
+                                 <blockquote class="right-side">
+                                    <h3 style="color: #8000fc"
+                                       th:text="${qStats.numScrips}"></h3>
+                                    <span
+                                       style="color: #486590; font-weight: medium;">Number
+                                       of Scrips</span>
+                                 </blockquote>
+
+                              </div>
+
+
+                              <div class="cell">
+                                 <blockquote class="right-side">
+                                    <h4 style="color: #32B480"
+                                       th:text="${qStats.maxAlloc.value }"></h4>
+                                    <h5 style="color: #4465a1"
+                                       th:text="${qStats.maxAlloc.name}">BAJFINANCE</h5>
+                                    <span
+                                       style="color: #486590; font-weight: medium;">Max'm.
+                                       % Allocation</span>
+                                 </blockquote>
+                              </div>
+
+                              <div class="cell">
+                                 <blockquote class="right-side">
+                                    <h4 style="color: #D74A76"
+                                       th:text="${qStats.minAlloc.value}"></h4>
+                                    <h5 style="color: #4465a1"
+                                       th:text="${qStats.minAlloc.name}">BAJFINANCE</h5>
+                                    <span
+                                       style="color: #486590; font-weight: medium;">Min'm.
+                                       % Allocation</span>
+                                 </blockquote>
+                              </div>
+
+                           </div>
+
+                        </div>
+
+                     </div>
+
+                  </div>
+
+
+                  <!-- Quick Stats Row - Ends -->
+
+
+                  <!-- CAGR Row - Starts-->
+
+                  <div class="row">
+                     <div class="card" style="padding-top: -20px">
+
+                        <div class="row d-flex flex-justify-center">
+
+                           <h6
+                              style="color: #000058; background: #F1F2FF; padding: 10px; margin-left: 5px center;">
+                              <span style="color: #585800">Returns
+                                 Factsheet</span>
+
+                           </h6>
+                        </div>
+                        <div th:each="cagrResult : ${cagrResults}">
+                           <div class="row d-flex flex-justify-center">
+                              <span
+                                 style="color: #41729F; font-weight: bolder;"
+                                 th:text="${cagrResult.durationVal}"></span>
+
+                           </div>
+                           <div class="row d-flex flex-justify-center">
+
+                              <div class="cell-4"
+                                 style="margin-top: 8px">
+                                 <div data-role="progress"
+                                    data-type="buffer"
+                                    data-cls-bar="bg-pink"
+                                    data-cls-buffer="bg-white"
+                                    data-small="true"
+                                    th:attr="data-value=${cagrResult.stgyCAGR}">
+                                 </div>
+                                 <span
+                                    style="color: #C26DBC; font-weight: bolder;"
+                                    th:text="${cagrResult.stgyCAGR}"></span>
+                              </div>
+
+                              <div class="cell-1"></div>
+
+                              <div class="cell-4"
+                                 style="margin-top: 8px">
+                                 <div data-role="progress"
+                                    data-type="buffer"
+                                    data-cls-bar="bg-grayBlue"
+                                    data-cls-buffer="bg-white"
+                                    data-small="true"
+                                    th:attr="data-value=${cagrResult.niftyCAGR}">
+                                 </div>
+                                 <span
+                                    style="color: #78859E; font-weight: bolder;"
+                                    th:text="${cagrResult.niftyCAGR}"></span>
+                              </div>
+
+
+                           </div>
+
+                        </div>
+
+                        <div class="row d-flex flex-justify-center">
+                           <span
+                              style="color: #C26DBC; font-weight: bolder; margin-left: 0px">
+                              Strategy </span> <span
+                              style="color: #9A8C73; font-weight: bolder; margin-left: 8px">
+                              v/s </span> <span
+                              style="color: #78859E; font-weight: bolder; margin-left: 8px">
+                              Nifty </span>
+
+                        </div>
+
+
+                     </div>
+
+                     <!-- CAGR Row - Ends-->
+
+                     <!-- Strategy Form Row - Starts  -->
+
+                     <div class="colspan-10 offset-1"
+                        style="margin-top: 5px">
+
+                        <div class="card">
+
+                           <h6 style="color: #4465a1; margin-left: 10px">Maintain
+                              below Details to Save Strategy</h6>
+
+                           <form th:object="${strategy}"
+                              th:action="@{'/stratergy/save'} "
+                              method="post">
+
+                              <div class="colspan-7 offset-1"
+                                 style="margin-top: 10px; margin-bottom: 10px;">
+                                 <label>Strategy Name</label> <input
+                                    type="text" class="metro-input"
+                                    th:field="*{name}" />
+                              </div>
+
+                              <div class="colspan-7 offset-1"
+                                 style="margin-top: 10px; margin-bottom: 10px;">
+                                 <label>Concept for Strategy</label>
+                                 <textarea type="text"
+                                    data-role="textarea"
+                                    class="metro-input"
+                                    th:field="*{concept}"
+                                    data-max-height="200"
+                                    data-auto-size="true">  </textarea>
+                                 <small class="text-muted">A
+                                    brief note about the Concept behind
+                                    the Strategy</small>
+                              </div>
+
+
+                              <div class="colspan-7 offset-1"
+                                 style="margin-top: 10px; margin-bottom: 10px;">
+                                 <input type="checkbox"
+                                    data-role="switch"
+                                    th:field="*{active}"
+                                    data-caption="Active"> <input
+                                    type="checkbox" data-role="switch"
+                                    th:field="*{rebalanceallowed}"
+                                    data-caption="Rebalancing Enabled">
+                              </div>
+
+
+                              <div class="colspan-1 offset-10"
+                                 style="margin-top: 10px; margin-bottom: 10px;">
+                                 <button class="button rounded"
+                                    style="background-color: #59D3AF; color: white; margin-top: 5px; margin-bottom: 10px"
+                                    data-role="hint"
+                                    data-hint-position="bottom"
+                                    data-cls-hint="bg-LightGreen fg-black"
+                                    data-hint-text="Save Strategy">
+                                    <span class="mif-floppy-disk"
+                                       style="margin-left: 0px">
+                                    </span> <span style="margin-left: 3px">Save</span>
+                                 </button>
+
+                              </div>
+                           </form>
+                        </div>
+                     </div>
+
+                     <!-- Strategy Form Row - Ends  -->
+
+
+
+
+
+
+                  </div>
+
+
+               </div>
+            </div>
+         </div>
+      </div>
+
+   </div>
+   <!-- Metro 4 -->
+   <script src="https://cdn.metroui.org.ua/v4.3.2/js/metro.min.js"></script>
+</body>
+</html>

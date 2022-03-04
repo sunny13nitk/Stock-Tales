@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<div th:replace="fragments/header :: STHeader"></div>
+<script
+   src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script type="text/javascript"
+   src="https://www.gstatic.com/charts/loader.js"></script>
+</head>
+<body>
+
+   <div style="min-height: 600px; overflow: hidden;">
+      <div data-role="navview" data-compact="md" data-expand="false"
+         data-active-state="true">
+         <div th:replace="fragments/navbar :: STNavbar"></div>
+
+
+
+         <div class="navview-content pl-4-md pr-4-md">
+
+            <div class="grid">
+
+               <div th:replace="fragments/brand :: STBrand"></div>
+
+               <!-- your Code Starts from Here  -->
+               <div class="grid" style="padding: 20px">
+
+                  <!--Top Row - Starts  -->
+                  <div class="row">
+
+                     <div class="colspan-11 " style="margin-left: 2px">
+
+                        <h3
+                           style="padding-top: 10px; margin: 2px; font-weight: medium; color: #4465a1"
+                           th:text="${stgyData.getName()}"></h3>
+
+
+                     </div>
+
+                  </div>
+                  <!--Top Row - Ends  -->
+
+
+
+
+
+
+                  <div class="colspan-12 ">
+
+                     <div class="row">
+
+
+                        <!-- Criteria Details - Col Start -->
+                        <div class="colspan-11"
+                           style="margin-top: -13px">
+                           <div class="remark info">
+                              <label
+                                 style="padding-top: 10px; margin: 5px; font-weight: medium; color: #0476D0"
+                                 th:text="${stgyData.getConcept()}">
+
+                              </label>
+                           </div>
+                        </div>
+
+                     </div>
+
+
+
+                     <!-- Display Area - Starts -->
+                     <div class="colspan-12">
+                        <div class="row">
+                           <label style="color: #0476D0"> Value
+                              of ₹ 100 invested in this Strategy over <span
+                              style="color: #4465a1"
+                              th:text="${interval}"></span> would today
+                              be worth ₹ <span
+                              style="color: #4465a1; font-weight: bold;"
+                              th:text="${latestVal}"></span>
+                           </label>
+
+                        </div>
+
+                        <div class="d-flex flex-justify-left">
+
+
+                           <a class="button primary square mini outline"
+                              th:href="@{/stratergy/timeseries/{stgyId}/LastMonth(stgyId=${stgyData.getStid()})}"
+                              role="button">1M</a> <a
+                              class="button primary square mini outline"
+                              th:href="@{/stratergy/timeseries/{stgyId}/Last3Months(stgyId=${stgyData.getStid()})}"
+                              role="button">3M</a> <a
+                              class="button primary square mini outline"
+                              th:href="@{/stratergy/timeseries/{stgyId}/Last6Months(stgyId=${stgyData.getStid()})}"
+                              role="button">6M</a> <a
+                              class="button primary square mini outline"
+                              th:href="@{/stratergy/timeseries/{stgyId}/Last1Yr(stgyId=${stgyData.getStid()})}"
+                              role="button">1Y</a> <a
+                              class="button primary square mini outline"
+                              th:href="@{/stratergy/timeseries/{stgyId}/Last2Yrs(stgyId=${stgyData.getStid()})}"
+                              role="button">2Y</a> <a
+                              class="button primary square mini outline"
+                              th:href="@{/stratergy/timeseries/{stgyId}/Last3Yrs(stgyId=${stgyData.getStid()})}"
+                              role="button">3Y</a> <a
+                              class="button primary square mini outline"
+                              th:href="@{/stratergy/timeseries/{stgyId}/Last5Yrs(stgyId=${stgyData.getStid()})}"
+                              role="button">5Y</a> <a
+                              class="button primary square mini outline"
+                              th:href="@{/stratergy/timeseries/{stgyId}/Last7Yrs(stgyId=${stgyData.getStid()})}"
+                              role="button">7Y</a> <a
+                              class="button primary square mini outline"
+                              th:href="@{/stratergy/timeseries/{stgyId}/Last10Yrs(stgyId=${stgyData.getStid()})}"
+                              role="button">10Y</a>
+
+
+
+
+                        </div>
+
+                     </div>
+
+                     <div class="d-flex flex-justify-center">
+                        <div id="chart_pp"></div>
+
+                     </div>
+
+                  </div>
+                  <!-- Display Area - Ends -->
+
+
+
+               </div>
+               <!-- Current Selected Scrips Row --Ends -->
+
+
+            </div>
+
+
+         </div>
+      </div>
+   </div>
+   </div>
+
+
+
+
+   <!-- Charts - STARTS -->
+   <script th:inline="javascript">
+            var real_data = /*[[${seriesval}]]*/'noValue';
+           
+
+
+            $(document).ready(function() {
+               google.charts.load('current', {
+                  packages : [ 'corechart', 'bar' ]
+               });
+               google.charts.setOnLoadCallback(drawLineChartPrices);
+                  
+
+            });
+
+           
+            function drawLineChartPrices() {
+
+               var data4 = new google.visualization.DataTable();
+               
+               data4.addColumn('string', 'Date');
+               data4.addColumn('number', 'Value');
+               
+               var dataArray4 = [];
+               
+                $.each(real_data, function(i, obj) {
+                  dataArray4.push([ obj.date, obj.value]);
+               });
+
+               data4.addRows(dataArray4);
+               
+               
+            
+
+               /*
+               In case Data labels are needed on Bar Chart - Not working on combo*/
+               var view4 = new google.visualization.DataView(data4);
+               
+               view4.setColumns([ 0, 1],
+                
+               
+               );
+
+               var options4 = {
+                  width : 1350,
+                  height : 340,
+                  margin : 20,
+                  pointSize : 2,
+
+                  colors : [ '#B430AF' ],
+                  seriesType : 'line',
+                  legend : 'none',
+                  
+                    hAxis : {
+                     
+                     viewWindow : 
+                     {
+                        min : [ 7, 30, 0 ],
+                        max : [ 17, 30, 0 ]
+                     },
+                     textStyle:
+                     { 
+                       color: '#30B435',
+                       fontName: 'Calibri',
+                       fontSize: 12,
+                       bold: true
+                      }
+                     
+                  },
+                  
+                  vAxis : {
+                     
+                     viewWindow : 
+                     {
+                        min : [ 7, 30, 0 ],
+                        max : [ 17, 30, 0 ]
+                     },
+                     textStyle:
+                     { 
+                       color: '#30B435',
+                       fontName: 'Calibri',
+                       fontSize: 12,
+                       bold: true
+                      }
+                     
+                  },
+                  
+                  
+                  
+               };
+               var chartPricesDelta = new google.visualization.LineChart(
+                     document.getElementById('chart_pp'));
+        
+               
+               //In case of Data points enabled on chart series
+               chartPricesDelta.draw(view4, options4);
+            }   
+            
+          
+            
+            
+         </script>
+
+   <!-- Charts - ENDS -->
+
+
+
+
+
+   <!-- Metro 4 -->
+   <script src="https://cdn.metroui.org.ua/v4.3.2/js/metro.min.js"></script>
+</body>
+</html>

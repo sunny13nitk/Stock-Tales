@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport"
+   content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<link rel="shortcut icon" th:href="@{/images/favicon.ico}" />
+<title>Stock Tales</title>
+<!-- Metro 4 -->
+<link rel="stylesheet"
+   href="https://cdn.metroui.org.ua/v4.3.2/css/metro-all.min.css">
+<!-- <div th:replace="fragments/header :: header"></div> -->
+
+</head>
+<body>
+
+   <div style="height: 800px;">
+      <div data-role="navview" data-compact="md" data-expand="false"
+         data-active-state="true">
+
+
+         <nav class="navview-pane bg-red fg-white">
+
+            <button class="pull-button bg-red fg-white">
+               <span class="mif-menu"></span>
+            </button>
+
+
+
+
+            <ul class="navview-menu bg-red fg-white">
+
+               <li class="item-header"><img
+                  th:src="@{/images/dice.png}"
+                  src="../../static/images/dice.png" width="60"
+                  height="60" style="margin-left: 5px"> <span
+                  style="margin-left: 7px; font-size: larger;">
+                     Stock Tales</span></li>
+
+               <li class="item-separator"></li>
+               <li class="item-separator"></li>
+               <li class="item-separator"></li>
+
+
+
+
+
+               <li><a href="#"> <span class="icon"><span
+                        class="mif-home"></span></span> <span class="caption">Home</span>
+               </a></li>
+
+               <li class="item-separator"></li>
+
+
+               <li><a href="#"> <span class="icon"><span
+                        class="mif-clipboard"></span></span> <span
+                     class="caption">Scrips Lookup</span>
+               </a></li>
+               <li><a href="#"> <span class="icon"><span
+                        class="mif-filter"></span></span> <span class="caption">Filters</span>
+               </a></li>
+               <li><a href="#"> <span class="icon"><span
+                        class="mif-compass2"></span></span> <span
+                     class="caption">Strategies</span>
+               </a></li>
+
+               <li class="item-separator"></li>
+
+               <li><a href="#"> <span class="icon"><span
+                        class="mif-upload"></span></span> <span class="caption">Upload
+                        Scrip</span>
+               </a></li>
+               <li><a href="#"> <span class="icon"><span
+                        class="mif-stethoscope"></span></span> <span
+                     class="caption">Scrip Status Report</span>
+               </a></li>
+            </ul>
+         </nav>
+
+         <div class="navview-content pl-4-md pr-4-md">
+
+            <div class="grid">
+
+               <div class="row">
+                  <div class="colspan-10 bg-white fg-red">
+
+                     <h1 style="margin-left: 15px;">
+                        <img th:src="@{/images/dice.png}"
+                           src="../../static/images/dice.png" width="80"
+                           height="80"
+                           style="margin-left: 5px; margin-right: 10px">
+                        Stock Tales
+                     </h1>
+                  </div>
+
+                  <div class="colspan-2 bg-white fg-red align-end"
+                     ; style="margin-top: 15px;">
+                     <small> <img
+                        th:src="@{/images/bicycle.png}"
+                        src="../../static/images/bicycle.png" width="30"
+                        height="30" style="margin-right: 10px;"> :
+                        by FunProjects
+                     </small>
+                  </div>
+
+               </div>
+
+               <div class="row">
+                  <!--Carousel - Start  -->
+
+                  <div data-role="carousel" data-auto-start="true"
+                     data-period="3000" data-duration="1000"
+                     data-bullets-position="right" data-effect="slide"
+                     data-effect-func="easeInQuart" data-height="21/9"
+                     data-controls-on-mouse="true"
+                     data-cls-bullet="bullet-big"
+                     data-cls-bullet-on="bg-red drop-shadow"
+                     data-cls-slides="rounded"
+                     data-cls-controls="fg-red"
+                     data-control-next="<span class='mif-chevron-right fg-red'></span>"
+                     data-control-prev="<span class='mif-chevron-left fg-red'></span>">
+
+                     <div class="slide p-14 pl-8 pr-8">
+                        <div class="row" style="margin-top: -20px">
+                           <h2 class="fg-red">Scrip(s) Look up by
+                              their Strength Score(s)</h2>
+                        </div>
+                        <div class="row flex-align-center h-500"
+                           style="margin-top: 10px">
+                           <div class="img-container">
+                              <img th:src="@{/images/EDRC.png}"
+                                 src="../../static/images/EDRC.png"
+                                 width="900" height="500"
+                                 style="margin-left: 5px; margin-right: 10px">
+                           </div>
+
+                        </div>
+                     </div>
+
+                     <div class="slide p-14 pl-8 pr-8">
+                        <div class="row" style="margin-top: -20px">
+                           <h2 class="fg-red">Browse Curated
+                              Filtered List(s) & Generate Strategies</h2>
+                        </div>
+                        <div class="row flex-align-center h-500"
+                           style="margin-top: 10px">
+                           <div class="img-container">
+                              <img th:src="@{/images/EDRCFilters.png}"
+                                 src="../../static/images/EDRCFilters.png"
+                                 width="900" height="500"
+                                 style="margin-left: 5px; margin-right: 10px">
+                           </div>
+
+                        </div>
+                     </div>
+
+                     <div class="slide p-14 pl-8 pr-8">
+                        <div class="row" style="margin-top: -20px">
+                           <h2 class="fg-red">Create Fine-Tuned
+                              Strategies to Deploy Funds</h2>
+                        </div>
+                        <div class="row flex-align-center h-500"
+                           style="margin-top: 10px">
+                           <div class="img-container">
+                              <img th:src="@{/images/Staging_1.png}"
+                                 src="../../static/images/Staging_1.png"
+                                 width="900" height="500"
+                                 style="margin-left: 5px; margin-right: 10px">
+                           </div>
+
+                        </div>
+                     </div>
+
+
+                     <div class="slide p-14 pl-8 pr-8">
+                        <div class="row" style="margin-top: -20px">
+                           <h2 class="fg-red">Custom Strategies
+                              with Own Margin of Safety at Scrip level</h2>
+                        </div>
+                        <div class="row flex-align-center h-500"
+                           style="margin-top: 10px">
+                           <div class="img-container">
+                              <img th:src="@{/images/Staging_2.png}"
+                                 src="../../static/images/Staging_2.png"
+                                 width="900" height="500"
+                                 style="margin-left: 5px; margin-right: 10px">
+                           </div>
+
+                        </div>
+                     </div>
+
+                     <div class="slide p-14 pl-8 pr-8">
+                        <div class="row" style="margin-top: -20px">
+                           <h2 class="fg-red">Browse Through your
+                              Strategies and Re-balance</h2>
+                        </div>
+                        <div class="row flex-align-center h-500"
+                           style="margin-top: 10px">
+                           <div class="img-container">
+                              <img th:src="@{/images/stgList.png}"
+                                 src="../../static/images/stgList.png"
+                                 width="900" height="500"
+                                 style="margin-left: 5px; margin-right: 10px">
+                           </div>
+
+                        </div>
+                     </div>
+
+
+                     <div class="slide p-14 pl-8 pr-8">
+                        <div class="row" style="margin-top: -20px">
+                           <h2 class="fg-red">Simulate Expected
+                              Returns CAGR before deploying funds</h2>
+                        </div>
+                        <div class="row flex-align-center h-500"
+                           style="margin-top: 10px">
+                           <div class="img-container">
+                              <img th:src="@{/images/Simulation.png}"
+                                 src="../../static/images/Simulation.png"
+                                 width="900" height="500"
+                                 style="margin-left: 5px; margin-right: 10px">
+                           </div>
+
+                        </div>
+                     </div>
+
+
+                  </div>
+
+
+                  <!--Caraousel - End  -->
+               </div>
+
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <!-- Metro 4 -->
+   <script src="https://cdn.metroui.org.ua/v4.3.2/js/metro.min.js"></script>
+</body>
+</html>

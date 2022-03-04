@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<div th:replace="fragments/header :: STHeader"></div>
+
+</head>
+<body>
+
+   <div style="min-height: 800px; overflow: hidden;"></div>
+
+
+   <div class="grid">
+
+      <!-- Top Row - Starts -->
+      <div class="row">
+
+         <div class="colspan-1">
+            <img th:src="@{/images/dice.png}"
+               src="../../static/images/dice.png" width="40" height="40">
+
+         </div>
+         <!--ICOn - Ends -->
+
+         <div class="colspan-7">
+            <h4
+               style="margin-top: 50px; font-weight: medium; color: #4465a1">
+               Replace with your Title <span style="color: #B1365B"
+                  th:text="${replace with model attr}"></span>
+            </h4>
+         </div>
+         <!-- Text  -->
+
+         <!--Buttons - Start  -->
+         <div class="colspan-4">
+
+            <div class="multi-action">
+               <button
+                  class="action-button rotate-minus bg-red fg-white"
+                  onclick="$(this).toggleClass('active')"
+                  data-role="hint"
+                  data-hint-text="Click to View Actions"
+                  data-cls-hint="bg-red fg-white drop-shadow"
+                  data-hint-position="top">
+                  <span class="icon"><span class="mif-plus"></span></span>
+               </button>
+               <ul class="actions drop-right">
+
+                  <li class="bg-blue"><a
+                     th:href="@{/userLogin/{userId}(userId=${user.userId})}"
+                     data-role="hint" data-hint-text="Buy Scrips"
+                     data-cls-hint="bg-cyan fg-white drop-shadow"
+                     data-hint-position="bottom"><span
+                        class="mif-folder-plus"></span></a></li>
+
+                  <li class="bg-orange"><a
+                     th:href="@{/userLogin/{userId}(userId=${user.userId})}"
+                     data-role="hint"
+                     data-hint-text="Holdings Statement"
+                     data-cls-hint="bg-orange fg-white drop-shadow"
+                     data-hint-position="bottom"><span
+                        class="mif-featured-play-list"></span></a></li>
+
+                  <li class="bg-teal"><a
+                     th:href="@{/userLogin/{userId}(userId=${user.userId})}"
+                     data-role="hint"
+                     data-hint-text="Transactions Diary"
+                     data-cls-hint="bg-teal fg-white drop-shadow"
+                     data-hint-position="bottom"><span
+                        class="mif-library"></span></a></li>
+
+               </ul>
+            </div>
+
+         </div>
+
+         <!--Buttons - End -->
+
+      </div>
+      <!-- Top Row - Ends -->
+
+
+      <!-- Content Row - Starts -->
+
+      <div class="row"></div>
+      <!-- Content Row - Ends -->
+
+   </div>
+
+   <!-- Metro 4 -->
+   <script src="https://cdn.metroui.org.ua/v4.3.2/js/metro.min.js"></script>
+</body>
+</html>

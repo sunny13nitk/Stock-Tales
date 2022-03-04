@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<div th:replace="fragments/header :: STHeader"></div>
+
+</head>
+<body>
+
+   <div style="min-height: 800px; overflow: hidden;">
+      <div data-role="navview" data-compact="md" data-expand="false"
+         data-active-state="true">
+         <div th:replace="fragments/navbar :: STNavbar"></div>
+
+
+
+         <div class="navview-content pl-4-md pr-4-md">
+
+            <div class="grid">
+
+               <div th:replace="fragments/brand :: STBrand"></div>
+
+               <div class="grid">
+
+                  <!--Top Row - Starts  -->
+                  <div class="row">
+
+                     <div class="colspan-3 " style="margin-left: 10px">
+                        <h3 style="color: #4465a1">Scrips Strength
+                           Scores</h3>
+                     </div>
+
+                     <div class="colspan-8" style="margin-left: 10px">
+                        <div class="remark primary"
+                           style="padding-top: 10px; margin: 2px; color: #4465a1; font-weight: bolder;">
+                           Relative Strength Scores of Scrips computed
+                           using TIME WEGHTED Fundamental(s). See <a
+                              href="#" th:href="@{/help/sscore}">Details</a>
+                           to understand what goes in computing Strength
+                           Scores.
+                        </div>
+
+                     </div>
+
+
+                  </div>
+                  <!--Top Row - Ends  -->
+
+
+                  <!--Filter Criteria Row - Starts -->
+                  <div th:if="${criteria != null}">
+                     <div class="row">
+
+                        <!-- Criteria Details - Col Start -->
+                        <div class="colspan-9" style="margin-left: 10px">
+                           <div class="remark yellow">
+                              <label
+                                 style="padding-top: 10px; margin: 2px; color: #0476D0; font-weight: bold;"
+                                 th:text="${criteria}">
+                                 (Earnings & Dividend Score > 15) AND
+                                 (Return Ratios Score > 18) AND (Cash
+                                 Flow Score (Non Financials) > 25) AND
+                                 (Value Ratio Between 10 & 45) AND (EDRC
+                                 Score > 28)</label>
+                           </div>
+                        </div>
+                        <!-- Criteria Details - Col End -->
+
+                        <!-- Create Strategy Button - Col Start -->
+                        <div class="colspan-1"
+                           style="margin-left: 20px; margin-top: 30px">
+
+
+                           <a href="#" class="button"
+                              style="background-color: #59D3AF; color: white"
+                              th:href="@{/stratergy/myFilter}"
+                              role="button" data-role="hint"
+                              data-hint-position="bottom"
+                              data-cls-hint="bg-Lightgreen fg-black"
+                              data-hint-text="Create Stratergy Using Current Scrips">
+                              <span class="mif-share icon"
+                              style="margin-left: 0px"></span> <span
+                              style="margin-left: 3px">Generate
+                                 Strategy</span>
+
+
+                           </a>
+
+
+                        </div>
+                        <!-- Create Strategy Button - Col End -->
+
+                     </div>
+                  </div>
+
+                  <!--Filter Criteria Row - Ends -->
+
+                  <!--Table Row - Starts  -->
+                  <div class="row" style="margin-top: 20px">
+                     <div class="colspan-12">
+                        <table
+                           class="table compact striped table-border row-hover mt-4"
+                           id="t-inspector" data-role="table"
+                           data-show-search="true"
+                           data-show-rows-steps="false"
+                           data-table-search-title="Search By Scrip Code or Sector :"
+                           data-search-min-length="1"
+                           data-search-threshold="300" data-rows="-1"
+                           data-search-fields="scCode, sector"
+                           data-horizontal-scroll="true"
+                           data-info-wrapper=".my-info-wrapper"
+                           data-thousand-separator=","
+                           data-pagination-wrapper=".my-pagination-wrapper">
+                           <thead>
+                              <tr>
+
+                                 <th data-name="scCode"
+                                    class="sortable-column sort-asc">Scrip
+                                    Name</th>
+
+                                 <th data-name="sector"
+                                    class="sortable-column sort-asc">Sector</th>
+
+                                 <th class="sortable-column sort-asc"
+                                    data-format="number"
+                                    data-cls-column=" text-center">ED
+                                    Score</th>
+
+
+                                 <th class="sortable-column sort-asc"
+                                    data-format="number"
+                                    data-cls-column=" text-center">RR
+                                    Score</th>
+
+                                 <th class="sortable-column sort-asc"
+                                    data-format="number"
+                                    data-cls-column=" text-center">CFO
+                                    Score</th>
+
+                                 <th class="sortable-column sort-asc"
+                                    data-format="number"
+                                    data-cls-column=" text-center">CFO/PAT
+                                    %</th>
+
+                                 <th class="sortable-column sort-asc"
+                                    data-format="number"
+                                    data-cls-column=" text-center">FCF
+                                    Yield</th>
+
+                                 <th class="sortable-column sort-asc"
+                                    data-format="number"
+                                    data-cls-column=" text-center">CFO
+                                    Yield</th>
+
+                                 <th data-cls-column=" text-center">EDRC
+                                    Score</th>
+
+                                 <th class="sortable-column sort-asc"
+                                    data-format="number"
+                                    data-cls-column=" text-center"></th>
+
+
+                                 <th data-cls-column=" text-center">Value
+                                    Ratio</th>
+
+                                 <th class="sortable-column sort-asc"
+                                    data-format="number"
+                                    data-cls-column=" text-center"></th>
+
+                                 <th data-cls-column=" text-center">Strength
+                                    Score</th>
+
+                                 <th class="sortable-column sort-asc"
+                                    data-format="number"
+                                    data-cls-column=" text-center"></th>
+
+                                 <th data-cls-column=" text-center"></th>
+
+
+                              </tr>
+                           </thead>
+                           <tbody>
+
+
+                              <tr
+                                 th:each="EDRCSummaryI : ${EDRCSummary}">
+                                 <td><a
+                                    th:href="@{'/scOvw/' + ${EDRCSummaryI.scCode}}"
+                                    th:text="${EDRCSummaryI.scCode}"></a></td>
+
+                                 <td th:text="${EDRCSummaryI.sector}">Financials</td>
+                                 <td style="text-align: center"
+                                    th:text="${EDRCSummaryI.avWtED}">31.5</td>
+                                 <td style="text-align: center"
+                                    th:text="${EDRCSummaryI.avWtRR}">23.5</td>
+                                 <td style="text-align: center"
+                                    th:text="${EDRCSummaryI.avWtCF}">73.5</td>
+                                 <td style="text-align: center"
+                                    th:text="${EDRCSummaryI.patCFOAdh}">73.5</td>
+                                 <td style="text-align: center"
+                                    th:text="${EDRCSummaryI.FCFYield}">73.5</td>
+                                 <td style="text-align: center"
+                                    th:text="${EDRCSummaryI.CFOYield}">73.5</td>
+
+                                 <td style="text-align: center">
+                                    <div data-role="progress"
+                                       data-type="buffer"
+                                       data-cls-bar="bg-blue"
+                                       data-cls-buffer="bg-white"
+                                       data-small="true"
+                                       th:attr="data-value=${EDRCSummaryI.EDRC}"></div>
+                                 </td>
+                                 <td th:text="${EDRCSummaryI.EDRC}">33.4</td>
+
+                                 <td style="text-align: center">
+                                    <div data-role="progress"
+                                       data-type="buffer"
+                                       data-cls-bar="bg-green"
+                                       data-cls-buffer="bg-white"
+                                       data-small="true"
+                                       th:attr="data-value=${EDRCSummaryI.valR}"></div>
+                                 </td>
+                                 <td th:text="${EDRCSummaryI.valR}">12.3</td>
+
+                                 <td style="text-align: center">
+                                    <div data-role="progress"
+                                       data-type="buffer"
+                                       data-cls-bar="bg-pink"
+                                       data-cls-buffer="bg-white"
+                                       data-small="true"
+                                       th:attr="data-value=${EDRCSummaryI.strengthScore}"></div>
+                                 </td>
+                                 <td
+                                    th:text="${EDRCSummaryI.strengthScore}">22.6</td>
+
+                                 <!--Buttons - OCA  -->
+                                 <td style="text-align: center;"><a
+                                    class="button yellow cycle small outline"
+                                    th:href="@{'/scrips/val/' + ${EDRCSummaryI.scCode}}"
+                                    data-role="hint"
+                                    data-hint-text="Check Target Price"
+                                    data-cls-hint="bg-lightyellow fg-black drop-shadow"
+                                    data-hint-position="bottom"><span
+                                       class="mif-money fg-orange"></span></a>
+                                 </td>
+                                 <!--Buttons - OCA  -->
+                              </tr>
+
+                           </tbody>
+                        </table>
+
+                        <p class="h5  text-center my-info-wrapper "></p>
+                        <div
+                           class="d-flex flex-justify-center my-pagination-wrapper"></div>
+                     </div>
+                  </div>
+                  <!--Table Row - Ends -->
+
+
+               </div>
+
+
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <!-- Metro 4 -->
+   <script src="https://cdn.metroui.org.ua/v4.3.2/js/metro.min.js"></script>
+</body>
+</html>

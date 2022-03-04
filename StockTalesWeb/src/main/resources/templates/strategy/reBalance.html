@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+   class=" scrollbar-type-1 sb-cyan">
+<head>
+<div th:replace="fragments/header :: STHeader"></div>
+
+</head>
+<body>
+
+   <div style="min-height: 600px; overflow: hidden;">
+      <div data-role="navview" data-compact="md" data-expand="false"
+         data-active-state="true">
+         <div th:replace="fragments/navbar :: STNavbar"></div>
+
+
+
+         <div class="navview-content pl-4-md pr-4-md">
+
+            <div class="grid">
+
+               <div th:replace="fragments/brand :: STBrand"></div>
+
+               <!-- your Code Starts from Here  -->
+
+               <div class="grid">
+                  <!--Title Row Div -Starts  -->
+                  <div class="row" style="margin: 20px">
+
+                     <div class="colspan-9 offset-3">
+                        <h3
+                           style="padding-top: 10px; margin: 2px; font-weight: medium; color: #4465a1">
+                           Strategy : <span style="color: #B1365B"
+                              th:text="${rblPOJO.stgyDesc}">Consistent
+                              Compounders</span> : Re-Balancing
+                        </h3>
+
+                     </div>
+
+                  </div>
+                  <!--Title Row Div -Ends  -->
+
+                  <!-- Strategy DEsc and Predicate dEtails - Starts  -->
+                  <div class="row d-flex flex-justify-center">
+
+
+                     <div class="cell-6">
+                        <div class="remark warning">
+                           <label
+                              style="padding-top: 10px; margin: 2px; color: #0476D0; font-weight: bold;"
+                              th:text="${concept}"> </label>
+                        </div>
+
+                     </div>
+
+                     <div class="cell-6">
+                        <div class="remark yellow">
+                           <label
+                              style="padding-top: 10px; margin: 2px; color: #0476D0; font-weight: bold;"
+                              th:text="${criteria}"> </label>
+                        </div>
+                     </div>
+
+
+
+
+
+                  </div>
+
+                  <!-- Strategy DEsc and Predicate dEtails - ends -->
+
+
+
+
+                  <!--Additons & Removals Div -Starts  -->
+                  <div class="row">
+                     <!-- Proposals - Additions Starts -->
+                     <div th:if="${rblPOJO.propAdditions.size() >0}"
+                        class="colspan-5">
+
+                        <div class="card" style="padding-top: -20px">
+                           <div class="card-content p-2">
+
+                              <h6
+                                 style="color: #325254; background-color: #faf0ff; padding: 8px">
+                                 Proposed Additions to Strategy
+
+                                 <!--Buttons - Info  -->
+                                 <a style="margin-left: 100px"
+                                    class="button info cycle mini"
+                                    data-role="hint"
+                                    data-hint-text="Scrips that are Selected by Filter but not a part of Current Strategy"
+                                    data-cls-hint="bg-cyan fg-white drop-shadow"
+                                    data-hint-position="right"><span
+                                    class="mif-info  fg-white"></span></a>
+
+                                 <!--Buttons - Info  -->
+
+                              </h6>
+
+
+
+
+                           </div>
+
+
+                           <div class="row"
+                              style="padding-top: -10px; padding-left: 10px; padding-right: 10px; padding-bottom: 10px">
+
+                              <table
+                                 class="table subcompact striped table-border row-hover">
+                                 <thead>
+                                    <tr>
+                                       <th style="text-align: center;">Scrip</th>
+                                       <th style="text-align: center;">Reason</th>
+                                       <th style="text-align: center;"></th>
+
+                                    </tr>
+                                 </thead>
+                                 <tbody>
+                                    <tr
+                                       th:each="rblTextI : ${rblPOJO.propwithTxtsAdd}">
+                                       <td
+                                          style="text-align: center; font-weight: bolder;"
+                                          th:text="${rblTextI.sccode}">ABBOTT</td>
+                                       <td style="text-align: center"><textarea
+                                             th:if="${rblTextI.reason != null}"
+                                             th:text="${rblTextI.reason}"
+                                             data-auto-size="true"
+                                             disabled></textarea> <label
+                                          th:if="${rblTextI.reason == null}">Not
+                                             Maintained</label></td>
+
+                                       <!--Buttons - OCA  -->
+                                       <td style="text-align: center;"><a
+                                          class="button success cycle mini"
+                                          th:href="@{/stratergy/rebal/add4mProposal/{scCode} (scCode =  ${rblTextI.sccode})}"
+                                          data-role="hint"
+                                          data-hint-text="Add to Strategy"
+                                          data-cls-hint="bg-green fg-white drop-shadow"
+                                          data-hint-position="right"><span
+                                             class="mif-add  fg-white"></span></a>
+
+
+                                          <a
+                                          class="button warning cycle mini"
+                                          th:href="@{'/stratergy/rebal/reason/' + ${rblTextI.rbid}}"
+                                          data-role="hint"
+                                          data-hint-text="Add/View Reasoning"
+                                          data-cls-hint="bg-orange fg-white drop-shadow"
+                                          data-hint-position="right"><span
+                                             class="mif-question  fg-white"></span></a>
+
+                                       </td>
+                                       <!--Buttons - OCA  -->
+
+
+                                    </tr>
+                                 </tbody>
+                              </table>
+
+                           </div>
+                        </div>
+
+
+
+
+                     </div>
+                     <!-- Proposals - Additions Ends -->
+
+                     <!-- Proposals - REmovals Starts -->
+                     <div th:if="${rblPOJO.propRemovals.size() >0}"
+                        class="colspan-5 offset-1">
+
+                        <div class="card" style="padding-top: -20px">
+                           <div class="card-content p-2">
+
+                              <h6
+                                 style="color: #325254; background-color: #faf0ff; padding: 8px">
+                                 Proposed Removals from Strategy
+
+                                 <!--Buttons - Info  -->
+                                 <a style="margin-left: 100px"
+                                    class="button info cycle mini"
+                                    data-role="hint"
+                                    data-hint-text="Scrips that are a part of Current Strategy but not Selected by Strategy Filter(s)"
+                                    data-cls-hint="bg-cyan fg-white drop-shadow"
+                                    data-hint-position="right"><span
+                                    class="mif-info  fg-white"></span></a>
+
+                                 <!--Buttons - Info  -->
+
+                              </h6>
+
+
+
+
+                           </div>
+
+
+                           <div class="row"
+                              style="padding-top: -10px; padding-left: 10px; padding-right: 10px; padding-bottom: 10px">
+
+                              <table
+                                 class="table subcompact striped table-border row-hover">
+                                 <thead>
+                                    <tr>
+                                       <th style="text-align: center;">Scrip</th>
+                                       <th style="text-align: center;">Reason</th>
+                                       <th style="text-align: center;"></th>
+
+                                    </tr>
+                                 </thead>
+                                 <tbody>
+                                    <tr
+                                       th:each="rblTextI : ${rblPOJO.propwithTxtsRemove}">
+                                       <td
+                                          style="text-align: center; font-weight: bolder;"
+                                          th:text="${rblTextI.sccode}">ABBOTT</td>
+                                       <td style="text-align: center"><textarea
+                                             th:if="${rblTextI.reason != null}"
+                                             th:text="${rblTextI.reason}"
+                                             data-auto-size="true"
+                                             disabled></textarea> <label
+                                          th:if="${rblTextI.reason == null}">Not
+                                             Maintained</label></td>
+
+                                       <!--Buttons - OCA  -->
+                                       <td style="text-align: center;"><a
+                                          class="button alert cycle mini"
+                                          th:href="@{'/stratergy/rebal/rem4mProposal/' + ${rblTextI.sccode}}"
+                                          data-role="hint"
+                                          data-hint-text="Remove from Strategy"
+                                          data-cls-hint="bg-red fg-white drop-shadow"
+                                          data-hint-position="right"><span
+                                             class="mif-minus fg-white"></span></a>
+
+
+                                          <a
+                                          class="button warning cycle mini"
+                                          th:href="@{'/stratergy/rebal/reason/' + ${rblTextI.rbid}}"
+                                          data-role="hint"
+                                          data-hint-text="Add/View Reasoning"
+                                          data-cls-hint="bg-orange fg-white drop-shadow"
+                                          data-hint-position="right"><span
+                                             class="mif-question  fg-white"></span></a>
+
+                                       </td>
+                                       <!--Buttons - OCA  -->
+
+
+                                    </tr>
+                                 </tbody>
+                              </table>
+
+                           </div>
+                        </div>
+
+
+
+                     </div>
+                     <!-- Proposals -Removals Ends -->
+
+                  </div>
+                  <!--Additons & Removals Div -Ends  -->
+
+                  <!--Add New Scrip -Starts  -->
+                  <div class="row" style="margin-bottom: 50px">
+
+                     <div class="colspan-10 offset-1"
+                        style="margin-top: 5px">
+
+                        <div class="card" style="padding: 20px">
+
+                           <h6 style="color: #4465a1; margin-left: 10px">Select
+                              Scrip to Add to Strategy</h6>
+
+                           <form th:object="${scCode}"
+                              class="inline-form"
+                              th:action="@{'/stratergy/rebal/addNewScrip'} "
+                              method="post">
+
+                              <div class="colspan-7 offset-1"
+                                 style="margin-top: 5px; margin-bottom: 10px">
+                                 <select data-role="select"
+                                    name="scCode">
+                                    <!-- Scips list to be pushed via Model -->
+                                    <option
+                                       th:each="scCode : ${scCodes}"
+                                       th:value="${scCode}"
+                                       th:selected="${scCode}"
+                                       th:text="${scCode}">BAJAUTO</option>
+                                 </select>
+                              </div>
+                              <button class="button rounded"
+                                 style="background-color: #59D3AF; color: white; margin-top: 5px; margin-bottom: 10px"
+                                 data-role="hint"
+                                 data-hint-position="bottom"
+                                 data-cls-hint="bg-Lightgreen fg-black drop-shadow"
+                                 data-hint-text="Add Selected Scip to Strategy">
+                                 <span class="mif-plus"
+                                    style="margin-left: 0px"> </span> <span
+                                    style="margin-left: 3px">Add
+                                    Scrip to Strategy</span>
+                              </button>
+                           </form>
+                        </div>
+
+                     </div>
+
+                  </div>
+                  <!--Add New Scrip -Ends  -->
+
+                  <!--List of Scrips Div -Starts  -->
+                  <div class="row">
+
+                     <div th:if="${rblPOJO.currScrips.size() >0}"
+                        class="colspan-9 offset-2">
+
+                        <div class="card" style="padding-top: -20px">
+                           <div class="card-content p-2">
+
+                              <h6
+                                 style="color: #325254; background-color: #faf0ff; padding: 8px">
+                                 Current Strategy Scrips
+
+                                 <!--Buttons - Info  -->
+                                 <a style="margin-left: 100px"
+                                    class="button info cycle mini"
+                                    data-role="hint"
+                                    data-hint-text="Scrips that will currently form a Part of the Strategy after Re-Balancing."
+                                    data-cls-hint="bg-cyan fg-white drop-shadow"
+                                    data-hint-position="right"><span
+                                    class="mif-info  fg-white"></span></a>
+
+                                 <!--Buttons - Info  -->
+
+                              </h6>
+
+
+
+
+                           </div>
+
+
+                           <div class="row"
+                              style="padding-top: -10px; padding-left: 10px; padding-right: 10px; padding-bottom: 10px">
+
+                              <table
+                                 class="table subcompact striped table-border row-hover">
+                                 <thead>
+                                    <tr>
+                                       <th style="text-align: center;">Scrip</th>
+                                       <th style="text-align: center;"></th>
+
+                                    </tr>
+                                 </thead>
+                                 <tbody>
+                                    <tr
+                                       th:each="scrip : ${rblPOJO.currScrips}">
+                                       <td
+                                          style="text-align: center; font-weight: bolder;"
+                                          th:text="${scrip}">ABBOTT</td>
+
+                                       <!--Buttons - OCA  -->
+                                       <td style="text-align: center;">
+                                          <a
+                                          class="button red cycle mini outline"
+                                          th:href="@{'/stratergy/rebal/delete/' + ${scrip}}"
+                                          data-role="hint"
+                                          data-hint-text="Remove Scrip from Strategy"
+                                          data-cls-hint="bg-lightyellow fg-black drop-shadow"
+                                          data-hint-position="right"><span
+                                             class="mif-bin fg-red"></span></a>
+                                       </td>
+                                       <!--Buttons - OCA  -->
+
+
+                                    </tr>
+                                 </tbody>
+                              </table>
+
+                           </div>
+
+                           <div class="row" style="margin: 20px">
+                              <div class="colspan-5 offset-1">
+                                 <h3 style="color: #4465a1">
+                                    <span class="mif-list"
+                                       style="margin-right: 10px"></span>
+                                    Selected Scrips - <span
+                                       style="color: #B1365B"
+                                       th:text="${rblPOJO.currScrips.size()}"></span>
+
+                                 </h3>
+
+                              </div>
+
+                              <div class="colspan-1 offset-9">
+
+                                 <a class="button"
+                                    style="background-color: #FFD700; color: black"
+                                    th:href="@{/stratergy/rebal/staging}"
+                                    role="button" data-role="hint"
+                                    data-hint-position="left"
+                                    data-cls-hint="bg-Lightgreen fg-black drop-shadow"
+                                    data-hint-text="Navigate to Next Screen for Finer Adjustments">
+                                    <span class="mif-next icon"
+                                    style="margin-left: 0px"></span> <span
+                                    style="margin-left: 3px">Proceed
+                                       to Staging</span>
+
+
+                                 </a>
+
+                              </div>
+
+                           </div>
+                        </div>
+
+
+
+
+                     </div>
+
+
+                  </div>
+                  <!--List of Scrips Div -Ends  -->
+
+               </div>
+
+
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <!-- Metro 4 -->
+   <script src="https://cdn.metroui.org.ua/v4.3.2/js/metro.min.js"></script>
+</body>
+</html>

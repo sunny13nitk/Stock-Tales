@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<div th:replace="fragments/header :: STHeader"></div>
+
+</head>
+<body>
+
+	<div class="grid" style="padding: 5px">
+
+
+		<div class="row flex-align-center">
+
+			<div class="card" style="padding-top: -80px">
+
+				<div class="row flex-align-center">
+					<div class="cell-1">
+						<span class="mif-thumbs-up mif-7x fg-green"
+							style="margin-left: 20px;"></span>
+					</div>
+					<div class="cell-8">
+						<blockquote class="left-side">
+							<h3 style="color: #8000fc">Yipee!</h3>
+							<span style="color: #486590; font-weight: medium;">We've
+								got everything ready for you! It took us </span> <span
+								style="color: #CB5F8D; margin-left: 1px; font-weight: bold;"
+								th:text="${stats.elapsedMins}"></span><span
+								style="color: #486590; font-weight: medium; margin-left: 4px">minutes
+								to process!</span> <br> <span
+								style="color: #486590; font-weight: medium;"> We've got
+								only </span> <span
+								style="color: #CB5F8D; margin-left: 2px; font-weight: bold;"
+								th:text="${stats.numFinalScrips}"></span> <span
+								style="margin-left: 2px; color: #486590"> scrips that
+								were able to make through our criteria for Consideration in
+								Momentum Portfolio. Select 'Next' to view These Scrip Details &
+								proceed to Portfolio Creation.</span>
+						</blockquote>
+
+					</div>
+
+					<!-- Customize Button - Col Start -->
+					<div class="cell -2" style="margin-left: 10px; margin-top: 30px">
+
+
+						<a th:if="${noPF != true }" href="#"
+							class="button primary rounded outline"
+							th:href="@{/nfs/crExisProp}" role="button"> <span
+							class="mif-next icon" style="margin-left: 0px"></span> <span
+							style="margin-left: 3px">Create Portfolio</span>
+						</a> <a href="#" class="button steel rounded outline"
+							style="border: none; margin-left: 10px" th:href="@{/}"
+							role="button"> <span class="mif-home  mif-3x"></span>
+						</a>
+
+
+					</div>
+					<!-- Customize Button - Col End -->
+				</div>
+			</div>
+		</div>
+
+		<div class="row flex-align-left" style="padding-left: 10px">
+			<div class="colspan-7 ">
+				<h6 style="color: #8000fc">Statistics... Time for a few
+					Numbers!</h6>
+			</div>
+
+		</div>
+
+		<!--Table Row - Starts  -->
+		<div class="row" style="margin-top: -30px; padding: 20px">
+			<div class="colspan-12">
+				<table class="table striped table-border row-hover mt-4"
+					id="t-inspector" data-horizontal-scroll="true"
+					data-show-search="false">
+					<thead>
+						<tr>
+
+							<th data-name="title">Particulars</th>
+
+							<th data-name="numfltr" data-cls-column="text-center"
+								data-format="number">Scrips Filtered in the Step</th>
+
+							<th data-name="numScrips" data-cls-column="text-center"
+								data-format="number">Total Scrips Remaining</th>
+
+
+
+
+
+
+						</tr>
+					</thead>
+					<tbody>
+
+
+						<tr th:each="statsI : ${statsList}">
+
+							<td th:text="${statsI.title}">Particulars</td>
+							<td style="text-align: center;" th:text="${statsI.numfltr}">45</td>
+
+							<td style="text-align: center;" th:text="${statsI.numscrips}">150</td>
+
+
+
+						</tr>
+
+					</tbody>
+				</table>
+
+
+			</div>
+		</div>
+		<!--Table Row - Ends -->
+
+
+
+
+
+
+
+	</div>
+
+	</div>
+
+
+
+	<!-- Metro 4 -->
+	<script src="https://cdn.metroui.org.ua/v4.3.2/js/metro.min.js"></script>
+</body>
+</html>

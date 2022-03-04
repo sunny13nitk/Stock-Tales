@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:element name="Months" type="months"/>
+
+  <xs:element name="monthNames" type="monthNames"/>
+
+  <xs:element name="monthsConfig" type="monthsConfig"/>
+
+  <xs:complexType name="months">
+    <xs:sequence>
+      <xs:element name="monthConfig" type="monthsConfig" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="monthsConfig">
+    <xs:sequence>
+      <xs:element ref="monthNames" minOccurs="0"/>
+      <xs:element name="quarter" type="xs:int"/>
+      <xs:element name="monValue" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="monthNames">
+    <xs:sequence>
+      <xs:element name="sname" type="xs:string" minOccurs="0"/>
+      <xs:element name="lname" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+

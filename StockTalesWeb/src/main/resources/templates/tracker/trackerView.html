@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<div th:replace="fragments/header :: STHeader"></div>
+
+</head>
+<body>
+
+
+   <!-- Header div - Start  -->
+   <div
+      class="head-bar pos-absolute bg-transparent fg-darkteal text-bold">
+
+      <div class="cell-9">
+         <a href="#" class="button alert rounded outline"
+            style="border: none;" th:href="@{/}" role="button"> <span
+            class="mif-home  mif-2x"></span>
+
+         </a> <label
+            style="color: #E15851; font-weight: bold; font-size: 1.5em; margin-left: 10px; margin-top: 10px">Scrip
+            Comparison Tool</label>
+
+
+
+
+      </div>
+
+   </div>
+
+   <!-- Header div - End  -->
+
+   <!-- Content Row - Starts -->
+   <div class="row" style="margin-top: 50px">
+
+      <!-- Static Table Div Column - Starts -->
+      <div class="cell-md-5" style="margin-top: 16px">
+
+         <div>
+            <table
+               class="table compact striped row-hover row-border table-border">
+               <thead>
+                  <tr>
+                     <th data-name="scCode">Scrip</th>
+                     <th data-name="mCapStr">MCap(Cr.)</th>
+                     <th data-name="mCapR"></th>
+                     <th data-name="salesL4QStr">Sales TTM</th>
+                     <th data-name="mCapBySales">MCap/Sales</th>
+                     <th data-name="PECurr">PE</th>
+                     <th data-name="PEG">PEG</th>
+                     <th data-name="UPH">UPH (%)</th>
+
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr th:each="scTrackHead : ${result.trackerHeaders}">
+                     <td><a
+                        th:href="@{'/scOvw/' + ${scTrackHead.scCode}}"
+                        th:text="${scTrackHead.scCode}"></a></td>
+
+                     <td
+                        style="text-align: center; font-weight: bolder;"
+                        th:text="${scTrackHead.mCapStr}"></td>
+                     <td
+                        style="text-align: center; font-style: italic; font-size: small; font-weight: bolder; color: #18A4B6"
+                        th:text="${scTrackHead.mCapR}"></td>
+                     <td
+                        style="text-align: center; font-weight: bolder;"
+                        th:text="${scTrackHead.salesL4QStr}"></td>
+
+
+                     <td
+                        style="text-align: center; font-weight: bolder; color: #E74C3C;"
+                        th:text="${scTrackHead.mCapBySales}"></td>
+                     <td
+                        style="text-align: center; font-weight: bolder; color: #32B480"
+                        th:text="${scTrackHead.PECurr}"></td>
+                     <td
+                        style="text-align: center; font-weight: bolder; color: #B43266"
+                        th:text="${scTrackHead.PEG}"></td>
+                     <td
+                        style="text-align: center; font-weight: bolder;"
+                        th:text="${scTrackHead.UPH}"></td>
+
+
+
+                  </tr>
+               </tbody>
+            </table>
+         </div>
+
+      </div>
+      <!-- Static Table Div Column - ends -->
+
+
+
+      <!-- Wizard Div Column - Starts -->
+      <div class="cell-md-7">
+         <div data-role="wizard" class="wizard-wide">
+            <section>
+               <div class="page-content">
+
+
+                  <table
+                     class="table compact striped row-hover row-border table-border">
+
+                     <thead>
+                        <tr>
+                           <th style="text-align: center"
+                              data-name="cmp">CMP</th>
+                           <th style="text-align: center"
+                              data-name="dma50">50 DMA</th>
+                           <th style="text-align: center"
+                              data-name="dma200">200 DMA</th>
+                           <th style="text-align: center"
+                              data-name="High52W">52wk High</th>
+                           <th style="text-align: center"
+                              data-name="Low52W">52wk Low</th>
+
+
+                        </tr>
+                     </thead>
+                     <tbody>
+                        <tr
+                           th:each="scTrackPrices : ${result.trackerPrices}">
+
+                           <td
+                              style="text-align: center; font-weight: bolder; color: #31758F"
+                              th:text="${scTrackPrices.cmp}"></td>
+                           <td
+                              style="text-align: center; font-weight: bolder;"
+                              th:text="${scTrackPrices.dma50}"></td>
+                           <td
+                              style="text-align: center; font-weight: bolder;"
+                              th:text="${scTrackPrices.dma200}"></td>
+                           <td
+                              style="text-align: center; font-weight: bolder; color: #32B480"
+                              th:text="${scTrackPrices.High52W}"></td>
+                           <td
+                              style="text-align: center; font-weight: bolder; color: #E74C3C;"
+                              th:text="${scTrackPrices.Low52W}"></td>
+
+
+
+
+                        </tr>
+                     </tbody>
+                  </table>
+               </div>
+
+
+            </section>
+            <section>
+               <div class="page-content">
+
+
+                  <table
+                     class="table compact striped row-hover row-border table-border">
+
+                     <thead>
+                        <tr>
+                           <th style="text-align: center"
+                              data-name="revG5Y">Rev. CAGR (5Y)</th>
+                           <th style="text-align: center"
+                              data-name="patG5Y">PAT CAGR (5Y)</th>
+                           <th style="text-align: center"
+                              data-name="revG3Y">Rev. CAGR (3Y)</th>
+                           <th style="text-align: center"
+                              data-name="patG3Y">PAT CAGR (3Y)</th>
+
+                           <th style="text-align: center"
+                              data-name="revGTTM">Rev. Gr TTM</th>
+                           <th style="text-align: center"
+                              data-name="patGTTM">PAT Gr TTM</th>
+
+
+                        </tr>
+                     </thead>
+                     <tbody>
+                        <tr
+                           th:each="scTrackRevPAT : ${result.trackerRevPATs}">
+
+                           <td
+                              style="text-align: center; font-weight: bolder; color: #31758F"
+                              th:text="${scTrackRevPAT.revG5Y}"></td>
+                           <td
+                              style="text-align: center; font-weight: bolder; color: #31758F"
+                              th:text="${scTrackRevPAT.patG5Y}"></td>
+
+                           <td
+                              style="text-align: center; font-weight: bolder; color: #32B480"
+                              th:text="${scTrackRevPAT.revG3Y}"></td>
+                           <td
+                              style="text-align: center; font-weight: bolder; color: #32B480"
+                              th:text="${scTrackRevPAT.patG3Y}"></td>
+
+                           <td
+                              style="text-align: center; font-weight: bolder; color: #B43266"
+                              th:text="${scTrackRevPAT.revGTTM}"></td>
+                           <td
+                              style="text-align: center; font-weight: bolder; color: #B43266"
+                              th:text="${scTrackRevPAT.patGTTM}"></td>
+
+                        </tr>
+                     </tbody>
+                  </table>
+               </div>
+
+
+            </section>
+            <section>
+               <div class="page-content">Page 3</div>
+            </section>
+         </div>
+      </div>
+      <!-- Wizard Div Column - Ends -->
+
+
+   </div>
+
+   <!-- Content Row - Starts -->
+
+
+
+
+
+   <!-- Metro 4 -->
+   <script src="https://cdn.metroui.org.ua/v4.3.2/js/metro.min.js"></script>
+</body>
+</html>

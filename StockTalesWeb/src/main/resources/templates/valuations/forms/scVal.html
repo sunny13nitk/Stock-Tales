@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<div th:replace="fragments/header :: STHeader"></div>
+
+</head>
+<body>
+
+   <div style="height: 800px; overflow: hidden;">
+      <div data-role="navview" data-compact="md" data-expand="false"
+         data-active-state="true">
+         <div th:replace="fragments/navbar :: STNavbar"></div>
+
+
+
+         <div class="navview-content pl-4-md pr-4-md">
+
+            <div class="grid">
+
+               <div th:replace="fragments/brand :: STBrand"></div>
+
+               <!-- your Code Starts from Here  -->
+               <div class="colspan-10 offset-1" style="margin-top: 80px">
+
+                  <div class="card">
+                     <div class="card-header">
+
+                        <div class="remark alert"
+                           style="padding-top: 10px; margin: 2px">
+                           <h4>Scrip Valuation Check Form</h4>
+                        </div>
+
+
+
+
+
+
+
+                        <!-- Place for messages: error, alert etc ... -->
+                        <div class="form-group">
+                           <div class="col-xs-15">
+                              <div th:if="${formError != null}">
+
+                                 <!-- Check for Form error -->
+
+                                 <div class="remark alert"
+                                    style="padding-top: 10px; margin: 2px">
+                                    <label
+                                       th:text="'Error Loading Scrip' + ${formError}"></label>
+                                 </div>
+                              </div>
+                           </div>
+
+                           <div class="col-xs-15">
+                              <div th:if="${formSucc != null}">
+
+
+                                 <div class="remark success"
+                                    style="padding-top: 10px; margin: 2px">
+                                    <label th:text=" ${formSucc}"></label>
+                                 </div>
+
+
+
+                              </div>
+                           </div>
+                        </div>
+
+
+
+                        <form th:object="${scValPOJO}"
+                           class="inline-form"
+                           th:action="@{'/scrips/scVal/{scCode}'} "
+                           method="post">
+
+                           <input type="text" placeholder="Scrip Code"
+                              class="metro-input" th:field="*{scCode}">
+                           <input type="text" placeholder="CMP"
+                              class="metro-input" th:field="*{CMP}">
+                           <label style="margin-left: 20px"> MOS
+                           </label><input type="text" data-role="spinner"
+                              data-step=".10" data-fixed="2"
+                              data-min-value="0" data-max-value="1"
+                              data-cls-spinner-button="fg-white"
+                              data-cls-spinner-button-plus="bg-red"
+                              data-cls-spinner-button-minus="bg-green"
+                              th:field="*{MoS}">
+                           <button class="button success">Submit</button>
+
+
+                        </form>
+                     </div>
+
+
+                  </div>
+
+               </div>
+
+            </div>
+
+         </div>
+      </div>
+   </div>
+   </div>
+
+   <!-- Metro 4 -->
+   <script src="https://cdn.metroui.org.ua/v4.3.2/js/metro.min.js"></script>
+</body>
+</html>
