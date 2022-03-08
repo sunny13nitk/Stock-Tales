@@ -59,6 +59,9 @@ import stocktales.strategy.helperPOJO.SectorAllocations;
 import stocktales.usersPF.enums.EnumTxnType;
 import yahoofinance.histquotes.Interval;
 
+/*
+ * CORE PF Service
+ */
 @Service
 @Getter
 @Setter
