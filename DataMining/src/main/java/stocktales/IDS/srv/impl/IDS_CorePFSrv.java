@@ -359,7 +359,7 @@ public class IDS_CorePFSrv implements stocktales.IDS.srv.intf.IDS_CorePFSrv
 										// Determine Buy Amount
 										buyAmnt = depAmntSrv.getDeploymentAmountByScrip4mPF(pfSchema.getSccode(),
 												EnumSMABreach.sma4);
-										if (buyAmnt > 0)
+										if (buyAmnt > cmpScrip)
 										{
 											buyProps.add(generateBuyProposal(pfSchema, buyAmnt, EnumSMABreach.sma4));
 											isBreached = true;
@@ -427,7 +427,7 @@ public class IDS_CorePFSrv implements stocktales.IDS.srv.intf.IDS_CorePFSrv
 										// Determine Buy Amount
 										buyAmnt = depAmntSrv.getDeploymentAmountByScrip4mPF(pfSchema.getSccode(),
 												EnumSMABreach.sma3);
-										if (buyAmnt > 0)
+										if (buyAmnt > cmpScrip)
 										{
 											buyProps.add(generateBuyProposal(pfSchema, buyAmnt, EnumSMABreach.sma3));
 											isBreached = true;
@@ -499,7 +499,7 @@ public class IDS_CorePFSrv implements stocktales.IDS.srv.intf.IDS_CorePFSrv
 									{
 										buyAmnt = depAmntSrv.getDeploymentAmountByScrip4mPF(pfSchema.getSccode(),
 												EnumSMABreach.sma2);
-										if (buyAmnt > 0)
+										if (buyAmnt > cmpScrip)
 										{
 											buyProps.add(generateBuyProposal(pfSchema, buyAmnt, EnumSMABreach.sma2));
 											isBreached = true;
@@ -529,7 +529,7 @@ public class IDS_CorePFSrv implements stocktales.IDS.srv.intf.IDS_CorePFSrv
 									{
 										buyAmnt = depAmntSrv.getDeploymentAmountByScrip4mPF(pfSchema.getSccode(),
 												EnumSMABreach.sma1);
-										if (buyAmnt > 0)
+										if (buyAmnt > cmpScrip)
 										{
 											buyProps.add(generateBuyProposal(pfSchema, buyAmnt, EnumSMABreach.sma1));
 											isBreached = true;
