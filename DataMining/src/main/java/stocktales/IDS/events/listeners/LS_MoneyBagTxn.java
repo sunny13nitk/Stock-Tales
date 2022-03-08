@@ -116,15 +116,22 @@ public class LS_MoneyBagTxn implements ApplicationListener<EV_MoneyBagTxn>
 
 						if (isDividendSenario)
 						{
-							Optional<HC> hcO = repoHC.findById(mbEV.getMbagTxn().getRemarks());
-							if (hcO.isPresent())
+							// Scrip Code Maintained in Remarks as Dividend:ScCode
+							String[] txts = mbEV.getMbagTxn().getRemarks().split(":");
+							if (txts.length > 1)
 							{
-								// Scrip Code Maintained in Remarks
-								// Get existing dividend if any
-								double exisDiv = hcO.get().getDividend();
-								exisDiv += depAmnt;
+								String scCode = txts[txts.length - 1];
 
-								repoHC.updateDividendforScrip(mbEV.getMbagTxn().getRemarks(), exisDiv);
+								Optional<HC> hcO = repoHC.findById(scCode);
+								if (hcO.isPresent())
+								{
+
+									// Get existing dividend if any
+									double exisDiv = hcO.get().getDividend();
+									exisDiv += depAmnt;
+
+									repoHC.updateDividendforScrip(scCode, exisDiv);
+								}
 							}
 						}
 					}

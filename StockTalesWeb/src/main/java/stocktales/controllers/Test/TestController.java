@@ -1614,6 +1614,42 @@ public class TestController
 
 	}
 
+	@GetMapping("/mbtxn/{ttype}/{sccode}/{amount}")
+	public String MBTxn(@PathVariable char ttype, @PathVariable String sccode, @PathVariable String amount)
+	{
+		// Get Today's Date
+		long millis = System.currentTimeMillis();
+		java.util.Date date = new java.util.Date(millis);
+		MoneyBag mbTxn = new MoneyBag();
+
+		if (ttype == 'D') // Deposit
+		{
+			mbTxn.setType(EnumTxnType.Deposit);
+			mbTxn.setRemarks("Deposit");
+
+		} else if (ttype == 'W') // Withdraw
+		{
+			mbTxn.setType(EnumTxnType.Withdraw);
+			mbTxn.setRemarks("Withdraw");
+		} else if (ttype == 'B') // Dividend
+		{
+			mbTxn.setType(EnumTxnType.Dividend);
+			mbTxn.setRemarks("Dividend");
+			if (!sccode.isEmpty())
+			{
+				mbTxn.setRemarks(mbTxn.getRemarks() + ":" + sccode);
+			}
+		}
+
+		mbTxn.setDate(date);
+		mbTxn.setAmount(Double.valueOf(amount));
+
+		mbSrv.processMBagTxn(mbTxn);
+
+		return "success";
+
+	}
+
 	@GetMapping("/pftxn/{scCode}/{ttype}/{units}/{ppu}/{smaRank}")
 	public String MBTxn(@PathVariable String scCode, @PathVariable char ttype, @PathVariable String units,
 			@PathVariable String ppu, @PathVariable String smaRank)
