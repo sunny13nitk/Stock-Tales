@@ -4,6 +4,7 @@ import java.util.List;
 
 import stocktales.IDS.model.pf.entity.HCI;
 import stocktales.IDS.pojo.IDS_SCBuyProposal;
+import stocktales.IDS.pojo.IDS_SC_PL;
 import stocktales.IDS.pojo.IDS_SMAPreview;
 import stocktales.IDS.pojo.IDS_ScAllocMassUpdate;
 import stocktales.IDS.pojo.IDS_VPDetails;
@@ -87,5 +88,14 @@ public interface IDS_CorePFSrv
 	 * @throws Exception
 	 */
 	public void removeScrip4mSchemaPF(String scCode, double sellPricePPU) throws Exception;
+
+	/**
+	 * Get Realized P&L amount and Itemized preview of Scrip Sale(s) if any
+	 * 
+	 * @param scCode - Scrip to be Queried for P&L Realized
+	 * @return - IDS_SC_PL
+	 * @throws Exception
+	 */
+	public IDS_SC_PL getRealizedPL4Scrip(String scCode) throws Exception;
 
 }

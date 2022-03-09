@@ -30,6 +30,8 @@ import stocktales.IDS.model.pf.entity.PFSchema;
 import stocktales.IDS.model.pf.repo.RepoPFSchema;
 import stocktales.IDS.pojo.IDS_SCAlloc;
 import stocktales.IDS.pojo.IDS_SCBuyProposal;
+import stocktales.IDS.pojo.IDS_SC_PL;
+import stocktales.IDS.pojo.IDS_SC_PL_Items;
 import stocktales.IDS.pojo.IDS_SMAPreview;
 import stocktales.IDS.pojo.IDS_SMASpread;
 import stocktales.IDS.pojo.IDS_ScAllocMassUpdate;
@@ -1852,6 +1854,37 @@ public class TestController
 		}
 
 		return "success";
+	}
+
+	@GetMapping("/realPL/{scCode}")
+	public String realzPL4Scrip(@PathVariable String scCode)
+	{
+		if (scCode.trim().length() > 0)
+		{
+			IDS_SC_PL scPL;
+			try
+			{
+				scPL = corePFSrv.getRealizedPL4Scrip(scCode);
+				if (scPL != null)
+				{
+					System.out.println("Realized P&L for Scrip - " + scCode + " : Rs.  " + scPL.getNettPLAmount());
+					System.out.println("---------------- Itemized BreakUp -------------- ");
+					for (IDS_SC_PL_Items plItem : scPL.getPlItems())
+					{
+						System.out.println(" Sell Date:  " + plItem.getSaleDate() + "Realization Amount : Rs.  "
+								+ plItem.getPlAmount());
+					}
+				}
+			} catch (Exception e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
+
+		return "success";
+
 	}
 
 	@GetMapping("/btids")

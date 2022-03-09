@@ -39,6 +39,8 @@ import stocktales.IDS.model.pf.repo.RepoPFSchema;
 import stocktales.IDS.model.pf.repo.RepoPFVolProfile;
 import stocktales.IDS.pojo.IDS_SCAlloc;
 import stocktales.IDS.pojo.IDS_SCBuyProposal;
+import stocktales.IDS.pojo.IDS_SC_PL;
+import stocktales.IDS.pojo.IDS_SC_PL_Items;
 import stocktales.IDS.pojo.IDS_SMAPreview;
 import stocktales.IDS.pojo.IDS_SMASpread;
 import stocktales.IDS.pojo.IDS_ScAllocMassUpdate;
@@ -812,6 +814,82 @@ public class IDS_CorePFSrv implements stocktales.IDS.srv.intf.IDS_CorePFSrv
 		}
 
 	}
+
+	@Override
+	public IDS_SC_PL getRealizedPL4Scrip(String scCode) throws Exception
+	{
+		IDS_SC_PL scPL = null;
+		if (scCode.trim().length() > 0 && repoHCI != null)
+		{
+			try
+			{
+				List<HCI> sellTxns = repoHCI.findAllByTxntypeAndSccode(EnumTxnType.Sell, scCode);
+				if (sellTxns != null)
+				{
+					if (sellTxns.size() > 0)
+					{
+						scPL = new IDS_SC_PL();
+						List<HCI> buyTxns = repoHCI.findAllByTxntypeAndSccode(EnumTxnType.Buy, scCode);
+						// Loop through All Sell Txns.
+						for (HCI sellTxn : sellTxns)
+						{
+							if (buyTxns != null && sellTxn.getUnits() > 0)
+							{
+								if (buyTxns.size() > 0)
+								{
+									// Get all Prior Buy Txns.
+									List<HCI> buyTxnsPrio = buyTxns.stream()
+											.filter(x -> x.getDate().before(sellTxn.getDate()))
+											.collect(Collectors.toList());
+									if (buyTxnsPrio != null)
+									{
+										if (buyTxnsPrio.size() > 0)
+										{
+											/*
+											 * Determine Prior Purchase Txns. PPU
+											 */
+											double sumPrioPurchaseTxns = buyTxnsPrio.stream()
+													.map(p -> p.getUnits() * (p.getTxnppu()))
+													.collect(Collectors.summingDouble(Double::doubleValue));
+											double sumUnits = buyTxnsPrio.stream().mapToInt(HCI::getUnits).sum();
+											double ppu = 0;
+											double realzPL = 0;
+											if (sumUnits > 0)
+											{
+												ppu = sumPrioPurchaseTxns / sumUnits;
+											}
+											realzPL = Precision.round(sellTxn.getUnits() * (sellTxn.getTxnppu() - ppu),
+													0);
+											scPL.getPlItems().add(new IDS_SC_PL_Items(sellTxn.getDate(), realzPL));
+
+										}
+									}
+								}
+							}
+						}
+
+						// All Sales Processed- Consolidate Nett Realized PL
+						if (scPL.getPlItems().size() > 0)
+						{
+							scPL.setNettPLAmount(Precision.round(
+									scPL.getPlItems().stream().mapToDouble(IDS_SC_PL_Items::getPlAmount).sum(), 1));
+						}
+					}
+				}
+			} catch (Exception e)
+			{
+				// Do Nothing - Probably no Sell Txn.
+			}
+		}
+
+		return scPL;
+	}
+
+	/**
+	 * --------------------------------------------------------------------------
+	 * -------------------- PRIVATE SECTION ------------------
+	 * -------------------------------------------------------------------------
+	 */
 
 	private void publishCorePFTxn(HCI txn)
 	{
