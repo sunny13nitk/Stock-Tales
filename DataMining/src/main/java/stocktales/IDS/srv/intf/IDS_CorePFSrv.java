@@ -8,6 +8,7 @@ import stocktales.IDS.pojo.IDS_SC_PL;
 import stocktales.IDS.pojo.IDS_SMAPreview;
 import stocktales.IDS.pojo.IDS_ScAllocMassUpdate;
 import stocktales.IDS.pojo.IDS_VPDetails;
+import stocktales.IDS.pojo.XIRRContainer;
 import stocktales.IDS.pojo.UI.IDS_BuyProposalBO;
 
 public interface IDS_CorePFSrv
@@ -97,5 +98,13 @@ public interface IDS_CorePFSrv
 	 * @throws Exception
 	 */
 	public IDS_SC_PL getRealizedPL4Scrip(String scCode) throws Exception;
+
+	/**
+	 * Calculate XIRR Returns for Portfolio
+	 * 
+	 * @return - XIRRContainer
+	 * @throws Exception
+	 */
+	public XIRRContainer calculateXIRRforPF() throws Exception;
 
 }

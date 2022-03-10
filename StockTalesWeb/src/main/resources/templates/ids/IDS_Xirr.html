@@ -1,0 +1,355 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<div th:replace="fragments/header :: STHeader"></div>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script type="text/javascript"
+	src="https://www.gstatic.com/charts/loader.js"></script>
+</head>
+<body style="height: 400px">
+
+	<div th:replace="fragments/IDS_FG :: IDSMenu"></div>
+
+	<div style="margin-top: 32px">
+		<div id="overview">
+			<div class="frame"
+				style="padding: 10px; overflow: auto; background-color: #FCFAFE">
+
+				<!--Top Row PF DashBoard - Begin  -->
+				<div class="row flex-justify-center">
+
+					<!-- Place for messages: error, alert etc ... -->
+
+					<!--Title Head - Begin -->
+					<div class="colspan-2">
+						<h3 style="color: #421C65; margin-left: -65px">
+							<span class="mif-directions-bike"></span> XIRR DashBoard!
+						</h3>
+
+					</div>
+					<!--Title Head - End -->
+					<div class="colspan-2" style="background: #F1FDF1; padding: 2px">
+						<div class="row flex-justify-left">
+
+
+							<div class="row flex-justify-left">
+								<span class="mif-paper-plane mif-4x" style="color: #119811;"></span>
+								<label
+									style="color: #448A64; font-weight: bold; font-size: 1.65em; margin-left: 7px"
+									th:text="${xirrUI.xirr}"> </label> <label
+									style="color: #448A64; font-weight: bold; font-size: 1.65em; margin-left: 2px">
+									% </label>
+
+
+							</div>
+
+							<div class="colspan-12 offset-2" style="margin-top: -30px;">
+								<span
+									style="color: #4E5055; font-weight: medium; font-size: .75em">
+									XIRR Since: </span> <label
+									style="color: #4E5055; font-weight: medium; font-size: .75em"
+									th:text="${xirrUI.since}"> </label>
+							</div>
+						</div>
+
+
+
+					</div>
+
+					<div class="colspan-2"
+						style="background: #F7F1FD; padding: 2px; margin-left: 20px">
+						<div class="row flex-justify-left">
+
+
+							<div class="row flex-justify-left">
+								<span class="mif-coins mif-4x" style="color: #4B0D89;"></span> <label
+									style="color: #4B0D89; font-weight: bold; font-size: 1.65em; margin-left: 7px"
+									th:text="${xirrUI.abspl}"> </label> <label
+									style="color: #4B0D89; font-weight: bold; font-size: 1.65em; margin-left: 2px">
+									% </label>
+
+
+							</div>
+
+							<div class="colspan-12 offset-2" style="margin-top: -30px;">
+								<span
+									style="color: #4E5055; font-weight: medium; font-size: .75em">
+									Abs. Ret. Since: </span> <label
+									style="color: #4E5055; font-weight: medium; font-size: .75em"
+									th:text="${xirrUI.since}"> </label>
+							</div>
+						</div>
+
+
+
+					</div>
+
+
+
+					<div class="colspan-2"
+						style="background: #FDFCF1; padding: 2px; margin-left: 20px">
+						<div class="row flex-justify-left">
+
+
+							<div class="row flex-justify-left">
+								<span class="mif-add-shopping-cart mif-4x"
+									style="color: #CFC122;"></span> <label
+									style="color: #CFC122; font-weight: bold; font-size: 1.35em; margin-left: 7px"
+									th:text="${xirrUI.numBuys}"> </label> <label
+									style="color: #CFC122; font-weight: bold; font-size: .75em; margin-left: 12px; margin-top: 8px">
+									# Days Buys</label>
+
+
+							</div>
+
+							<div class="colspan-12 offset-2" style="margin-top: -30px;">
+								<label
+									style="color: #CFC122; font-weight: bold; font-size: 1.35em; margin-left: 7px"
+									th:text="${xirrUI.numBuyTxns}"> </label> <label
+									style="color: #CFC122; font-weight: bold; font-size: .75em; margin-left: 10px; margin-top: 8px">
+									# Transactions</label>
+							</div>
+						</div>
+
+
+
+					</div>
+
+
+					<div class="colspan-2"
+						style="background: #FDF1FD; padding: 2px; margin-left: 20px">
+						<div class="row flex-justify-left">
+
+
+							<div class="row flex-justify-left">
+								<span class="mif-shopping-basket2 mif-4x"
+									style="color: #C917C9;"></span> <label
+									style="color: #C917C9; font-weight: bold; font-size: 1.35em; margin-left: 7px"
+									th:text="${xirrUI.numSells}"> </label> <label
+									style="color: #C917C9; font-weight: bold; font-size: .75em; margin-left: 12px; margin-top: 8px">
+									# Days Sold</label>
+
+
+							</div>
+
+							<div class="colspan-12 offset-2" style="margin-top: -30px;">
+								<label
+									style="color: #C917C9; font-weight: bold; font-size: 1.35em; margin-left: 7px"
+									th:text="${xirrUI.numSellTxns}"> </label> <label
+									style="color: #C917C9; font-weight: bold; font-size: .75em; margin-left: 10px; margin-top: 8px">
+									# Transactions</label>
+							</div>
+						</div>
+
+
+
+					</div>
+
+
+				</div>
+
+				<!--Top Row PF DashBoard - End -->
+
+
+
+
+
+				<!--Chart Row -Starts  -->
+
+				<h5
+					style="color: #4465a1; align-content: center; margin-left: 500px; margin-top: 30px">Cash
+					Flows Spread</h5>
+				<div id="chart_cf" style="margin-left: -110px"></div>
+
+
+				<!--Chart Row -Ends  -->
+
+				<!--Table Row - Starts  -->
+				<div class="row" style="margin-top: 20px">
+
+					<div class="colspan-12">
+						<table class="table compact striped table-border row-hover mt-4 "
+							id="t-inspector" data-role="table" data-show-search="true"
+							data-show-rows-steps="false"
+							data-table-search-title="Filter By Date :"
+							data-search-min-length="1" data-search-threshold="300"
+							data-rows="-1" data-search-fields="date"
+							data-horizontal-scroll="true"
+							data-info-wrapper=".my-info-wrapper" data-thousand-separator=","
+							data-pagination-wrapper=".my-pagination-wrapper">
+							<thead>
+								<tr>
+
+									<th data-name="date">Date</th>
+
+									<th data-name="cfStr" data-cls-column=" text-center">Cash
+										Flow - Figures</th>
+
+									<th data-name="cf" data-cls-column=" text-center">Cash
+										Flow - Numbers</th>
+
+
+									<th data-cls-column=" text-center">Progress Bar</th>
+
+									<th data-name="per" data-format="number"
+										data-cls-column=" text-center">Inv. Alloc(%)</th>
+
+
+								</tr>
+							</thead>
+							<tbody>
+
+
+								<tr th:each="xirrItem : ${xirrUI.xirrTable}">
+
+									<td style="text-align: center"
+										th:text="${#dates.format(xirrItem.date, 'dd-MMM-yyyy')}"></td>
+
+									<td th:if="${xirrItem.cf <= 0}"><span
+										class=" tally success" th:text="${xirrItem.cfStr}"></span></td>
+
+									<td th:if="${xirrItem.cf > 0}"><span class=" tally alert"
+										th:text="${xirrItem.cfStr}"></span></td>
+
+									<td style="text-align: center" th:text="${xirrItem.cf}"></td>
+									<td style="text-align: center">
+										<div data-role="progress" data-type="buffer"
+											data-cls-bar="bg-blue" data-cls-buffer="bg-white"
+											data-small="true" th:attr="data-value=${xirrItem.per}"></div>
+									</td>
+
+
+									<td><span class=" tally yellow" th:text="${xirrItem.per}"></span></td>
+
+
+								</tr>
+
+							</tbody>
+						</table>
+
+						<p class="h5  text-center my-info-wrapper "></p>
+						<div class="d-flex flex-justify-center my-pagination-wrapper"></div>
+					</div>
+
+				</div>
+				<!--Table Row - Ends -->
+
+
+				<!-- Holdings Row - Ends -->
+
+			</div>
+		</div>
+	</div>
+
+
+	<script th:inline="javascript">
+		var xirrData = /*[[${xirrChart}]]*/'noValue';
+
+		$(document).ready(function() {
+			google.charts.load('current', {
+				packages : [ 'corechart', 'bar' ]
+			});
+
+			google.charts.setOnLoadCallback(drawChart);
+
+		});
+
+		/*
+		------------ Cash Flows Chart
+		 */
+
+		function drawChart() {
+
+			var data = new google.visualization.DataTable();
+			data.addColumn('string', 'date');
+			data.addColumn('number', 'Investments');
+			data.addColumn('number', 'Sell Value');
+			data.addColumn('number', 'Current Value');
+
+			var dataArray = [];
+
+			$.each(xirrData, function(i, obj) {
+				dataArray.push([ obj.date, obj.inv, obj.sales, obj.value ]);
+			});
+
+			data.addRows(dataArray);
+
+			/*
+			In case Data labels are needed on Bar Chart */
+			var view = new google.visualization.DataView(data);
+
+			var options = {
+
+				width : 1500,
+				height : 450,
+				backgroundColor : {
+					fill : 'transparent'
+				},
+				pointSize : 5,
+				focusTarget : 'category',
+
+				colors : [ '#BFE994', '#E994BF', '#94BFE9' ],
+				legend : {
+					position : 'top',
+					alignment : 'center',
+					maxLines : 2,
+					textStyle : {
+						color : '#3C6EB7',
+						fontName : 'Calibri',
+						fontSize : 12,
+						bold : true
+
+					}
+
+				},
+
+				hAxis : {
+
+					viewWindow : {
+						min : [ 7, 30, 0 ],
+						max : [ 17, 30, 0 ]
+					},
+					textStyle : {
+						color : '#841EE1',
+						fontName : 'Calibri',
+						fontSize : 12,
+						bold : true
+					}
+
+				},
+
+				vAxis : {
+
+					viewWindow : {
+						min : [ 7, 30, 0 ],
+						max : [ 17, 30, 0 ]
+					},
+					textStyle : {
+						color : '#698AFF',
+						fontName : 'Calibri',
+						fontSize : 12,
+						bold : true
+					}
+
+				},
+
+				seriesType : 'bars'
+
+			};
+
+			var chartReturns = new google.visualization.ColumnChart(document
+					.getElementById('chart_cf'));
+
+			//In case of Data points enabled on chart series
+			chartReturns.draw(view, options);
+		}
+	</script>
+
+	<!-- Charts - ENDS -->
+
+	<!-- Metro 4 -->
+	<script src="https://cdn.metroui.org.ua/v4.3.2/js/metro.min.js"></script>
+</body>
+</html>

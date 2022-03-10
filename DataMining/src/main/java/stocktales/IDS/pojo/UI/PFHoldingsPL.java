@@ -37,5 +37,6 @@ public class PFHoldingsPL
 	private double depPer;
 	private Date lastBuyDate;
 	private Date lastSellDate;
+	private int numDaysBuy;
 
 }

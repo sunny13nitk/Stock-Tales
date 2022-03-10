@@ -25,6 +25,7 @@ import stocktales.IDS.pojo.UI.IDS_BuyProposalBO;
 import stocktales.IDS.pojo.UI.IDS_PF_Chart_DepAmnt;
 import stocktales.IDS.pojo.UI.IDS_PF_Chart_PFReturns;
 import stocktales.IDS.pojo.UI.IDS_PF_Chart_PLSpread;
+import stocktales.IDS.pojo.UI.IDS_XIRR_UI;
 import stocktales.IDS.pojo.UI.MBUI;
 import stocktales.IDS.pojo.UI.PFDBContainer;
 import stocktales.IDS.pojo.UI.PFHoldingsPL;
@@ -34,6 +35,7 @@ import stocktales.IDS.srv.intf.IDS_MoneyBagSrv;
 import stocktales.IDS.srv.intf.IDS_PFDashBoardUISrv;
 import stocktales.IDS.srv.intf.IDS_PFSchema_REbalUI_Srv;
 import stocktales.IDS.srv.intf.IDS_VPSrv;
+import stocktales.IDS.srv.intf.IDS_XIRR_UI_Srv;
 import stocktales.NFS.repo.RepoBseData;
 import stocktales.annotations.RetainView;
 import stocktales.durations.UtilDurations;
@@ -71,6 +73,9 @@ public class IDSController
 
 	@Autowired
 	private IDS_VPSrv idsVPSrv;
+
+	@Autowired
+	private IDS_XIRR_UI_Srv xirrSrv;
 
 	@Autowired
 	private IDS_MoneyBagSrv mbSrv;
@@ -125,6 +130,21 @@ public class IDSController
 		}
 
 		return "ids/IDShome";
+	}
+
+	@GetMapping("/xirr")
+	public String showXIRR(Model model) throws Exception
+	{
+		if (xirrSrv != null && pfDashBSrv != null)
+		{
+			IDS_XIRR_UI xirrUI = xirrSrv.generateXIRRUI();
+			if (xirrUI != null)
+			{
+				model.addAttribute("xirrUI", xirrUI);
+				model.addAttribute("xirrChart", xirrUI.getXirrChart());
+			}
+		}
+		return "ids/IDS_Xirr";
 	}
 
 	@GetMapping("/vprofile")

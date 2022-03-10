@@ -106,6 +106,13 @@
 			<artifactId>aspectjweaver</artifactId>
 		</dependency>
 
+		<!--XIRR JAR -->
+		<dependency>
+			<groupId>org.decampo</groupId>
+			<artifactId>xirr</artifactId>
+			<version>1.2</version>
+		</dependency>
+
 
 
 		<!-- to compensate for java 9 not including jaxb -->

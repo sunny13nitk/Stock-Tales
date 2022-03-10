@@ -14,6 +14,8 @@ import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 
 import org.apache.commons.math3.util.Precision;
+import org.decampo.xirr.Transaction;
+import org.decampo.xirr.Xirr;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
@@ -37,6 +39,7 @@ import stocktales.IDS.model.pf.repo.RepoHCI;
 import stocktales.IDS.model.pf.repo.RepoMoneyBag;
 import stocktales.IDS.model.pf.repo.RepoPFSchema;
 import stocktales.IDS.model.pf.repo.RepoPFVolProfile;
+import stocktales.IDS.pojo.DateAmount;
 import stocktales.IDS.pojo.IDS_SCAlloc;
 import stocktales.IDS.pojo.IDS_SCBuyProposal;
 import stocktales.IDS.pojo.IDS_SC_PL;
@@ -45,7 +48,9 @@ import stocktales.IDS.pojo.IDS_SMAPreview;
 import stocktales.IDS.pojo.IDS_SMASpread;
 import stocktales.IDS.pojo.IDS_ScAllocMassUpdate;
 import stocktales.IDS.pojo.IDS_ScSMASpread;
+import stocktales.IDS.pojo.IDS_ScripUnits;
 import stocktales.IDS.pojo.IDS_VPDetails;
+import stocktales.IDS.pojo.XIRRContainer;
 import stocktales.IDS.pojo.UI.IDS_BuyProposalBO;
 import stocktales.IDS.pojo.UI.IDS_PF_BuyPHeader;
 import stocktales.IDS.srv.intf.IDS_DeploymentAmntSrv;
@@ -885,6 +890,83 @@ public class IDS_CorePFSrv implements stocktales.IDS.srv.intf.IDS_CorePFSrv
 		return scPL;
 	}
 
+	@Override
+	public XIRRContainer calculateXIRRforPF() throws Exception
+	{
+		XIRRContainer xirrCont = null;
+
+		if (repoHCI != null)
+		{
+			List<HCI> txns = repoHCI.findAll();
+
+			if (txns != null)
+			{
+				if (txns.size() > 0)
+				{
+					xirrCont = new XIRRContainer();
+					/**
+					 * Get Unique Date Groups
+					 */
+					List<Date> DatesUQ = repoHCI.getUniqueTxnDates();
+
+					// txns.stream().filter(w ->
+					// DatesUQ.add(w.getDate())).distinct().collect(Collectors.toList());
+
+					for (Date date : DatesUQ)
+					{
+						List<HCI> txnsOnDate = txns.stream().filter(e -> e.getDate().compareTo(date) == 0)
+								.collect(Collectors.toList());
+						if (txnsOnDate != null)
+						{
+							double dayAmount = 0;
+							for (HCI txn : txnsOnDate)
+							{
+								switch (txn.getTxntype())
+								{
+								case Buy: // Negative Cash Flow = Buy
+									dayAmount += txn.getTxnppu() * txn.getUnits() * -1;
+									break;
+								case Sell: // Positive Cash Flow = Sell
+									dayAmount += txn.getTxnppu() * txn.getUnits();
+									break;
+								case Exit: // Positive Cash Flow = Exit
+									dayAmount += txn.getTxnppu() * txn.getUnits();
+									break;
+
+								default:
+									break;
+								}
+							}
+
+							// consolidate for the Date
+							xirrCont.getTransactions().add(new DateAmount(date, dayAmount));
+						}
+					}
+
+					// Final Entry for PF Current Price as Positive Cash Flow Entry
+					xirrCont.getTransactions()
+							.add(new DateAmount(UtilDurations.getTodaysDateOnly(), this.getPFCurrVal()));
+
+					if (xirrCont.getTransactions().size() > 0)
+					{
+						/*
+						 * CAll the Utility to Calculate XIRR
+						 */
+						List<Transaction> txnColl = new ArrayList<Transaction>();
+						txnColl = xirrCont.getTransactions().stream()
+								.map(t -> new Transaction(t.getAmount(), t.getDate())).collect(Collectors.toList());
+
+						double xirr = Precision.round(new Xirr(txnColl).xirr() * 100, 1);
+						xirrCont.setXirr(xirr);
+					}
+				}
+			}
+
+		}
+
+		return xirrCont;
+	}
+
 	/**
 	 * --------------------------------------------------------------------------
 	 * -------------------- PRIVATE SECTION ------------------
@@ -1021,12 +1103,6 @@ public class IDS_CorePFSrv implements stocktales.IDS.srv.intf.IDS_CorePFSrv
 		}
 	}
 
-	/**
-	 * ------------------ PRIVATE SECTION --------------------------
-	 * 
-	 * @throws Exception
-	 */
-
 	private IDS_SCBuyProposal generateBuyProposal(PFSchema pfSchema, double buyAmnt, EnumSMABreach smaBreach)
 			throws Exception
 	{
@@ -1115,6 +1191,23 @@ public class IDS_CorePFSrv implements stocktales.IDS.srv.intf.IDS_CorePFSrv
 			}
 		}
 
+	}
+
+	private double getPFCurrVal() throws Exception
+	{
+		double value = 0;
+
+		List<IDS_ScripUnits> scUnits = new ArrayList<IDS_ScripUnits>();
+		List<HC> holdings = repoHC.findAll();
+		if (holdings != null)
+		{
+			scUnits = holdings.stream().map(holding -> new IDS_ScripUnits(holding.getSccode(), holding.getUnits()))
+					.collect(Collectors.toList());
+
+			value = StockPricesUtility.getCurrentValueforScripsandUnits(scUnits);
+		}
+
+		return value;
 	}
 
 }

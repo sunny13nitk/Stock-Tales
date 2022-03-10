@@ -1,5 +1,6 @@
 package stocktales.IDS.srv.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -32,6 +33,7 @@ import stocktales.IDS.pojo.UI.ScripPLSS;
 import stocktales.IDS.srv.intf.IDS_PFSchema_REbalUI_Srv;
 import stocktales.NFS.enums.EnumMCapClassification;
 import stocktales.NFS.model.config.NFSConfig;
+import stocktales.durations.UtilDurations;
 import stocktales.historicalPrices.utility.StockPricesUtility;
 import stocktales.maths.UtilPercentages;
 import stocktales.money.UtilDecimaltoMoneyString;
@@ -161,6 +163,9 @@ public class IDS_PFDashBoardUISrv implements stocktales.IDS.srv.intf.IDS_PFDashB
 
 			// Schema Details No need to change on each refresh
 
+			// Update XIRR for PF
+			this.pfDBCtr.setXirrContainer(corePFSrv.calculateXIRRforPF());
+
 		}
 
 	}
@@ -185,6 +190,9 @@ public class IDS_PFDashBoardUISrv implements stocktales.IDS.srv.intf.IDS_PFDashB
 			// Proposals each time
 
 			// Schema Details No need to change on each refresh
+
+			// Update XIRR for PF
+			this.pfDBCtr.setXirrContainer(corePFSrv.calculateXIRRforPF());
 		}
 
 	}
@@ -249,6 +257,9 @@ public class IDS_PFDashBoardUISrv implements stocktales.IDS.srv.intf.IDS_PFDashB
 				 * Build Stats Header
 				 */
 				buildStatsHeader();
+
+				// Update XIRR for PF
+				this.pfDBCtr.setXirrContainer(corePFSrv.calculateXIRRforPF());
 			}
 
 		}
@@ -349,8 +360,11 @@ public class IDS_PFDashBoardUISrv implements stocktales.IDS.srv.intf.IDS_PFDashB
 
 					try
 					{
-						Date buyDate = repoHCI.getlastBuyTxnDateforScrip(hc.getSccode());
-						pfPL_H.setLastBuyDate(buyDate);
+
+						pfPL_H.setLastBuyDate(repoHCI.getlastBuyTxnDateforScrip(hc.getSccode()));
+
+						pfPL_H.setNumDaysBuy(UtilDurations.getNumDaysbwSysDates(pfPL_H.getLastBuyDate(),
+								UtilDurations.getTodaysDate()));
 
 					} catch (Exception e)
 					{
@@ -435,6 +449,11 @@ public class IDS_PFDashBoardUISrv implements stocktales.IDS.srv.intf.IDS_PFDashB
 				pfDBCtr.getStatsH().setMaxLoser(new ScripPLSS(maxLoser.getScCode(), maxLoser.getPl(),
 						maxLoser.getPlStr(), maxLoser.getPlPer()));
 			}
+
+			// Populate PF Start Date
+			pfDBCtr.getStatsH().setInvSince(repoHCI.getPFInvSinceDate());
+			SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy");
+			pfDBCtr.getStatsH().setInvSinceStr(formatter.format(pfDBCtr.getStatsH().getInvSince()));
 		}
 
 	}

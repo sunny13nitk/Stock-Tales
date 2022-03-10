@@ -28,6 +28,7 @@ import stocktales.IDS.model.pf.entity.HCI;
 import stocktales.IDS.model.pf.entity.MoneyBag;
 import stocktales.IDS.model.pf.entity.PFSchema;
 import stocktales.IDS.model.pf.repo.RepoPFSchema;
+import stocktales.IDS.pojo.DateAmount;
 import stocktales.IDS.pojo.IDS_SCAlloc;
 import stocktales.IDS.pojo.IDS_SCBuyProposal;
 import stocktales.IDS.pojo.IDS_SC_PL;
@@ -37,6 +38,7 @@ import stocktales.IDS.pojo.IDS_SMASpread;
 import stocktales.IDS.pojo.IDS_ScAllocMassUpdate;
 import stocktales.IDS.pojo.IDS_ScSMASpread;
 import stocktales.IDS.pojo.IDS_VPDetails;
+import stocktales.IDS.pojo.XIRRContainer;
 import stocktales.IDS.srv.impl.IDS_CorePFSrv;
 import stocktales.IDS.srv.intf.IDS_DeploymentAmntSrv;
 import stocktales.IDS.srv.intf.IDS_MoneyBagSrv;
@@ -1784,6 +1786,33 @@ public class TestController
 
 		}
 
+		return "success";
+	}
+
+	@GetMapping("/xirr")
+	public String xirr()
+	{
+		if (corePFSrv != null)
+		{
+			try
+			{
+				XIRRContainer xirrCont = corePFSrv.calculateXIRRforPF();
+				if (xirrCont != null)
+				{
+					System.out.println("PF XIRR: " + xirrCont.getXirr());
+					System.out.println("------------ Itemized Details ---------------");
+
+					for (DateAmount item : xirrCont.getTransactions())
+					{
+						System.out.println("Date: " + item.getDate() + "  Amount:  " + item.getAmount());
+					}
+				}
+			} catch (Exception e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		return "success";
 	}
 

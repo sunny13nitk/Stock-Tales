@@ -10,6 +10,7 @@ import lombok.Setter;
 import stocktales.IDS.model.pf.entity.PFSchema;
 import stocktales.IDS.pojo.IDS_SMAPreview;
 import stocktales.IDS.pojo.PFSchemaRebalUIStats;
+import stocktales.IDS.pojo.XIRRContainer;
 
 @Getter
 @Setter
@@ -24,5 +25,6 @@ public class PFDBContainer
 	private List<PFSchema> schemaDetails = new ArrayList<PFSchema>(); // 4
 	private PFStatsH statsH = new PFStatsH(); // 5
 	private PFSchemaRebalUIStats schemaStats = null; // 6
+	private XIRRContainer xirrContainer = new XIRRContainer(); // 7
 
 }

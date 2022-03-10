@@ -15,7 +15,7 @@
 	<div style="margin-top: 32px">
 		<div id="overview">
 			<div class="frame"
-				style="padding: 10px; overflow: auto; background-color: #FCFAFE">
+				style="padding: 20px; overflow: auto; background-color: #FCFAFE">
 
 				<!--Error and Success Messages On DashBoard  -->
 				<div class="row flex-justify-center">
@@ -358,6 +358,53 @@
 					<!-- TOP Gainer and Loser - Begin -->
 					<div class="cell-3" style="background-color: #FDF7F1; margin: 5px">
 
+						<!-- XIRR - Begin -->
+						<div class="row flex-justify-left"
+							style="background-color: #E4F0FB; margin: 15px"
+							th:if="${pfDBCon.xirrContainer != null}">
+							<div class="row flex-justify-left"
+								th:if="${pfDBCon.xirrContainer.xirr >0}">
+								<span class="mif-arrow-up-right fg-darkBlue"
+									style="margin-top: 4px; margin-left: 10px"></span> <label
+									style="color: #246CB3; font-weight: bold; font-size: 1.15em; margin-left: 15px">XIRR</label>
+								<label
+									style="color: #246CB3; font-weight: bold; font-size: 1.15em; margin-left: 12px">
+									( </label> <label
+									style="color: #246CB3; font-weight: bold; font-size: 1.15em; margin-left: 5px"
+									th:text="${pfDBCon.xirrContainer.xirr}"></label> <label
+									style="color: #246CB3; font-weight: bold; font-size: 1.15em; margin-left: 5px">
+									)%</label>
+							</div>
+
+							<div class="row flex-justify-left"
+								th:if="${pfDBCon.xirrContainer.xirr <0}">
+								<span class="mif-arrow-down-right fg-darkBlue"
+									style="margin-top: 4px; margin-left: 10px"></span> <label
+									style="color: #246CB3; font-weight: bold; font-size: 1.15em; margin-left: 15px">XIRR</label>
+								<label
+									style="color: #246CB3; font-weight: bold; font-size: 1.15em; margin-left: 12px">
+									( </label> <label
+									style="color: #246CB3; font-weight: bold; font-size: 1.15em; margin-left: 5px"
+									th:text="${pfDBCon.xirrContainer.xirr}"></label> <label
+									style="color: #246CB3; font-weight: bold; font-size: 1.15em; margin-left: 5px">
+									)%</label>
+							</div>
+
+
+							<div class="colspan-6 offset-5" style="margin-top: -10px">
+								<span
+									style="color: #4E5055; font-weight: medium; font-size: .75em">
+									Since: </span> <label
+									style="color: #4E5055; font-weight: medium; font-size: .75em"
+									th:text="${pfDBCon.statsH.invSinceStr}"> </label>
+							</div>
+
+
+
+						</div>
+						<!-- XIRR - End -->
+
+
 						<!-- TOP Gainer - Begin -->
 						<div class="row flex-justify-left"
 							style="background-color: #F1FDF1; margin: 15px"
@@ -538,6 +585,9 @@
 									<th data-name="depPer" class="sortable-column sort-asc"
 										data-cls-column="text-center">Avail. %</th>
 
+									<th data-name="numDaysBuy" class="sortable-column sort-asc"
+										data-cls-column="text-center">Days LB</th>
+
 									<!--Actions  -->
 									<th></th>
 
@@ -599,17 +649,19 @@
 									<td><span class=" tally primary"
 										th:text="${holding.depPer}"></span></td>
 
+									<td th:text="${holding.numDaysBuy}"></td>
+
 
 
 
 									<!--Buttons - OCA  -->
 									<td style="text-align: center;"><a
 										class="button yellow cycle small outline"
-										th:href="@{'/ids/div/' + ${holding.scCode}}" data-role="hint"
-										data-hint-text="Add dividend"
+										th:href="@{'/ids/scDetails/' + ${holding.scCode}}"
+										data-role="hint" data-hint-text="Details"
 										data-cls-hint="bg-lightyellow fg-black drop-shadow"
 										data-hint-position="bottom"><span
-											class="mif-money fg-orange"></span></a></td>
+											class="mif-developer_board fg-orange"></span></a></td>
 									<!--Buttons - OCA  -->
 								</tr>
 

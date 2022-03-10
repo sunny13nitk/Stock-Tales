@@ -44,4 +44,16 @@ public interface RepoHCI extends JpaRepository<HCI, Integer>
 	@Query("delete from HCI where sccode = ?1 ")
 	public void removeScrip(String scCode);
 
+	@Query("select distinct(date) from HCI")
+	public List<Date> getUniqueTxnDates();
+
+	@Query("select MIN(date) from HCI")
+	public Date getPFInvSinceDate();
+
+	@Query("select COUNT(tid) from HCI where txntype = stocktales.usersPF.enums.EnumTxnType.Buy")
+	public int getCountBuyTxns();
+
+	@Query("select COUNT(tid) from HCI where txntype = stocktales.usersPF.enums.EnumTxnType.Sell OR txntype = stocktales.usersPF.enums.EnumTxnType.Exit")
+	public int getCountSellTxns();
+
 }

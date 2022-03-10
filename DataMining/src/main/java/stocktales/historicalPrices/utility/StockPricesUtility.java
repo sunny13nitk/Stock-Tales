@@ -18,6 +18,7 @@ import org.apache.commons.math3.util.Precision;
 
 import stocktales.IDS.pojo.IDS_SMASpread;
 import stocktales.IDS.pojo.IDS_ScSMASpread;
+import stocktales.IDS.pojo.IDS_ScripUnits;
 import stocktales.NFS.model.entity.NFSPF;
 import stocktales.NFS.model.pojo.NFSExitSMADelta;
 import stocktales.NFS.model.pojo.NFSStockHistoricalQuote;
@@ -1242,6 +1243,33 @@ public class StockPricesUtility
 					double cmp = StockPricesUtility.getQuoteforScrip(scripUnit.Sccode()).getQuote().getPrice()
 							.doubleValue();
 					val += (cmp * scripUnit.Units());
+				}
+			}
+		}
+
+		return val;
+	}
+
+	/**
+	 * Get Current Value of the Portfolio
+	 * 
+	 * @param scUnits - List of <Sccode, Units>
+	 * @return - Current PF Value
+	 * @throws Exception
+	 */
+	public static double getCurrentValueforScripsandUnits(List<IDS_ScripUnits> scUnits) throws Exception
+	{
+		double val = 0;
+
+		for (IDS_ScripUnits scripUnit : scUnits)
+		{
+			if (scripUnit.getScCode() != null && scripUnit.getUnits() > 0)
+			{
+				if (scripUnit.getScCode().trim().length() > 0)
+				{
+					double cmp = StockPricesUtility.getQuoteforScrip(scripUnit.getScCode()).getQuote().getPrice()
+							.doubleValue();
+					val += (cmp * scripUnit.getUnits());
 				}
 			}
 		}
