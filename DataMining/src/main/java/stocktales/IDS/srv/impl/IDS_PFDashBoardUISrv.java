@@ -31,6 +31,7 @@ import stocktales.IDS.pojo.UI.PFHoldingsPL;
 import stocktales.IDS.pojo.UI.PFStatsH;
 import stocktales.IDS.pojo.UI.ScripPLSS;
 import stocktales.IDS.srv.intf.IDS_PFSchema_REbalUI_Srv;
+import stocktales.IDS.utility.SMASortUtility;
 import stocktales.NFS.enums.EnumMCapClassification;
 import stocktales.NFS.model.config.NFSConfig;
 import stocktales.durations.UtilDurations;
@@ -336,22 +337,26 @@ public class IDS_PFDashBoardUISrv implements stocktales.IDS.srv.intf.IDS_PFDashB
 								.filter(w -> w.getScCode().equals(hc.getSccode())).findFirst();
 						if (smaO.isPresent())
 						{
-							IDS_SMAPreview smaEnt = smaO.get();
-							if (pfPL_H.getCmp() < smaEnt.getSMAI1())
+							IDS_SMAPreview smaEnt1 = smaO.get();
+							IDS_SMAPreview smaEnt = SMASortUtility.getSMASortedforIDS(smaEnt1);
+							if (smaEnt != null)
 							{
-								pfPL_H.setSmaLvl(EnumSMABreach.sma1);
-							}
-							if (pfPL_H.getCmp() < smaEnt.getSMAI2())
-							{
-								pfPL_H.setSmaLvl(EnumSMABreach.sma2);
-							}
-							if (pfPL_H.getCmp() < smaEnt.getSMAI3())
-							{
-								pfPL_H.setSmaLvl(EnumSMABreach.sma3);
-							}
-							if (pfPL_H.getCmp() < smaEnt.getSMAI4())
-							{
-								pfPL_H.setSmaLvl(EnumSMABreach.sma4);
+								if (pfPL_H.getCmp() < smaEnt.getSMAI1())
+								{
+									pfPL_H.setSmaLvl(EnumSMABreach.sma1);
+								}
+								if (pfPL_H.getCmp() < smaEnt.getSMAI2())
+								{
+									pfPL_H.setSmaLvl(EnumSMABreach.sma2);
+								}
+								if (pfPL_H.getCmp() < smaEnt.getSMAI3())
+								{
+									pfPL_H.setSmaLvl(EnumSMABreach.sma3);
+								}
+								if (pfPL_H.getCmp() < smaEnt.getSMAI4())
+								{
+									pfPL_H.setSmaLvl(EnumSMABreach.sma4);
+								}
 							}
 
 						}
