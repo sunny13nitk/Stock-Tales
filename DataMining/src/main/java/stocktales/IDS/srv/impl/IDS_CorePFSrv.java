@@ -53,6 +53,7 @@ import stocktales.IDS.pojo.IDS_VPDetails;
 import stocktales.IDS.pojo.XIRRContainer;
 import stocktales.IDS.pojo.UI.IDS_BuyProposalBO;
 import stocktales.IDS.pojo.UI.IDS_PF_BuyPHeader;
+import stocktales.IDS.pojo.UI.IDS_Scrip_Details;
 import stocktales.IDS.srv.intf.IDS_DeploymentAmntSrv;
 import stocktales.IDS.srv.intf.IDS_MoneyBagSrv;
 import stocktales.IDS.srv.intf.IDS_VPSrv;
@@ -1102,6 +1103,19 @@ public class IDS_CorePFSrv implements stocktales.IDS.srv.intf.IDS_CorePFSrv
 			}
 		}
 	}
+
+	@Override
+	public IDS_Scrip_Details getScripDetails4Scrip(String scCode) throws Exception
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/*
+	 * --------------------------------------------------- ---------------------
+	 * ------------------------------ PRIVATE SECTION -------------------------
+	 * --------------------------------------------------- ------------------------
+	 */
 
 	private IDS_SCBuyProposal generateBuyProposal(PFSchema pfSchema, double buyAmnt, EnumSMABreach smaBreach)
 			throws Exception

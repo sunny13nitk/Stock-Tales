@@ -10,6 +10,7 @@ import stocktales.IDS.pojo.IDS_ScAllocMassUpdate;
 import stocktales.IDS.pojo.IDS_VPDetails;
 import stocktales.IDS.pojo.XIRRContainer;
 import stocktales.IDS.pojo.UI.IDS_BuyProposalBO;
+import stocktales.IDS.pojo.UI.IDS_Scrip_Details;
 
 public interface IDS_CorePFSrv
 {
@@ -106,5 +107,14 @@ public interface IDS_CorePFSrv
 	 * @throws Exception
 	 */
 	public XIRRContainer calculateXIRRforPF() throws Exception;
+
+	/**
+	 * Get Scrip Details for Existing Scrip in PF- 360 degree view
+	 * 
+	 * @param scCode - Scrip Code in PF
+	 * @return - IDS_Scrip_Details
+	 * @throws Exception
+	 */
+	public IDS_Scrip_Details getScripDetails4Scrip(String scCode) throws Exception;
 
 }
