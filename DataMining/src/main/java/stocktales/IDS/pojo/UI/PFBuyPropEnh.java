@@ -16,5 +16,7 @@ public class PFBuyPropEnh
 	private double nppu;
 	private double effectppu;
 	private double utilz;
+	private double perDepAvail; // Dep. Amount Available in Percentage post Txn.
 	private EnumVolatilityProfile vp;
+
 }

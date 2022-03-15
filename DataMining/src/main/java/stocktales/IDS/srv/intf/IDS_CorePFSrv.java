@@ -4,7 +4,9 @@ import java.util.List;
 
 import stocktales.IDS.model.pf.entity.HCI;
 import stocktales.IDS.pojo.IDS_SCBuyProposal;
+import stocktales.IDS.pojo.IDS_SC_BonusIP;
 import stocktales.IDS.pojo.IDS_SC_PL;
+import stocktales.IDS.pojo.IDS_SC_SplitIP;
 import stocktales.IDS.pojo.IDS_SMAPreview;
 import stocktales.IDS.pojo.IDS_ScAllocMassUpdate;
 import stocktales.IDS.pojo.IDS_VPDetails;
@@ -116,5 +118,21 @@ public interface IDS_CorePFSrv
 	 * @throws Exception
 	 */
 	public IDS_Scrip_Details getScripDetails4Scrip(String scCode) throws Exception;
+
+	/**
+	 * Adjust Stock Split in Portfolio
+	 * 
+	 * @param scSplitIP- IDS_SC_SplitIP {ScripCode|Ratio}
+	 * @throws Exception
+	 */
+	public void adjustPF4StockSplit(IDS_SC_SplitIP scSplitIP) throws Exception;
+
+	/**
+	 * Adjust PF for Stock Bonus
+	 * 
+	 * @param scSplitIP - IDS_SC_SplitIP {ScripCode|ForNShares|TogetMShares}
+	 * @throws Exception
+	 */
+	public void adjustPF4StockBonus(IDS_SC_BonusIP scBonusIP) throws Exception;
 
 }

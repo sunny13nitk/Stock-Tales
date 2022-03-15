@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -42,8 +43,10 @@ import stocktales.IDS.model.pf.repo.RepoPFVolProfile;
 import stocktales.IDS.pojo.DateAmount;
 import stocktales.IDS.pojo.IDS_SCAlloc;
 import stocktales.IDS.pojo.IDS_SCBuyProposal;
+import stocktales.IDS.pojo.IDS_SC_BonusIP;
 import stocktales.IDS.pojo.IDS_SC_PL;
 import stocktales.IDS.pojo.IDS_SC_PL_Items;
+import stocktales.IDS.pojo.IDS_SC_SplitIP;
 import stocktales.IDS.pojo.IDS_SMAPreview;
 import stocktales.IDS.pojo.IDS_SMASpread;
 import stocktales.IDS.pojo.IDS_ScAllocMassUpdate;
@@ -940,7 +943,10 @@ public class IDS_CorePFSrv implements stocktales.IDS.srv.intf.IDS_CorePFSrv
 							}
 
 							// consolidate for the Date
-							xirrCont.getTransactions().add(new DateAmount(date, dayAmount));
+							if (dayAmount != 0) // Ignore other Then Buy/Sell/Exit
+							{
+								xirrCont.getTransactions().add(new DateAmount(date, dayAmount));
+							}
 						}
 					}
 
@@ -1111,6 +1117,161 @@ public class IDS_CorePFSrv implements stocktales.IDS.srv.intf.IDS_CorePFSrv
 		return null;
 	}
 
+	@Override
+	@Transactional
+	public void adjustPF4StockSplit(IDS_SC_SplitIP scSplitIP) throws Exception
+	{
+		if (scSplitIP != null)
+		{
+			if (StringUtils.hasText(scSplitIP.getScCode()) && scSplitIP.getOneToSplitIntoSharesNum() > 1)
+			{
+				Optional<HC> hcO = repoHC.findById(scSplitIP.getScCode());
+				List<HCI> hcItems = repoHCI.findAllBySccode(scSplitIP.getScCode());
+				if (hcO.isPresent() && hcItems != null)
+				{
+					repoHC.updatePPUUnitsforScrip(scSplitIP.getScCode(),
+							hcO.get().getUnits() * scSplitIP.getOneToSplitIntoSharesNum(),
+							hcO.get().getPpu() / scSplitIP.getOneToSplitIntoSharesNum());
+
+					// Update PPU and Units in Each Txn Item
+					for (HCI hci : hcItems)
+					{
+						// No Split up for Bonus Sell Units - to avoid Fractions
+						if (hci.getTxntype() != EnumTxnType.BonusSell)
+						{
+							repoHCI.updatePPUUnitsforItemTxn(hci.getTid(),
+									hci.getUnits() * scSplitIP.getOneToSplitIntoSharesNum(),
+									hci.getTxnppu() / scSplitIP.getOneToSplitIntoSharesNum());
+						}
+					}
+
+				}
+			}
+		}
+
+	}
+
+	@Override
+	@Transactional
+	public void adjustPF4StockBonus(IDS_SC_BonusIP scBonusIP) throws Exception
+	{
+
+		if (scBonusIP != null)
+		{
+			if (StringUtils.hasText(scBonusIP.getScCode()) && scBonusIP.getForeveryNShares() > 1
+					&& scBonusIP.getToGetSharesNum() > 1)
+			{
+				int unitsH = 0, unitsI = 0, unitsAdj, sumBuys = 0, sumSells = 0;
+				HCI itemAdjusted = null;
+				double amntAdj = 0;
+				Optional<HC> hcO = repoHC.findById(scBonusIP.getScCode());
+				List<HCI> hcItems = repoHCI.findAllBySccode(scBonusIP.getScCode());
+				if (hcO.isPresent() && hcItems != null)
+				{
+
+					HC hc = hcO.get();
+					double nettRatio = (double) scBonusIP.getToGetSharesNum() / scBonusIP.getForeveryNShares();
+					int remainder = hc.getUnits() % scBonusIP.getForeveryNShares();
+
+					if (remainder == 0)
+					{
+
+						unitsH = (int) (hcO.get().getUnits() * nettRatio);
+					} else
+					{
+						unitsH = (int) ((hcO.get().getUnits() - remainder) * nettRatio);
+					}
+
+					// Get Items Units Total
+					for (HCI hci : hcItems)
+					{
+
+						if (hci.getTxntype() == EnumTxnType.Buy)
+						{
+							sumBuys += hci.getUnits() * nettRatio;
+						}
+
+						if (hci.getTxntype() == EnumTxnType.Sell)
+						{
+							sumSells += hci.getUnits() * nettRatio;
+						}
+
+					}
+					unitsI = sumBuys - sumSells;
+
+					/**
+					 * Establish Items Units Adjustments if any needed
+					 */
+					unitsAdj = unitsH - unitsI;
+					if (unitsAdj > 0) // Add Adj Units to Buy Txn.
+					{
+						Optional<HCI> HCIO = hcItems.stream().filter(c -> c.getTxntype() == EnumTxnType.Buy)
+								.findFirst();
+						if (HCIO.isPresent())
+						{
+							itemAdjusted = HCIO.get();
+							amntAdj = (itemAdjusted.getUnits() * itemAdjusted.getTxnppu())
+									/ (itemAdjusted.getUnits() * nettRatio + unitsAdj);
+							itemAdjusted.setUnits((int) (itemAdjusted.getUnits() * nettRatio + unitsAdj));
+							itemAdjusted.setTxnppu(Precision.round(amntAdj, 2));
+
+						}
+
+					} else if (unitsAdj < 0) // Add Adj Units to Sell Txn.
+					{
+						Optional<HCI> HCIO = hcItems.stream().filter(c -> c.getTxntype() == EnumTxnType.Sell)
+								.findFirst();
+						if (HCIO.isPresent())
+						{
+							itemAdjusted = HCIO.get();
+							amntAdj = (itemAdjusted.getUnits() * itemAdjusted.getTxnppu())
+									/ (itemAdjusted.getUnits() * nettRatio + unitsAdj);
+							itemAdjusted.setUnits((int) (itemAdjusted.getUnits() * nettRatio + unitsAdj));
+							itemAdjusted.setTxnppu(Precision.round(amntAdj, 2));
+						}
+
+					}
+
+					/**
+					 * UPdates Start
+					 */
+					// HC Update
+					repoHC.updatePPUUnitsforScrip(scBonusIP.getScCode(), unitsH, hcO.get().getPpu() / nettRatio);
+
+					// Update PPU and Units in Each Txn Item
+					for (HCI hci : hcItems)
+					{
+						if (hci.getTxntype() != EnumTxnType.BonusSell)
+						{
+							if (hci.getTid() != itemAdjusted.getTid())
+							{
+								int unitsItem = (int) (hci.getUnits() * nettRatio);
+								repoHCI.updatePPUUnitsforItemTxn(hci.getTid(), unitsItem, hci.getTxnppu() / nettRatio);
+							} else
+							{
+								repoHCI.save(hci);
+							}
+						}
+					}
+
+					if (remainder > 0)
+					{
+						// Create a Sell PF Txn for Fractional(remainder) units
+						double cmp = StockPricesUtility.getQuoteforScrip(scBonusIP.getScCode()).getQuote().getPrice()
+								.doubleValue() * nettRatio;
+
+						this.processCorePFTxn(new HCI(0, scBonusIP.getScCode(), UtilDurations.getTodaysDateOnly(),
+								EnumTxnType.BonusSell, remainder, cmp, 0));
+					}
+
+				}
+
+			}
+
+		}
+
+	}
+
 	/*
 	 * --------------------------------------------------- ---------------------
 	 * ------------------------------ PRIVATE SECTION -------------------------
@@ -1127,7 +1288,7 @@ public class IDS_CorePFSrv implements stocktales.IDS.srv.intf.IDS_CorePFSrv
 		int units = (int) Precision.round((buyAmnt / cmp), 0);
 		double currInv = Precision.round((units * cmp), 0);
 		int totalUnits;
-		double nppu, utilz, effect;
+		double nppu, utilz, effect, depAvail = 0, totals, post;
 
 		Optional<HC> currHoldingO = repoHC.findById(pfSchema.getSccode());
 		if (currHoldingO.isPresent())
@@ -1136,12 +1297,20 @@ public class IDS_CorePFSrv implements stocktales.IDS.srv.intf.IDS_CorePFSrv
 			nppu = Precision
 					.round((currInv + (currHoldingO.get().getPpu() * currHoldingO.get().getUnits())) / totalUnits, 2);
 			utilz = Precision.round(((units * cmp) / pfSchema.getDepamnt()) * 100, 1);
+			totals = pfSchema.getDepamnt() + currHoldingO.get().getUnits() * currHoldingO.get().getPpu();
+			post = totals - (totalUnits * nppu);
+
+			depAvail = (post / totals) * 100;
 			effect = UtilPercentages.getPercentageDelta(currHoldingO.get().getPpu(), nppu, 1);
 		} else
 		{
 			totalUnits = units;
 			nppu = cmp;
 			utilz = Precision.round(((totalUnits * nppu) / pfSchema.getDepamnt()) * 100, 1);
+			totals = pfSchema.getDepamnt();
+			post = totals - (units * cmp);
+			depAvail = (post / totals) * 100;
+
 			effect = 0;
 		}
 
@@ -1156,6 +1325,7 @@ public class IDS_CorePFSrv implements stocktales.IDS.srv.intf.IDS_CorePFSrv
 		buyP.setSmaBreach(smaBreach);
 		buyP.setTotalUnits(totalUnits);
 		buyP.setUtilz(utilz);
+		buyP.setPerDepAvail(Precision.round(depAvail, 1));
 		buyP.setVp(repoPFVP.findById(pfSchema.getSccode()).get().getProfile());
 
 		return buyP;

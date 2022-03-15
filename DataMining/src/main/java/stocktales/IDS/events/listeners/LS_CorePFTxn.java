@@ -165,6 +165,27 @@ public class LS_CorePFTxn implements ApplicationListener<EV_PFTxn>
 
 							break;
 
+						case BonusSell:
+
+							repoHCI.save(evPFTxn.getPfTxn()); // Insert in HCI
+							/*
+							 * Treat as Fresh Deposit- Money Bag Preparation
+							 */
+							MoneyBag mbPLB = new MoneyBag();
+							mbPLB.setDate(UtilDurations.getTodaysDate());
+							mbPLB.setRemarks("Bonus Issue Adjustment :  " + evPFTxn.getPfTxn().getUnits() + " units of "
+									+ evPFTxn.getPfTxn().getSccode() + " @ Rs. " + evPFTxn.getPfTxn().getTxnppu()
+									+ " per Unit");
+							mbPLB.setType(EnumTxnType.Deposit);
+							mbPLB.setAmount(
+									Precision.round(evPFTxn.getPfTxn().getUnits() * evPFTxn.getPfTxn().getTxnppu(), 0));
+							/*
+							 * Process P&L Money Bag Txn Using Money Bag Service
+							 */
+							repoMB.save(mbPLB);
+
+							break;
+
 						case Exit:
 							/*
 							 * Get Exited Scrip Deployable Amount and Distribute as per Adjusted Ideal/Inc

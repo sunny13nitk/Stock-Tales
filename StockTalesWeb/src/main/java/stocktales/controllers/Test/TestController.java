@@ -11,6 +11,7 @@ import org.apache.commons.math3.util.Precision;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,8 +32,10 @@ import stocktales.IDS.model.pf.repo.RepoPFSchema;
 import stocktales.IDS.pojo.DateAmount;
 import stocktales.IDS.pojo.IDS_SCAlloc;
 import stocktales.IDS.pojo.IDS_SCBuyProposal;
+import stocktales.IDS.pojo.IDS_SC_BonusIP;
 import stocktales.IDS.pojo.IDS_SC_PL;
 import stocktales.IDS.pojo.IDS_SC_PL_Items;
+import stocktales.IDS.pojo.IDS_SC_SplitIP;
 import stocktales.IDS.pojo.IDS_SMAPreview;
 import stocktales.IDS.pojo.IDS_SMASpread;
 import stocktales.IDS.pojo.IDS_ScAllocMassUpdate;
@@ -1914,6 +1917,48 @@ public class TestController
 
 		return "success";
 
+	}
+
+	@GetMapping("/split/{scCode}/{ratio}")
+	public String scSplit(@PathVariable String scCode, @PathVariable int ratio)
+	{
+		if (StringUtils.hasText(scCode) && ratio > 1)
+		{
+			IDS_SC_SplitIP splitP = new IDS_SC_SplitIP(scCode, ratio);
+
+			try
+			{
+				corePFSrv.adjustPF4StockSplit(splitP);
+				System.out.println("Stock Split Done for  -  " + scCode + " in Ratio 1:" + ratio);
+			} catch (Exception e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		return "success";
+	}
+
+	@GetMapping("/bonus/{scCode}/{numfor}/{numget}")
+	public String scBonus(@PathVariable String scCode, @PathVariable int numfor, @PathVariable int numget)
+	{
+		if (StringUtils.hasText(scCode) && numfor > 1 && numget > 1)
+		{
+			IDS_SC_BonusIP scBonusIP = new IDS_SC_BonusIP(scCode, numfor, numget);
+
+			try
+			{
+				corePFSrv.adjustPF4StockBonus(scBonusIP);
+				System.out.println("Stock Bonus Adjusted for  -  " + scCode);
+			} catch (Exception e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		return "success";
 	}
 
 	@GetMapping("/btids")

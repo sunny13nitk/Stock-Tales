@@ -25,6 +25,12 @@ public interface RepoHCI extends JpaRepository<HCI, Integer>
 	 */
 	public List<HCI> findAllByTxntypeAndSccode(EnumTxnType tType, String scCode);
 
+	public List<HCI> findAllBySccode(String scCode);
+
+	@Modifying
+	@Query("update HCI h set  h.units = ?2, h.txnppu = ?3  where h.tid = ?1")
+	public void updatePPUUnitsforItemTxn(int tid, int units, double ppu);
+
 	// Get last Sell txn date for Scrip Code
 	@Query("select MAX(date) from HCI where sccode = ?1 AND txntype = stocktales.usersPF.enums.EnumTxnType.Sell")
 	public Date getlastSellTxnDateforScrip(String scCode);

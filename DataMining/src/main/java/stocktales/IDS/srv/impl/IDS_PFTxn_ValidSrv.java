@@ -101,6 +101,22 @@ public class IDS_PFTxn_ValidSrv implements IDS_PFTxn_Validator
 					}
 					break;
 
+				case BonusSell:
+					// Get Scrip Holding from HC
+
+					if (repoHC != null)
+					{
+						Optional<HC> hcO = repoHC.findById(pfTxn.getSccode());
+						if (hcO.isPresent())
+						{
+							if (hcO.get().getUnits() >= pfTxn.getUnits())
+							{
+								isValid = true;
+							}
+						}
+					}
+					break;
+
 				case Exit:
 					if (repoHC != null)
 					{

@@ -2,5 +2,5 @@ package stocktales.usersPF.enums;
 
 public enum EnumTxnType
 {
-	Buy, Sell, Exit
+	Buy, Sell, Exit, BonusSell
 }
