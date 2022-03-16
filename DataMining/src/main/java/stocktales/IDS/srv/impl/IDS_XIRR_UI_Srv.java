@@ -54,7 +54,7 @@ public class IDS_XIRR_UI_Srv implements stocktales.IDS.srv.intf.IDS_XIRR_UI_Srv
 		if (pfDBSrv != null && repoHCI != null)
 		{
 			xirrCont = pfDBSrv.getPFDashBoardContainer4mSession().getXirrContainer();
-			XirrTxns = xirrCont.getTransactions().subList(0, xirrCont.getTransactions().size() - 2);
+			XirrTxns = xirrCont.getTransactions().subList(0, xirrCont.getTransactions().size() - 1);
 			currValTxn = xirrCont.getTransactions().get(xirrCont.getTransactions().size() - 1);
 
 			dateSince = pfDBSrv.getPFDashBoardContainer4mSession().getStatsH().getInvSinceStr();
