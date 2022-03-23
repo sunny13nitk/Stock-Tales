@@ -122,7 +122,7 @@ public class NFSController
 			scSelList.setScSel(nfsUISrv.getScripsForSelectionFromSavedProposal());
 			if (scSelList.getScSel() != null)
 			{
-				if (scSelList.getScSel().size() > (nfsConfig.getPfSize() * 1.2))
+				if (scSelList.getScSel().size() >= (nfsConfig.getPfSize() * 1.2))
 				{
 					model.addAttribute("scSelList", scSelList);
 					viewName = "/nfs/crpfSel";
