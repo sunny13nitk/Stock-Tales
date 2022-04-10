@@ -15,14 +15,14 @@ import stocktales.NFS.model.ui.NFSPFExit;
 @NoArgsConstructor
 public class NFSPFExitSS
 {
-	private double             plExitPer;
-	private double             plExitAmnt;
-	private String             currInvStr;
-	private double             currInv;                                       //From NFSPF REpo
-	private String             maxLossStr;
-	private double             maxLoss;
-	private double             maxLossPer;
+	private double plExitPer;
+	private double plExitAmnt;
+	private String currInvStr;
+	private double currInv; // From NFSPF REpo
+	private String maxLossStr;
+	private double maxLoss;
+	private double maxLossPer;
 	private List<NFSPFExitSMA> pfExitsSMAList = new ArrayList<NFSPFExitSMA>();
-	private List<NFSPFExit>    pfExitScrips   = new ArrayList<NFSPFExit>();
-	
+	private List<NFSPFExit> pfExitScrips = new ArrayList<NFSPFExit>();
+
 }

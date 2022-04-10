@@ -10,4 +10,5 @@ import java.util.List;
 public interface INFSRebalanceUISrv
 {
 	public void processRebalance(double incrementalAmnt, List<String> exits, List<String> entries) throws Exception;
+
 }

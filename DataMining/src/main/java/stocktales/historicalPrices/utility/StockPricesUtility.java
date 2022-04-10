@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -582,6 +583,58 @@ public class StockPricesUtility
 
 		return stockHPrices;
 
+	}
+
+	public static double getHistoricalPricesforScrip4Date(String scrip, Date date) throws Exception
+	{
+		double price = 0;
+
+		// 1. Format the scrips symbols with exchange Info
+
+		if (scrip != null)
+		{
+			if (scrip.trim().length() > 0)
+			{
+
+				scrip = scrip + ".NS";
+			}
+
+			Stock stock = YahooFinance.get(scrip, true);
+			if (stock != null)
+			{
+
+				// Prepare the Duration
+
+				Calendar dateCal = Calendar.getInstance();
+				dateCal.setTime(date);
+
+				Calendar fromDate = Calendar.getInstance();
+				fromDate.setTime(date);
+				fromDate.add(Calendar.DAY_OF_MONTH, -1);
+
+				List<HistoricalQuote> HistQuotes = stock.getHistory(fromDate, dateCal, Interval.DAILY);
+				if (HistQuotes != null)
+				{
+					if (HistQuotes.size() > 0)
+					{
+						HistoricalQuote hQuote = HistQuotes.get(HistQuotes.size() - 1);
+
+						if (hQuote != null)
+						{
+							if (hQuote.getDate() != null && hQuote.getClose() != null)
+							{
+								price = hQuote.getClose().doubleValue();
+							}
+						}
+
+					}
+				}
+
+			}
+
+		}
+
+		return price;
 	}
 
 	/**

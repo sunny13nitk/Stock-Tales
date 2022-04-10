@@ -24,7 +24,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import stocktales.NFS.model.config.NFSConfig;
-import stocktales.NFS.model.entity.NFSCashBook;
 import stocktales.NFS.model.pojo.NFSContainer;
 import stocktales.NFS.model.pojo.NFSPFExitSS;
 import stocktales.NFS.model.ui.NFSIncAlloc;
@@ -37,12 +36,12 @@ import stocktales.NFS.model.ui.NFSRunTmp_UISel;
 import stocktales.NFS.model.ui.NFSUISCMassUpdateList;
 import stocktales.NFS.model.ui.NFS_UIRebalProposalContainer;
 import stocktales.NFS.model.ui.NFS_UI_Summary;
-import stocktales.NFS.repo.RepoNFSCashBook;
 import stocktales.NFS.repo.RepoNFSPF;
 import stocktales.NFS.repo.RepoNFSTmp;
 import stocktales.NFS.srv.intf.INFSPFUISrv;
 import stocktales.NFS.srv.intf.INFSProcessor;
 import stocktales.NFS.srv.intf.INFSRebalanceUISrv;
+import stocktales.NFS.srv.intf.INFS_CashBookSrv;
 import stocktales.strategy.helperPOJO.SectorAllocations;
 
 @Controller
@@ -69,7 +68,7 @@ public class NFSController
 	private INFSPFUISrv nfsUISrv;
 
 	@Autowired
-	private RepoNFSCashBook repoNFSCB;
+	private INFS_CashBookSrv nfsCBSrv;
 
 	@Autowired
 	private MessageSource msgSrc;
@@ -170,10 +169,14 @@ public class NFSController
 			model.addAttribute("pfDetails", pfDetails);
 			newAlloc.setMinInv(Precision.round(pfDetails.getMinInv(), 1));
 
-			NFSCashBook nfsCB = repoNFSCB.getLastestCashPosition();
-			if (nfsCB != null)
+			if (newAlloc.isNewPF())
 			{
-				newAlloc.setIncInvestment(nfsCB.getCashamount());
+				newAlloc.setIncInvestment(Precision.round(pfDetails.getMinInv(), 0));
+			} else
+			{
+
+				double amount = nfsCBSrv.getDeployableBalance();
+				newAlloc.setIncInvestment(Precision.round(amount, 1));
 			}
 
 			model.addAttribute("alloc", newAlloc);
@@ -201,11 +204,8 @@ public class NFSController
 			model.addAttribute("pfDetails", pfDetails);
 			newAlloc.setMinInv(Precision.round(pfDetails.getMinInv(), 1));
 
-			NFSCashBook nfsCB = repoNFSCB.getLastestCashPosition();
-			if (nfsCB != null)
-			{
-				newAlloc.setIncInvestment(nfsCB.getCashamount());
-			}
+			double amount = nfsCBSrv.getDeployableBalance();
+			newAlloc.setIncInvestment(Precision.round(amount, 1));
 
 			model.addAttribute("alloc", newAlloc);
 		} catch (Exception e)
@@ -370,14 +370,8 @@ public class NFSController
 			newAlloc.setNewPF(false);
 			newAlloc.setExisProp(true);
 
-			NFSCashBook nfsCB = repoNFSCB.getLastestCashPosition();
-			if (nfsCB != null)
-			{
-				newAlloc.setIncInvestment(nfsCB.getCashamount());
-			} else
-			{
-				newAlloc.setIncInvestment(0);
-			}
+			double amount = nfsCBSrv.getDeployableBalance();
+			newAlloc.setIncInvestment(Precision.round(amount, 1));
 
 			NFSPFExitSS nfsExitSS = nfsProcSrv.getPFExitSnapshot();
 			if (nfsExitSS != null)

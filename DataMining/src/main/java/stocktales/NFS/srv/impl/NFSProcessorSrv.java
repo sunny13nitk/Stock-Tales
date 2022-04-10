@@ -25,12 +25,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import stocktales.NFS.enums.EnumMCapClassification;
+import stocktales.NFS.enums.EnumNFSTxnType;
 import stocktales.NFS.model.config.NFSConfig;
 import stocktales.NFS.model.entity.BseDataSet;
-import stocktales.NFS.model.entity.NFSCashBook;
 import stocktales.NFS.model.entity.NFSJournal;
 import stocktales.NFS.model.entity.NFSPF;
 import stocktales.NFS.model.entity.NFSRunTmp;
+import stocktales.NFS.model.pojo.NFSCB_IP;
 import stocktales.NFS.model.pojo.NFSConsistency;
 import stocktales.NFS.model.pojo.NFSContainer;
 import stocktales.NFS.model.pojo.NFSExitSMADelta;
@@ -52,11 +53,11 @@ import stocktales.NFS.model.ui.NFSRunTmpList;
 import stocktales.NFS.model.ui.NFSRunTmp_UISel;
 import stocktales.NFS.model.ui.NFS_UIRebalProposalContainer;
 import stocktales.NFS.repo.RepoBseData;
-import stocktales.NFS.repo.RepoNFSCashBook;
 import stocktales.NFS.repo.RepoNFSJornal;
 import stocktales.NFS.repo.RepoNFSPF;
 import stocktales.NFS.repo.RepoNFSTmp;
 import stocktales.NFS.srv.intf.INFSProcessor;
+import stocktales.NFS.srv.intf.INFS_CashBookSrv;
 import stocktales.durations.UtilDurations;
 import stocktales.historicalPrices.pojo.HistoricalQuote;
 import stocktales.historicalPrices.utility.StockPricesUtility;
@@ -88,7 +89,7 @@ public class NFSProcessorSrv implements INFSProcessor
 	private RepoNFSPF repoNFSPF;
 
 	@Autowired
-	private RepoNFSCashBook repoNFSCB;
+	private INFS_CashBookSrv nfsCBSrv;
 
 	@Autowired
 	private RepoNFSJornal repoNFSJ;
@@ -365,7 +366,7 @@ public class NFSProcessorSrv implements INFSProcessor
 					{
 						/*
 						 * Rank Intact and Within Current Proposals Check with SMA Rank Exit Fail-
-						 * (higher one 45 days - more breahting spae) In holding Rank = Rank Max when
+						 * (higher one 45 days - more breathing space) In holding Rank = Rank Max when
 						 * not found in Latest proposals from Re-balance
 						 */
 						smaCmp = StockPricesUtility.getDeltaSMAforDaysfromCMP(holding.getSccode(),
@@ -577,13 +578,24 @@ public class NFSProcessorSrv implements INFSProcessor
 
 		}
 
+		/**
+		 * Trigger Cash Book Entry for Exit PF
+		 */
+		NFSCB_IP nfscbIP = new NFSCB_IP(EnumNFSTxnType.Exit, sumCurrVal);
+		nfsCBSrv.processCBTxn(nfscbIP);
+
 		plPer = (sumplAmnt / sumInv) * 100;
 
-		repoNFSPF.deleteAll(); // Delete PF from DB
+		/**
+		 * Now Delete PF from DB
+		 */
+
+		repoNFSPF.deleteAll();
 
 		/**
 		 * Save Journal Entry
 		 */
+
 		NFSJournal nfsJ = new NFSJournal();
 		nfsJ.setDate(UtilDurations.getTodaysDateOnly());
 		nfsJ.setEntries(null);
@@ -596,12 +608,6 @@ public class NFSProcessorSrv implements INFSProcessor
 		nfsJ.setUnrealpl(0);
 
 		repoNFSJ.save(nfsJ);
-
-		/**
-		 * Create CashBook Entry for Current Value
-		 */
-		NFSCashBook cb = new NFSCashBook(0, nfsJ.getDate(), sumCurrVal, 100);
-		repoNFSCB.save(cb);
 
 	}
 

@@ -21,6 +21,8 @@ import stocktales.NFS.enums.EnumMCapClassification;
 import stocktales.NFS.model.config.NFSConfig;
 import stocktales.NFS.model.entity.NFSPF;
 import stocktales.NFS.model.entity.NFSRunTmp;
+import stocktales.NFS.model.pojo.NFSPFExitSS;
+import stocktales.NFS.model.pojo.ScripPPUUnitsRank;
 import stocktales.NFS.model.ui.NFSGainersLosers;
 import stocktales.NFS.model.ui.NFSMCapClass;
 import stocktales.NFS.model.ui.NFSNewPF_PREUI;
@@ -33,6 +35,7 @@ import stocktales.NFS.repo.RepoNFSPF;
 import stocktales.NFS.repo.RepoNFSTmp;
 import stocktales.NFS.srv.intf.INFSPFUISrv;
 import stocktales.NFS.srv.intf.INFSProcessor;
+import stocktales.NFS.srv.intf.INFS_DD_Srv;
 import stocktales.historicalPrices.utility.StockPricesUtility;
 import stocktales.maths.UtilPercentages;
 import stocktales.money.UtilDecimaltoMoneyString;
@@ -58,6 +61,9 @@ public class NFSPFUISrv implements INFSPFUISrv
 
 	@Autowired
 	private NFSConfig nfsConfig;
+
+	@Autowired
+	private INFS_DD_Srv nfsDDSrv;
 
 	@Autowired
 	private INFSProcessor nfsProcSrv;
@@ -148,6 +154,10 @@ public class NFSPFUISrv implements INFSPFUISrv
 	@Override
 	public NFSNewPF_PREUI getNewPF_PreCreateDetails() throws Exception
 	{
+
+		List<String> scrips = new ArrayList<String>();
+		List<ScripPPUUnitsRank> scHoldings = new ArrayList<ScripPPUUnitsRank>();
+
 		NFSNewPF_PREUI newPfDet = null;
 		int numScrips = this.userSelScrips.size();
 		boolean rebalance = false;
@@ -171,12 +181,30 @@ public class NFSPFUISrv implements INFSPFUISrv
 				for (NFSRunTmp_UISel nfsRunTmp_UISel : userSelScrips)
 				{
 					scAllocs.add(new SectorAllocations(nfsRunTmp_UISel.getSccode(), perAlloc));
+					scrips.add(nfsRunTmp_UISel.getSccode());
+				}
+				if (scrips.size() > 0)
+				{
+					newPfDet.setMaxLossPer(Precision.round(nfsDDSrv.getDDByScrips(scrips).getMaxPerLoss(), 1));
 				}
 			} else
 			{
 				for (NFSPF nfspf : repoNFSPf.findAll())
 				{
 					scAllocs.add(new SectorAllocations(nfspf.getSccode(), perAlloc));
+					ScripPPUUnitsRank holding = new ScripPPUUnitsRank();
+					holding.setSccode(nfspf.getSccode());
+					holding.setPpu(nfspf.getPriceincl());
+					holding.setRankCurr(nfspf.getRankcurr());
+					holding.setUnits(nfspf.getUnits());
+
+					scHoldings.add(holding);
+				}
+				if (scHoldings.size() > 0)
+				{
+					NFSPFExitSS exitSS = nfsDDSrv.getDDByScripsPPUUnits(scHoldings);
+					newPfDet.setMaxLossPer(exitSS.getMaxLossPer());
+					newPfDet.setMaxLossStr(exitSS.getMaxLossStr());
 				}
 
 				newPfDet.setCurrInv(repoNFSPf.getTotalInvestedValue());
@@ -185,6 +213,14 @@ public class NFSPFUISrv implements INFSPFUISrv
 
 			newPfDet.setMinInv(StockPricesUtility.getMinmAmntforPFCreation(scAllocs));
 			newPfDet.setMinInvStr(UtilDecimaltoMoneyString.getMoneyStringforDecimal(newPfDet.getMinInv(), 2));
+			if (rebalance == false)
+			{
+				if (newPfDet.getMaxLossPer() != 0)
+				{
+					double maxLoss = newPfDet.getMinInv() * newPfDet.getMaxLossPer() * .01;
+					newPfDet.setMaxLossStr(UtilDecimaltoMoneyString.getMoneyStringforDecimal(maxLoss, 1));
+				}
+			}
 		}
 
 		return newPfDet;

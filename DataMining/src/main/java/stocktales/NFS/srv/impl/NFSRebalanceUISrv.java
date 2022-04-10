@@ -14,11 +14,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import stocktales.NFS.enums.EnumNFSTxnType;
 import stocktales.NFS.model.config.NFSConfig;
-import stocktales.NFS.model.entity.NFSCashBook;
 import stocktales.NFS.model.entity.NFSJournal;
 import stocktales.NFS.model.entity.NFSPF;
 import stocktales.NFS.model.entity.NFSRunTmp;
+import stocktales.NFS.model.pojo.NFSCB_IP;
 import stocktales.NFS.model.pojo.NFSExitOnly;
 import stocktales.NFS.model.pojo.StockUnitsPPU;
 import stocktales.NFS.model.ui.NFSRebalStats;
@@ -28,6 +29,7 @@ import stocktales.NFS.repo.RepoNFSPF;
 import stocktales.NFS.repo.RepoNFSTmp;
 import stocktales.NFS.srv.intf.INFSProcessor;
 import stocktales.NFS.srv.intf.INFSRebalanceUISrv;
+import stocktales.NFS.srv.intf.INFS_CashBookSrv;
 import stocktales.durations.UtilDurations;
 import stocktales.historicalPrices.pojo.StockCurrQuote;
 import stocktales.historicalPrices.utility.StockPricesUtility;
@@ -37,6 +39,7 @@ import stocktales.historicalPrices.utility.StockPricesUtility;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+
 public class NFSRebalanceUISrv implements INFSRebalanceUISrv
 {
 
@@ -53,7 +56,7 @@ public class NFSRebalanceUISrv implements INFSRebalanceUISrv
 	private NFSConfig nfsConfig;
 
 	@Autowired
-	private RepoNFSCashBook repoNfsCashBook;
+	private INFS_CashBookSrv nfsCBSrv;;
 
 	@Autowired
 	private INFSProcessor nfsProcSrv;
@@ -128,11 +131,10 @@ public class NFSRebalanceUISrv implements INFSRebalanceUISrv
 					// Get Sum Invested Value (SIV)
 					double siv = exitsData.stream().mapToDouble(NFSExitOnly::getInvAmnt).sum();
 
-					double perPF = (exitsData.size() / (int) repoNFSPF.count()) * 100;
-
 					// PRepare NFSCashBook Entry and Persist
-					NFSCashBook nfsCB = new NFSCashBook(0, UtilDurations.getTodaysDate(), scv + incrementalAmnt, perPF);
-					repoNfsCashBook.save(nfsCB);
+
+					NFSCB_IP nfscbIP = new NFSCB_IP(EnumNFSTxnType.SalePartial, scv);
+					nfsCBSrv.processCBTxn(nfscbIP);
 
 					// Prepare SCJournal and PErsist
 					NFSJournal nfsJ = getJournalLogforOnlyExits(exits, spl, siv);
@@ -140,6 +142,8 @@ public class NFSRebalanceUISrv implements INFSRebalanceUISrv
 					{
 						repoNFSJournal.save(nfsJ);
 					}
+
+					// Record Each Exit Entry in NFSExitBook
 
 				}
 			}
@@ -160,6 +164,8 @@ public class NFSRebalanceUISrv implements INFSRebalanceUISrv
 			{
 				// Exit All
 				nfsProcSrv.exitPortfolio();
+
+				// Process Entries in NFSExit Book
 			}
 
 			/**
@@ -213,7 +219,16 @@ public class NFSRebalanceUISrv implements INFSRebalanceUISrv
 						// Delete Exit Scrip from PF
 						repoNFSPF.delete(scExitH);
 					}
+
+					// Record in NFSExitBook
+
 				}
+
+				/**
+				 * Create CashBook Entry for Current Sale Value
+				 */
+				NFSCB_IP nfscbIP = new NFSCB_IP(EnumNFSTxnType.SalePartial, sumCurrVal);
+				nfsCBSrv.processCBTxn(nfscbIP);
 
 				/**
 				 * Save Journal Entry
@@ -231,12 +246,6 @@ public class NFSRebalanceUISrv implements INFSRebalanceUISrv
 
 				repoNFSJ.save(nfsJ);
 
-				/**
-				 * Create CashBook Entry for Current Value
-				 */
-				NFSCashBook cb = new NFSCashBook(0, nfsJ.getDate(), (sumCurrVal - sumRepl + incrementalAmnt),
-						nfsJ.getPerchurn());
-				repoNFSCB.save(cb);
 			}
 		}
 
@@ -641,4 +650,5 @@ public class NFSRebalanceUISrv implements INFSRebalanceUISrv
 
 		return concat;
 	}
+
 }

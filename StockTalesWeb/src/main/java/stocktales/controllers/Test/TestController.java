@@ -1,6 +1,7 @@
 package stocktales.controllers.Test;
 
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
@@ -46,6 +47,9 @@ import stocktales.IDS.srv.impl.IDS_CorePFSrv;
 import stocktales.IDS.srv.intf.IDS_DeploymentAmntSrv;
 import stocktales.IDS.srv.intf.IDS_MoneyBagSrv;
 import stocktales.IDS.srv.intf.IDS_VPSrv;
+import stocktales.NFS.enums.EnumNFSTxnType;
+import stocktales.NFS.model.entity.NFSPF;
+import stocktales.NFS.model.pojo.NFSCB_IP;
 import stocktales.NFS.model.pojo.NFSConsistency;
 import stocktales.NFS.model.pojo.NFSContainer;
 import stocktales.NFS.model.pojo.NFSPFExitSMA;
@@ -53,10 +57,17 @@ import stocktales.NFS.model.pojo.NFSPFExitSS;
 import stocktales.NFS.model.pojo.NFSPriceManipulation;
 import stocktales.NFS.model.pojo.NFSPriceManipulationItems;
 import stocktales.NFS.model.pojo.NFSScores;
+import stocktales.NFS.model.pojo.NFS_DD4ListScrips;
+import stocktales.NFS.model.pojo.NFS_DD4ListScripsI;
+import stocktales.NFS.model.pojo.ScripPPU;
+import stocktales.NFS.model.pojo.ScripPPUUnitsRank;
 import stocktales.NFS.model.ui.NFSPFSummary;
 import stocktales.NFS.repo.RepoBseData;
+import stocktales.NFS.repo.RepoNFSPF;
 import stocktales.NFS.srv.intf.INFSPFUISrv;
 import stocktales.NFS.srv.intf.INFSProcessor;
+import stocktales.NFS.srv.intf.INFS_CashBookSrv;
+import stocktales.NFS.srv.intf.INFS_DD_Srv;
 import stocktales.basket.allocations.autoAllocation.facades.interfaces.EDRCFacade;
 import stocktales.basket.allocations.autoAllocation.facades.pojos.SC_EDRC_Summary;
 import stocktales.basket.allocations.autoAllocation.interfaces.EDRCScoreCalcSrv;
@@ -216,6 +227,15 @@ public class TestController
 
 	@Autowired
 	private IBT_IDS_Srv bt_IdsSrv;
+
+	@Autowired
+	private INFS_DD_Srv nfsDDSrv;
+
+	@Autowired
+	private RepoNFSPF repoNFSPF;
+
+	@Autowired
+	private INFS_CashBookSrv nfsCBSrv;
 
 	@GetMapping("/edrcSrv/{scCode}")
 	public String testEDRCSrv(@PathVariable String scCode
@@ -1961,6 +1981,140 @@ public class TestController
 		return "success";
 	}
 
+	@GetMapping("/ddscList")
+	public String ddScList()
+	{
+		// Go with NFS PF Scrips list
+
+		if (repoNFSPF != null && nfsDDSrv != null)
+		{
+			List<String> scrips = repoNFSPF.getScrips4mPF();
+			if (scrips != null)
+			{
+				if (scrips.size() > 0)
+				{
+					NFS_DD4ListScrips ddSC;
+					try
+					{
+						ddSC = nfsDDSrv.getDDByScrips(scrips);
+
+						if (ddSC != null)
+						{
+							System.out.println("Max Drawdown with Current Scrips #  " + scrips.size() + ": "
+									+ ddSC.getMaxPerLoss() + "%");
+							for (NFS_DD4ListScripsI ddItem : ddSC.getScripDDItems())
+							{
+								System.out.println(ddItem.getScCode() + ": " + ddItem.getCmp() + ": " + ddItem.getSma()
+										+ ": " + ddItem.getDelta() + " % || " + ddItem.getWtdPLPer() + " %");
+							}
+						}
+					} catch (Exception e)
+					{
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+
+			}
+		}
+
+		return "success";
+	}
+
+	@GetMapping("/ddscListPPU")
+	public String ddScListPPU()
+	{
+		// Go with NFS PF Scrips list
+
+		List<ScripPPU> scPPUList = new ArrayList<ScripPPU>();
+
+		if (repoNFSPF != null && nfsDDSrv != null)
+		{
+			List<Object[]> scrips = repoNFSPF.getScripsPPUList();
+			if (scrips != null)
+			{
+				if (scrips.size() > 0)
+				{
+					int i = 0;
+					for (Object obj : scrips)
+					{
+						if (obj != null)
+						{
+							ScripPPU scPPU = new ScripPPU();
+							scPPU.setSccode((String) scrips.get(i)[0]);
+							scPPU.setPpu((double) scrips.get(i)[1]);
+							scPPUList.add(scPPU);
+						}
+						i++;
+					}
+
+					NFS_DD4ListScrips ddSC;
+					try
+					{
+						ddSC = nfsDDSrv.getDDByScripsPPU(scPPUList);
+
+						if (ddSC != null)
+						{
+							System.out.println("Max Drawdown with Current Scrips #  " + scrips.size() + ": "
+									+ ddSC.getMaxPerLoss() + "%");
+							for (NFS_DD4ListScripsI ddItem : ddSC.getScripDDItems())
+							{
+								System.out.println(ddItem.getScCode() + ": " + ddItem.getCmp() + ": " + ddItem.getSma()
+										+ ": " + ddItem.getDelta() + " % || " + ddItem.getWtdPLPer() + " %");
+							}
+						}
+					} catch (Exception e)
+					{
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+
+			}
+		}
+
+		return "success";
+	}
+
+	@GetMapping("/ddscListPPUUnits")
+	public String ddScListPPUUNITS()
+	{
+
+		if (repoNFSPF != null)
+		{
+			List<NFSPF> holdings = repoNFSPF.findAll();
+			if (holdings != null)
+			{
+				List<ScripPPUUnitsRank> scList = new ArrayList<ScripPPUUnitsRank>();
+				for (NFSPF holding : holdings)
+				{
+					ScripPPUUnitsRank item = new ScripPPUUnitsRank();
+					item.setSccode(holding.getSccode());
+					item.setPpu(holding.getPriceincl());
+					item.setRankCurr(holding.getRankcurr());
+					item.setUnits(holding.getUnits());
+
+					scList.add(item);
+				}
+
+				try
+				{
+					NFSPFExitSS exitSS = nfsDDSrv.getDDByScripsPPUUnits(scList);
+					if (exitSS != null)
+					{
+						System.out.println(exitSS.getMaxLossPer() + "% ------- Amount Rs. " + exitSS.getMaxLossStr());
+					}
+				} catch (Exception e)
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+
+		return "success";
+	}
+
 	@GetMapping("/btids")
 	public String btids()
 	{
@@ -1988,6 +2142,117 @@ public class TestController
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		}
+
+		return "success";
+	}
+
+	@GetMapping("/scPrice/{scCode}")
+	public String testscPriceonDate(@PathVariable String scCode)
+	{
+		if (scCode.trim().length() > 0)
+		{
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+			java.util.Date date;
+			try
+			{
+				date = dateFormat.parse("2020-03-20");
+				if (date != null)
+				{
+
+					System.out.println("Price as on " + date.toString() + ": "
+							+ StockPricesUtility.getHistoricalPricesforScrip4Date(scCode, date));
+				}
+			} catch (Exception e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
+
+		return "success";
+	}
+
+	@GetMapping("/nfsPFCreate/{amount}")
+	public String testNFSPfCreate(@PathVariable String amount)
+	{
+		double amountD = Double.valueOf(amount);
+
+		if (amountD > 0)
+		{
+
+			try
+			{
+
+				if (nfsCBSrv != null)
+				{
+					nfsCBSrv.processCBTxn(amountD, -19.6);
+
+				}
+			} catch (Exception e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
+
+		return "success";
+	}
+
+	@GetMapping("/nfsPFCB")
+	public String testNFSPFCB()
+	{
+
+		try
+		{
+
+			if (nfsCBSrv != null)
+			{
+
+				/*
+				 * NFSCB_IP cbtxn2 = new NFSCB_IP(EnumNFSTxnType.Deploy, 91202.300);
+				 * nfsCBSrv.processCBTxn(cbtxn2);
+				 */
+
+				/*
+				 * NFSCB_IP cbtxn3 = new NFSCB_IP(EnumNFSTxnType.Dividend, 210);
+				 * nfsCBSrv.processCBTxn(cbtxn3);
+				 */
+
+				/*
+				 * NFSCB_IP cbtxn4 = new NFSCB_IP(EnumNFSTxnType.SalePartial, 25000);
+				 * nfsCBSrv.processCBTxn(cbtxn4);
+				 */
+
+				NFSCB_IP cbtxn5 = new NFSCB_IP(EnumNFSTxnType.Exit, 270000);
+				nfsCBSrv.processCBTxn(cbtxn5);
+
+			}
+		} catch (Exception e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return "success";
+
+	}
+
+	@GetMapping("/nfsBal")
+	public String testNFSDepAmnt()
+	{
+
+		double amnt;
+		try
+		{
+			amnt = nfsCBSrv.getDeployableBalance();
+			System.out.println("NFS Deployable Cash : " + amnt);
+		} catch (Exception e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 		return "success";

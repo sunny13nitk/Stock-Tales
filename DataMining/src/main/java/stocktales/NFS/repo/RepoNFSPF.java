@@ -36,4 +36,10 @@ public interface RepoNFSPF extends JpaRepository<NFSPF, String>
 
 	@Query("select s.sccode, s.units from NFSPF s ")
 	public List<ScripUnits> getScripsUnitsList();
+
+	@Query("select s.sccode, s.priceincl from NFSPF s ")
+	public List<Object[]> getScripsPPUList();
+
+	@Query("select s.sccode from NFSPF s ")
+	public List<String> getScrips4mPF();
 }

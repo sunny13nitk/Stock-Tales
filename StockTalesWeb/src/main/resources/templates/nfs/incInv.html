@@ -68,7 +68,7 @@
 
 					<div class="row flex-align-center">
 
-						<div class="colspan-10 offset-1">
+						<div class="colspan-11 offset-1">
 							<div class="card" style="padding-top: -20px">
 
 								<div class="row flex-align-center">
@@ -108,6 +108,26 @@
 												Investment</span>
 										</blockquote>
 									</div>
+
+
+									<div class="cell">
+										<blockquote class="right-side">
+											<h3 style="color: #654AD7" th:text="${pfDetails.maxLossPer}"></h3>
+
+											<span style="color: #486590; font-weight: medium;">Max'm.
+												Drawdown in %</span>
+										</blockquote>
+									</div>
+
+									<div class="cell" th:if="${pfDetails.maxLossStr != null}">
+										<blockquote class="right-side">
+											<h3 style="color: #C32B5A" th:text="${pfDetails.maxLossStr}"></h3>
+
+											<span style="color: #486590; font-weight: medium;">Max'm.
+												Drawdown in Rs.</span>
+										</blockquote>
+									</div>
+
 
 
 

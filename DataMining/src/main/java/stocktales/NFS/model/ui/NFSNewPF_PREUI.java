@@ -17,4 +17,6 @@ public class NFSNewPF_PREUI
 	private String minInvStr;
 	private double currInv;
 	private String currInvStr;
+	private double maxLossPer;
+	private String maxLossStr;
 }
