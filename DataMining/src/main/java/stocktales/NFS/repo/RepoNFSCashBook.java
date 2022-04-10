@@ -11,7 +11,8 @@ import stocktales.NFS.model.entity.NFSCashBook;
 
 public interface RepoNFSCashBook extends JpaRepository<NFSCashBook, Integer>
 {
-	@Query("select c from NFSCashBook c where c.date = ( select max(cc.date) from NFSCashBook cc ) ")
+	@Query("select c from NFSCashBook c where c.date = ( select max(cc.date) from NFSCashBook cc ) AND "
+			+ " c.id = ( select max(cc.id) from NFSCashBook cc ) ")
 	public Optional<NFSCashBook> getLatestEntry();
 
 	@Query("select MAX(date) from NFSCashBook where txntype = stocktales.NFS.enums.EnumNFSTxnType.Deploy")

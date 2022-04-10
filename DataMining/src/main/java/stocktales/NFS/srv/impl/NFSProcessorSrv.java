@@ -58,6 +58,7 @@ import stocktales.NFS.repo.RepoNFSPF;
 import stocktales.NFS.repo.RepoNFSTmp;
 import stocktales.NFS.srv.intf.INFSProcessor;
 import stocktales.NFS.srv.intf.INFS_CashBookSrv;
+import stocktales.NFS.srv.intf.INFS_DD_Srv;
 import stocktales.durations.UtilDurations;
 import stocktales.historicalPrices.pojo.HistoricalQuote;
 import stocktales.historicalPrices.utility.StockPricesUtility;
@@ -93,6 +94,9 @@ public class NFSProcessorSrv implements INFSProcessor
 
 	@Autowired
 	private RepoNFSJornal repoNFSJ;
+
+	@Autowired
+	private INFS_DD_Srv nfsDDSrv;
 
 	@Autowired
 	private MessageSource msgSrc;
@@ -463,6 +467,7 @@ public class NFSProcessorSrv implements INFSProcessor
 			int x = 1;
 			long millis = System.currentTimeMillis();
 			java.util.Date dateToday = new java.util.Date(millis);
+			List<String> scrips = new ArrayList<String>();
 
 			double amountPerPosition = 0;
 			int units = 0;
@@ -500,8 +505,7 @@ public class NFSProcessorSrv implements INFSProcessor
 							dateToday, dateToday, units);
 
 					this.nfsContainer.getNFSPortfolio().add(newPFEntity);
-
-					repoNFSPF.save(newPFEntity);
+					scrips.add(topn.getSccode());
 
 				}
 				x++;
@@ -509,6 +513,12 @@ public class NFSProcessorSrv implements INFSProcessor
 			}
 			// Amount Left/Needed after PF Creation
 			nfsContainer.setCashTxnBalance(invAmnt - utilizedAmnt);
+
+			// Cash Book Entry
+			nfsCBSrv.processCBTxn(utilizedAmnt, Precision.round(nfsDDSrv.getDDByScrips(scrips).getMaxPerLoss(), 1));
+
+			repoNFSPF.saveAll(this.nfsContainer.getNFSPortfolio());
+
 		}
 
 	}

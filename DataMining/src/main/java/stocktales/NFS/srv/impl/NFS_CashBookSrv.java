@@ -7,15 +7,19 @@ import java.util.Optional;
 
 import org.apache.commons.math3.util.Precision;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import stocktales.NFS.enums.EnumNFSTxnType;
 import stocktales.NFS.model.entity.NFSCashBook;
+import stocktales.NFS.model.entity.NFSPF;
 import stocktales.NFS.model.pojo.NFSCB_IP;
+import stocktales.NFS.model.pojo.ScripPPUUnitsRank;
 import stocktales.NFS.repo.RepoNFSCashBook;
 import stocktales.NFS.repo.RepoNFSPF;
 import stocktales.NFS.srv.intf.INFSPFUISrv;
 import stocktales.NFS.srv.intf.INFS_CashBookSrv;
+import stocktales.NFS.srv.intf.INFS_DD_Srv;
 import stocktales.durations.UtilDurations;
 
 /**
@@ -26,10 +30,12 @@ import stocktales.durations.UtilDurations;
 @Service
 public class NFS_CashBookSrv implements INFS_CashBookSrv
 {
-	@Autowired
-	private NFSProcessorSrv nfsProcSrv;
 
 	@Autowired
+	private INFS_DD_Srv nfsDDSrv;
+
+	@Autowired
+	@Lazy
 	private INFSPFUISrv nfsUISrv;
 
 	@Autowired
@@ -57,12 +63,15 @@ public class NFS_CashBookSrv implements INFS_CashBookSrv
 
 				case Dividend:
 					processDividend(cbTxn);
+					break;
 
 				case SalePartial:
 					processSale(cbTxn);
+					break;
 
 				case Exit:
 					processExit(cbTxn);
+					break;
 
 				default:
 					break;
@@ -144,11 +153,12 @@ public class NFS_CashBookSrv implements INFS_CashBookSrv
 					cbTxn.setDate(UtilDurations.getTodaysDateOnly());
 
 					// Get Max DD for Current PF
-					cbTxn.setDdmax(Precision.round(nfsProcSrv.getPFExitSnapshot().getMaxLossPer(), 1));
+					cbTxn.setDdmax(Precision.round(getMaxDDforNFSPF(), 1));
 					cbTxn.setTxntype(EnumNFSTxnType.Deploy);
 
 					// Get UnrealZ P&L at time of fresh Deployment
-					cbTxn.setUnrealzplper(Precision.round(nfsUISrv.getPfSummary().getPortfolioPL().getPlPer(), 1));
+					// cbTxn.setUnrealzplper(Precision.round(nfsUISrv.getPfSummary().getPortfolioPL().getPlPer(),
+					// 1));
 
 					repoCB.save(cbTxn);
 				}
@@ -220,7 +230,7 @@ public class NFS_CashBookSrv implements INFS_CashBookSrv
 					cbTxn.setDate(UtilDurations.getTodaysDateOnly());
 
 					// Get Max DD for Current PF
-					cbTxn.setDdmax(Precision.round(nfsProcSrv.getPFExitSnapshot().getMaxLossPer(), 1));
+					cbTxn.setDdmax(Precision.round(getMaxDDforNFSPF(), 1));
 					cbTxn.setTxntype(EnumNFSTxnType.SalePartial);
 
 					// Get UnrealZ P&L at time of fresh Deployment
@@ -261,7 +271,7 @@ public class NFS_CashBookSrv implements INFS_CashBookSrv
 					cbTxn.setDate(UtilDurations.getTodaysDateOnly());
 
 					// Get Max DD for Current PF
-					cbTxn.setDdmax(Precision.round(nfsProcSrv.getPFExitSnapshot().getMaxLossPer(), 1));
+					cbTxn.setDdmax(Precision.round(getMaxDDforNFSPF(), 1));
 					cbTxn.setTxntype(EnumNFSTxnType.Exit);
 
 					// Get UnrealZ P&L at time of fresh Deployment
@@ -290,6 +300,34 @@ public class NFS_CashBookSrv implements INFS_CashBookSrv
 			e.printStackTrace();
 		}
 
+	}
+
+	private double getMaxDDforNFSPF() throws Exception
+	{
+		double ddPer = 0;
+
+		if (repoNFSPF != null)
+		{
+			if (repoNFSPF.count() > 0)
+			{
+				List<ScripPPUUnitsRank> scHoldings = new ArrayList<ScripPPUUnitsRank>();
+
+				for (NFSPF holding : repoNFSPF.findAll())
+				{
+					ScripPPUUnitsRank item = new ScripPPUUnitsRank();
+					item.setSccode(holding.getSccode());
+					item.setPpu(holding.getPriceincl());
+					item.setRankCurr(holding.getRankcurr());
+					item.setUnits(holding.getUnits());
+
+					scHoldings.add(item);
+
+				}
+				ddPer = Precision.round(nfsDDSrv.getDDByScripsPPUUnits(scHoldings).getMaxLossPer(), 1);
+			}
+		}
+
+		return ddPer;
 	}
 
 }

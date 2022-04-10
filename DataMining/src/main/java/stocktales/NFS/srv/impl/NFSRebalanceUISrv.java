@@ -88,6 +88,15 @@ public class NFSRebalanceUISrv implements INFSRebalanceUISrv
 
 			if (incrementalAmnt > 0 || (exits != null && entries != null) || (incrementalAmnt > 0 && entries != null))
 			{
+				/**
+				 * No Risks - Adjust Cash Flow for Incremental Adjustments
+				 */
+				if (incrementalAmnt > 0)
+				{
+					NFSCB_IP nfscbIP = new NFSCB_IP(EnumNFSTxnType.Deploy, incrementalAmnt);
+					nfsCBSrv.processCBTxn(nfscbIP);
+				}
+
 				// do Basic Numbers Around Re-balance - TAD, PPI, ARC etc
 				doBasicNumbers(incrementalAmnt, exits, entries);
 
@@ -218,6 +227,7 @@ public class NFSRebalanceUISrv implements INFSRebalanceUISrv
 						exitsProc.add(exit);
 						// Delete Exit Scrip from PF
 						repoNFSPF.delete(scExitH);
+						i++;
 					}
 
 					// Record in NFSExitBook
@@ -584,8 +594,13 @@ public class NFSRebalanceUISrv implements INFSRebalanceUISrv
 	/*
 	 * Persists Re-balance- PF and Journal
 	 */
-	private void presistRebalance()
+	private void presistRebalance() throws Exception
 	{
+
+		/**
+		 * After Cash Book Entry - Follow the Downstream Process of PF adjustments
+		 */
+
 		// Clear current PF
 		repoNFSPF.deleteAll();
 

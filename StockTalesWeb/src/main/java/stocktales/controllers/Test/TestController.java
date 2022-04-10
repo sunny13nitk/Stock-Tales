@@ -2220,9 +2220,7 @@ public class TestController
 				/*
 				 * NFSCB_IP cbtxn3 = new NFSCB_IP(EnumNFSTxnType.Dividend, 210);
 				 * nfsCBSrv.processCBTxn(cbtxn3);
-				 */
-
-				/*
+				 * 
 				 * NFSCB_IP cbtxn4 = new NFSCB_IP(EnumNFSTxnType.SalePartial, 25000);
 				 * nfsCBSrv.processCBTxn(cbtxn4);
 				 */
