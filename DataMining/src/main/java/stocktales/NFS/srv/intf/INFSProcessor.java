@@ -83,4 +83,12 @@ public interface INFSProcessor
 	 */
 	public void exitPortfolio() throws Exception;
 
+	/**
+	 * Post Scrip Exit in ExitBook for Anlaytics
+	 * 
+	 * @param scCode - Scrip to be exited from Portfolio
+	 * @throws Exception
+	 */
+	public void postScripExit(String scCode) throws Exception;
+
 }

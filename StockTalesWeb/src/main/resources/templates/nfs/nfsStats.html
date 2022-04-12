@@ -48,6 +48,11 @@
 							th:href="@{/nfs/crExisProp}" role="button"> <span
 							class="mif-next icon" style="margin-left: 0px"></span> <span
 							style="margin-left: 3px">Create Portfolio</span>
+						</a> <a th:if="${rebal == true }" href="#"
+							class="button success rounded outline"
+							th:href="@{/nfs/rebalReport}" role="button"> <span
+							class="mif-description icon" style="margin-left: 0px"></span> <span
+							style="margin-left: 3px">Re-Balance Report</span>
 						</a> <a href="#" class="button steel rounded outline"
 							style="border: none; margin-left: 10px" th:href="@{/}"
 							role="button"> <span class="mif-home  mif-3x"></span>

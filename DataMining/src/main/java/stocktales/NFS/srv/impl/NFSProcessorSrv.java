@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javassist.NotFoundException;
 import lombok.AllArgsConstructor;
@@ -28,6 +29,7 @@ import stocktales.NFS.enums.EnumMCapClassification;
 import stocktales.NFS.enums.EnumNFSTxnType;
 import stocktales.NFS.model.config.NFSConfig;
 import stocktales.NFS.model.entity.BseDataSet;
+import stocktales.NFS.model.entity.NFSExitBook;
 import stocktales.NFS.model.entity.NFSJournal;
 import stocktales.NFS.model.entity.NFSPF;
 import stocktales.NFS.model.entity.NFSRunTmp;
@@ -53,6 +55,7 @@ import stocktales.NFS.model.ui.NFSRunTmpList;
 import stocktales.NFS.model.ui.NFSRunTmp_UISel;
 import stocktales.NFS.model.ui.NFS_UIRebalProposalContainer;
 import stocktales.NFS.repo.RepoBseData;
+import stocktales.NFS.repo.RepoNFSExitBook;
 import stocktales.NFS.repo.RepoNFSJornal;
 import stocktales.NFS.repo.RepoNFSPF;
 import stocktales.NFS.repo.RepoNFSTmp;
@@ -97,6 +100,9 @@ public class NFSProcessorSrv implements INFSProcessor
 
 	@Autowired
 	private INFS_DD_Srv nfsDDSrv;
+
+	@Autowired
+	private RepoNFSExitBook repoExitBook;
 
 	@Autowired
 	private MessageSource msgSrc;
@@ -586,6 +592,11 @@ public class NFSProcessorSrv implements INFSProcessor
 				scrips.add(nfspf.getSccode());
 			}
 
+			/**
+			 * Persist in Exit Book
+			 */
+			this.postScripExit(nfspf.getSccode());
+
 		}
 
 		/**
@@ -618,6 +629,59 @@ public class NFSProcessorSrv implements INFSProcessor
 		nfsJ.setUnrealpl(0);
 
 		repoNFSJ.save(nfsJ);
+
+	}
+
+	@Override
+	public void postScripExit(String scCode) throws Exception
+	{
+		if (StringUtils.hasText(scCode))
+		{
+
+			// Check if Scrip is in PF
+			if (repoNFSPF.count() > 0 && repoExitBook != null)
+			{
+				Optional<NFSPF> holdingO = repoNFSPF.findBySccode(scCode);
+				if (holdingO.isPresent())
+				{
+					// Initialize POJO
+					NFSExitBook ebEntity = new NFSExitBook();
+					ebEntity.setSccode(scCode);
+
+					ebEntity.setDateincl(holdingO.get().getDateincl());
+
+					ebEntity.setPpuincl(Precision.round(
+							StockPricesUtility.getHistoricalPricesforScrip4Date(scCode, ebEntity.getDateincl()), 2));
+
+					ebEntity.setPpuavg(holdingO.get().getPriceincl());
+
+					ebEntity.setDateexit(UtilDurations.getTodaysDateOnly());
+
+					ebEntity.setPpuexit(Precision
+							.round(StockPricesUtility.getQuoteforScrip(scCode).getQuote().getPrice().doubleValue(), 2));
+
+					ebEntity.setRealplper(
+							UtilPercentages.getPercentageDelta(ebEntity.getPpuavg(), ebEntity.getPpuexit(), 2));
+
+					ebEntity.setRealplperincl(
+							UtilPercentages.getPercentageDelta(ebEntity.getPpuincl(), ebEntity.getPpuexit(), 2));
+
+					ebEntity.setNumdays(
+							UtilDurations.getNumDaysbwSysDates(ebEntity.getDateincl(), ebEntity.getDateexit()));
+
+					ebEntity.setRealzamnt(Precision
+							.round((ebEntity.getPpuexit() - ebEntity.getPpuavg()) * holdingO.get().getUnits(), 1));
+
+					ebEntity.setDatelastbuy(holdingO.get().getDatelasttxn());
+
+					ebEntity.setPerpfexit(Precision.round(((holdingO.get().getUnits() * ebEntity.getPpuexit() * 100)
+							/ repoNFSPF.getTotalInvestedValue()), 2));
+
+					repoExitBook.save(ebEntity);
+
+				}
+			}
+		}
 
 	}
 

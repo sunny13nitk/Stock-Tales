@@ -153,6 +153,10 @@ public class NFSRebalanceUISrv implements INFSRebalanceUISrv
 					}
 
 					// Record Each Exit Entry in NFSExitBook
+					for (NFSExitOnly nfsExitOnly : exitsData)
+					{
+						nfsProcSrv.postScripExit(nfsExitOnly.getScCode());
+					}
 
 				}
 			}
@@ -171,10 +175,10 @@ public class NFSRebalanceUISrv implements INFSRebalanceUISrv
 			 */
 			if ((repoNFSPF.count() + entries.size() - exits.size()) < nfsConfig.getPfSize() * .6)
 			{
-				// Exit All
+				// Exit All - // Process Entries in NFSExit Book implictly coded in exit
+				// Portfolio
 				nfsProcSrv.exitPortfolio();
 
-				// Process Entries in NFSExit Book
 			}
 
 			/**
@@ -225,19 +229,21 @@ public class NFSRebalanceUISrv implements INFSRebalanceUISrv
 						sumCurrVal += amntCurr;
 						sumpl += amntCurr - (scExitH.getPriceincl() * scExitH.getUnits());
 						exitsProc.add(exit);
+
+						// Record in NFSExitBook
+						nfsProcSrv.postScripExit(exit);
+
 						// Delete Exit Scrip from PF
 						repoNFSPF.delete(scExitH);
 						i++;
 					}
-
-					// Record in NFSExitBook
 
 				}
 
 				/**
 				 * Create CashBook Entry for Current Sale Value
 				 */
-				NFSCB_IP nfscbIP = new NFSCB_IP(EnumNFSTxnType.SalePartial, sumCurrVal);
+				NFSCB_IP nfscbIP = new NFSCB_IP(EnumNFSTxnType.SalePartial, Precision.round(sumCurrVal, 2));
 				nfsCBSrv.processCBTxn(nfscbIP);
 
 				/**
@@ -372,6 +378,8 @@ public class NFSRebalanceUISrv implements INFSRebalanceUISrv
 				if (exitO.isPresent())
 				{
 					include = false;
+					// POST Entry in Exit Book
+					nfsProcSrv.postScripExit(holding.getSccode());
 				}
 			}
 

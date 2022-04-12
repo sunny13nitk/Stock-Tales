@@ -306,10 +306,25 @@ public class NFSController
 			}
 			model.addAttribute("statsList", statsList);
 
+			/*
+			 * DO not allow PF creation if Number of Scrips selected is less that minimum
+			 * threshold Scrips
+			 */
 			if (nfsContainer.getNfsStats().getNumFinalScrips() < (nfsConfig.getPfSize() * 1.2))
 			{
 				model.addAttribute("noPF", true);
 
+			}
+
+			// If PF already Exists
+			if (repoNFSPF.count() > 0)
+			{
+				// Do not prompt to create a new one
+				model.addAttribute("noPF", true);
+				if (repoNFSTmp.count() > 0)
+				{
+					model.addAttribute("rebal", true);
+				}
 			}
 
 		}
