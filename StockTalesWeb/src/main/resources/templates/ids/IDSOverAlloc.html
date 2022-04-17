@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<div th:replace="fragments/header :: STHeader"></div>
+
+</head>
+<body style="overflow: hidden">
+	<div th:replace="fragments/IDS_FG :: IDSMenu"></div>
+
+	<div style="margin-top: 32px;">
+		<div id="overview">
+			<div class="frame"
+				style="height: 570px; overflow: scroll; padding: 8px">
+
+				<div class="grid" style="padding: 5px">
+
+					<div class="row">
+
+						<div class="colspan-12">
+
+							<div class="card"
+								style="padding-top: -40px; background: transparent;">
+
+								<div class="row flex-align-center">
+
+									<blockquote class="left-side">
+										<h5 style="color: #8000fc">List of Holdings that exceed
+											guided allocations!</h5>
+										<h5 style="color: #486590">Select the ones you chose to
+											re-balance. Adjust proposed sell units and verify P&L Summary
+											before comitting the transaction(s).</h5>
+									</blockquote>
+
+								</div>
+
+								<!--Error and Success Messages On DashBoard  -->
+								<div class="row flex-justify-center">
+									<div class="form-group">
+										<div class="col-xs-15">
+											<div th:if="${formError != null}">
+
+												<!-- Check for Form error -->
+
+												<div class="remark alert"
+													style="padding-top: 10px; margin: 2px">
+													<label th:text="'ERROR : ' + ${formError}"></label>
+												</div>
+											</div>
+										</div>
+
+										<div class="col-xs-15">
+											<div th:if="${formSucc != null}">
+
+
+												<div class="remark success"
+													style="padding-top: 10px; margin: 2px">
+													<label th:text=" ${formSucc}"></label>
+												</div>
+
+
+
+											</div>
+										</div>
+									</div>
+
+								</div>
+
+
+
+
+
+
+
+							</div>
+						</div>
+
+
+
+
+					</div>
+
+					<!-- Heading -->
+					<div class="colspan-9 offset -2">
+						<h6 style="color: #4465a1">Holding(s) with Over Allocations</h6>
+					</div>
+
+
+
+
+					<!-- Table Row - Starts -->
+					<div class="row flex-align-center" style="padding: 5px">
+						<div class="cell-md-auto">
+
+							<form method="post" th:action="@{/ids/overAllocProcess}"
+								th:object="${ovAllocList}">
+
+
+								<!-- Here goes your table -->
+
+								<table class="table subcompact striped table-border row-hover "
+									data-show-search="false" data-show-rows-steps="false"
+									id="t-inspector" data-showPagination="false" data-role="table"
+									data-horizontal-scroll="true" data-rows="-1"
+									data-info-wrapper=".my-info-wrapper"
+									data-thousand-separator=","
+									data-pagination-wrapper=".my-pagination-wrapper">
+
+									<thead style="text-align: center">
+										<tr>
+
+
+											<th data-name="scCode" class="sortable-column "
+												data-cls-column=" text-left">Scrip Code</th>
+
+											<th data-name="depAmntStr" data-format="number"
+												data-cls-column=" text-left">Re-Align (Rs.)</th>
+
+											<th data-name="depPer" data-format="number"
+												data-cls-column=" text-left">Re-Align</th>
+
+											<th data-name="cmp" data-format="number">CMP</th>
+
+											<th data-name="pl" data-format="number">Gains/Loss</th>
+
+											<th data-name="unitsSell" data-format="number"
+												data-cls-column=" text-left" data-size="100">Units Sell</th>
+
+											<th data-format="number" data-size="1"></th>
+
+											<th data-name="select" data-cls-column="text-left">Select</th>
+										</tr>
+									</thead>
+
+
+
+
+									<tr th:each="propI , stat :  *{overAllocList} ">
+
+										<td><span
+											style="color: #000000; font-weight: bold; font-size: 200"
+											th:text="${propI.scCode}"></span><input type="hidden"
+											th:field="*{overAllocList[__${stat.index}__].scCode}" /></td>
+
+										<td><span
+											style="color: #446297; font-weight: bold; font-size: 200"
+											th:text="${propI.depAmntStr}"></span> <input type="hidden"
+											th:field="*{overAllocList[__${stat.index}__].depAmntStr}" /></td>
+
+
+										<td><input type="hidden"
+											th:field="*{overAllocList[__${stat.index}__].depPer}"
+											th:text="${propI.depPer}" /></td>
+
+										<td><input type="hidden"
+											th:field="*{overAllocList[__${stat.index}__].cmp}"
+											th:text="${propI.cmp}" /></td>
+
+
+
+										<td th:if="${propI.pl >=0}" style="text-align: center"><span
+											class=" tally success" th:text="${propI.pl}"></span> <input
+											type="hidden"
+											th:field="*{overAllocList[__${stat.index}__].pl}" /></td>
+
+
+										<td th:if="${propI.pl < 0}" style="text-align: center"><span
+											class=" tally alert" th:text="${propI.pl}"></span> <input
+											type="hidden"
+											th:field="*{overAllocList[__${stat.index}__].pl}" /></td>
+
+
+
+										<td><input type="text"
+											class="input-small alert metro-input"
+											th:field="*{overAllocList[__${stat.index}__].unitsSell}" />
+										<td>
+										<td><input type="checkbox" data-role="switch"
+											th:field="*{overAllocList[__${stat.index}__].select}" checked
+											data-material="true" data-cls-caption="fg-teal text-bold" /></td>
+									</tr>
+
+								</table>
+
+
+
+
+								<div class="row flex-justify-end"
+									style="padding-right: 20px; padding-top: 15px; padding-bottom: 20px; margin-left: 80px">
+
+									<div class="cell offset-2">
+										<div class="row flex-justify-start">
+
+											<div class="remark warning"
+												style="padding-top: 10px; margin: 2px; margin-left: 10px">
+												<label
+													th:text="'Nett. Turnover : Rs.' + ${overAllocContainer.txnSumStr}"></label>
+											</div>
+
+											<div th:if="${overAllocContainer.plSum >0}">
+												<!-- Profit -->
+												<div class="remark success"
+													style="padding-top: 10px; margin: 2px; margin-left: 10px">
+													<label
+														th:text="'Nett. P&L : Rs.' + ${overAllocContainer.plSumStr}"></label>
+												</div>
+											</div>
+
+											<div th:if="${overAllocContainer.plSum <0}">
+												<!-- Profit -->
+												<div class="remark alert"
+													style="padding-top: 10px; margin: 2px; margin-left: 10px">
+													<label
+														th:text="'Nett. P&L : Rs.' + ${overAllocContainer.plSumStr}"></label>
+												</div>
+											</div>
+
+
+
+
+										</div>
+									</div>
+
+									<div class="cell">
+										<div class="form-group" style="margin-top: 2px">
+
+											<a href="#" class="button secondary rounded outline"
+												th:href="@{/ids/realign}" role="button"> <span
+												class="mif-tree icon"
+												style="margin-left: 0px; margin-top: -3px"></span> <span
+												style="margin-left: 3px">Start Over</span>
+											</a>
+
+											<button class="button rounded" type="submit" name="action"
+												value="refreshPL"
+												style="background-color: #5638CA; color: white; margin-top: 5px; margin-bottom: 10px">
+												<span class="mif-shareable" style="margin-left: 0px">
+												</span> <span style="margin-left: 3px">P&L Check</span>
+											</button>
+
+
+
+											<button class="button rounded" type="submit" name="action"
+												value="commit"
+												style="background-color: #38CA9F; color: white; margin-top: 5px; margin-bottom: 10px">
+												<span class="mif-floppy-disk" style="margin-left: 0px">
+												</span> <span style="margin-left: 3px">Commit Sale(s)</span>
+											</button>
+
+
+										</div>
+									</div>
+								</div>
+
+
+
+							</form>
+
+						</div>
+
+					</div>
+					<!-- Table Row - Ends -->
+
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+
+	<!-- Metro 4 -->
+	<script src="https://cdn.metroui.org.ua/v4.3.2/js/metro.min.js"></script>
+</body>
+</html>

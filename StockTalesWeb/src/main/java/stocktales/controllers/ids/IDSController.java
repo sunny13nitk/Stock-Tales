@@ -21,10 +21,13 @@ import stocktales.IDS.model.pf.repo.RepoPFSchema;
 import stocktales.IDS.pojo.IDS_SCBuyProposal;
 import stocktales.IDS.pojo.PFSchemaRebalUI;
 import stocktales.IDS.pojo.UI.IDSBuyPropMassUpdateList;
+import stocktales.IDS.pojo.UI.IDSOverAllocList;
 import stocktales.IDS.pojo.UI.IDS_BuyProposalBO;
 import stocktales.IDS.pojo.UI.IDS_PF_Chart_DepAmnt;
 import stocktales.IDS.pojo.UI.IDS_PF_Chart_PFReturns;
 import stocktales.IDS.pojo.UI.IDS_PF_Chart_PLSpread;
+import stocktales.IDS.pojo.UI.IDS_PF_OverAllocations;
+import stocktales.IDS.pojo.UI.IDS_PF_OverAllocsContainer;
 import stocktales.IDS.pojo.UI.IDS_XIRR_UI;
 import stocktales.IDS.pojo.UI.MBUI;
 import stocktales.IDS.pojo.UI.PFDBContainer;
@@ -121,6 +124,7 @@ public class IDSController
 				model.addAttribute("retData", retChart);
 				model.addAttribute("plData", plChart);
 				model.addAttribute("depData", depChart);
+				model.addAttribute("isOverAlloc", pfDashBSrv.areOverAllocationsPresent());
 
 			} catch (Exception e)
 			{
@@ -214,6 +218,36 @@ public class IDSController
 		}
 
 		return viewName;
+	}
+
+	@GetMapping("/realign")
+	public String showOverAllocations(Model model) throws Exception
+	{
+		String viewName = "/ids/IDSOverAlloc";
+		if (pfDashBSrv != null)
+		{
+			IDS_PF_OverAllocsContainer overAllocContainer = pfDashBSrv.fetchOverAllocations();
+			if (overAllocContainer != null)
+			{
+				if (overAllocContainer.getOverAllocs().size() > 0)
+				{
+					IDSOverAllocList overAllocList = new IDSOverAllocList();
+
+					for (IDS_PF_OverAllocations overAllocI : overAllocContainer.getOverAllocs())
+					{
+						overAllocList.getOverAllocList().add(overAllocI);
+					}
+
+					model.addAttribute("overAllocContainer",
+							this.pfDashBSrv.getPFDashBoardContainer4mSession().getOverAllocsContainer());
+					model.addAttribute("ovAllocList", overAllocList);
+				}
+			}
+
+		}
+
+		return viewName;
+
 	}
 
 	@GetMapping("/buyP/edit")
@@ -519,6 +553,7 @@ public class IDSController
 					// Commit the Schema Changes
 					pfSchRebalSrv.commitValidatedSchema(rebalPOJO.getScAllocMassUpdate());
 					// Update the DashBoard Buffer for Schema change(s)
+					pfDashBSrv.refreshSchemaPostTxn();
 					pfDashBSrv.refreshContainer4SchemaChange();
 				}
 			}
@@ -543,6 +578,8 @@ public class IDSController
 					{
 
 						pfCoreSrv.pushandSyncPFTxn(propList.getBuyList());
+
+						pfDashBSrv.refreshSchemaPostTxn();
 
 						pfDashBSrv.refreshContainer4Txn();
 
@@ -584,12 +621,54 @@ public class IDSController
 					mbSrv.processMBagTxn(mbTxn);
 				}
 				// Equivalent to Schema Reset
+				pfDashBSrv.refreshSchemaPostTxn();
 				pfDashBSrv.refreshContainer4SchemaChange();
 			}
 		}
 
 		// Re-direct to Home
 		return "redirect:/ids/launch";
+	}
+
+	@PostMapping(value = "/overAllocProcess", params = "action=refreshPL")
+	public String realignRefreshPL(@ModelAttribute("ovAllocList") IDSOverAllocList overAllocList, Model model
+
+	) throws Exception
+	{
+		String viewName = "ids/IDSOverAlloc";
+		if (overAllocList != null)
+		{
+			if (overAllocList.getOverAllocList() != null)
+			{
+				pfDashBSrv.refreshOverAllocationsPL(overAllocList);
+				model.addAttribute("overAllocContainer",
+						this.pfDashBSrv.getPFDashBoardContainer4mSession().getOverAllocsContainer());
+				model.addAttribute("ovAllocList", overAllocList);
+			}
+		}
+
+		return viewName;
+	}
+
+	@PostMapping(value = "/overAllocProcess", params = "action=commit")
+	public String commitOverAllocChanges(@ModelAttribute("ovAllocList") IDSOverAllocList overAllocList, Model model
+
+	) throws Exception
+	{
+
+		if (overAllocList != null)
+		{
+			if (overAllocList.getOverAllocList() != null)
+			{
+				pfDashBSrv.commitOverAllocationsSells(overAllocList);
+				/*
+				 * Reset PF DB Container
+				 */
+				pfDashBSrv.refreshSchemaPostTxn();
+			}
+		}
+
+		return reRouteDBVw;
 	}
 
 }

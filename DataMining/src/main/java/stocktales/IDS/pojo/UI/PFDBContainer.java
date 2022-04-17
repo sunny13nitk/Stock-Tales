@@ -27,4 +27,7 @@ public class PFDBContainer
 	private PFSchemaRebalUIStats schemaStats = null; // 6
 	private XIRRContainer xirrContainer = new XIRRContainer(); // 7
 
+	// On DEmand - Always clear on Invocation and filled in again
+	private IDS_PF_OverAllocsContainer overAllocsContainer = new IDS_PF_OverAllocsContainer();
+
 }

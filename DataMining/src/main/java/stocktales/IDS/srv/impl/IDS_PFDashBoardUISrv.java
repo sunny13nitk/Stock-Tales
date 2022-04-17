@@ -6,6 +6,10 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
 
 import org.apache.commons.math3.util.Precision;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +24,16 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import stocktales.IDS.enums.EnumSMABreach;
 import stocktales.IDS.model.pf.entity.HC;
+import stocktales.IDS.model.pf.entity.HCI;
 import stocktales.IDS.model.pf.entity.PFSchema;
 import stocktales.IDS.model.pf.repo.RepoHC;
 import stocktales.IDS.model.pf.repo.RepoHCI;
 import stocktales.IDS.model.pf.repo.RepoPFSchema;
 import stocktales.IDS.pojo.IDS_SMAPreview;
+import stocktales.IDS.pojo.UI.IDSOverAllocList;
 import stocktales.IDS.pojo.UI.IDS_BuyProposalBO;
+import stocktales.IDS.pojo.UI.IDS_PF_OverAllocations;
+import stocktales.IDS.pojo.UI.IDS_PF_OverAllocsContainer;
 import stocktales.IDS.pojo.UI.PFDBContainer;
 import stocktales.IDS.pojo.UI.PFHoldingsPL;
 import stocktales.IDS.pojo.UI.PFStatsH;
@@ -38,6 +46,7 @@ import stocktales.durations.UtilDurations;
 import stocktales.historicalPrices.utility.StockPricesUtility;
 import stocktales.maths.UtilPercentages;
 import stocktales.money.UtilDecimaltoMoneyString;
+import stocktales.usersPF.enums.EnumTxnType;
 import yahoofinance.Stock;
 
 @Getter
@@ -69,6 +78,9 @@ public class IDS_PFDashBoardUISrv implements stocktales.IDS.srv.intf.IDS_PFDashB
 
 	@Autowired
 	private NFSConfig nfsConfig;
+
+	@Autowired
+	private EntityManager entityManager;
 
 	/**
 	 * ----------------------- AUTOWIRED SECTION ENDS ----------
@@ -209,6 +221,206 @@ public class IDS_PFDashBoardUISrv implements stocktales.IDS.srv.intf.IDS_PFDashB
 
 	}
 
+	@Override
+	public boolean areOverAllocationsPresent()
+	{
+		boolean isPresent = false;
+
+		if (pfDBCtr.getHoldings() != null)
+		{
+			if (pfDBCtr.getHoldings().size() > 0)
+			{
+				if (pfDBCtr.getHoldings().stream().filter(w -> w.getDepAmnt() < 0).findAny().isPresent())
+				{
+					isPresent = true;
+				}
+			}
+		}
+
+		return isPresent;
+	}
+
+	@Override
+	public IDS_PF_OverAllocsContainer fetchOverAllocations()
+	{
+		/*
+		 * Clear Over Allocations
+		 */
+		this.pfDBCtr.getOverAllocsContainer().getOverAllocs().clear();
+		this.pfDBCtr.getOverAllocsContainer().setPlSum(0);
+		this.pfDBCtr.getOverAllocsContainer().setPlSumStr("");
+		this.pfDBCtr.getOverAllocsContainer().setTxnSum(0);
+		this.pfDBCtr.getOverAllocsContainer().setTxnSumStr("");
+
+		if (this.areOverAllocationsPresent())
+		{
+			List<PFHoldingsPL> overallocHoldings = this.pfDBCtr.getHoldings().stream().filter(x -> x.getDepAmnt() < 0)
+					.collect(Collectors.toList());
+			if (overallocHoldings != null)
+			{
+				if (overallocHoldings.size() > 0)
+				{
+					double txnAmount = 0;
+					for (PFHoldingsPL overlAllocHolding : overallocHoldings)
+					{
+						IDS_PF_OverAllocations ovAlloc = new IDS_PF_OverAllocations();
+						ovAlloc.setScCode(overlAllocHolding.getScCode());
+						ovAlloc.setCmp(overlAllocHolding.getCmp());
+						ovAlloc.setDepAmnt(overlAllocHolding.getDepAmnt());
+						ovAlloc.setDepAmntStr(overlAllocHolding.getDepAmntStr());
+						ovAlloc.setDepPer(overlAllocHolding.getDepPer());
+						ovAlloc.setUnitsSell((int) (overlAllocHolding.getDepAmnt() * -1 / ovAlloc.getCmp()));
+						ovAlloc.setPl(Precision.round(
+								((overlAllocHolding.getCmp() - overlAllocHolding.getPpu()) * ovAlloc.getUnitsSell()),
+								1));
+						ovAlloc.setSelect(true);
+
+						if (ovAlloc.getUnitsSell() > 0)
+						{
+							txnAmount += (ovAlloc.getUnitsSell() * ovAlloc.getCmp());
+							this.pfDBCtr.getOverAllocsContainer().getOverAllocs().add(ovAlloc);
+						}
+
+					}
+
+					this.pfDBCtr.getOverAllocsContainer().setPlSum(this.pfDBCtr.getOverAllocsContainer().getOverAllocs()
+							.stream().mapToDouble(IDS_PF_OverAllocations::getPl).sum());
+					this.pfDBCtr.getOverAllocsContainer().setPlSumStr(UtilDecimaltoMoneyString
+							.getMoneyStringforDecimal(this.pfDBCtr.getOverAllocsContainer().getPlSum(), 2));
+					this.pfDBCtr.getOverAllocsContainer().setTxnSum(Precision.round(txnAmount, 2));
+					this.pfDBCtr.getOverAllocsContainer()
+							.setTxnSumStr(UtilDecimaltoMoneyString.getMoneyStringforDecimal(txnAmount, 2));
+				}
+			}
+
+		}
+
+		return this.pfDBCtr.getOverAllocsContainer();
+
+	}
+
+	@Override
+	public IDS_PF_OverAllocsContainer refreshOverAllocationsPL(IDSOverAllocList viewList)
+	{
+		this.pfDBCtr.getOverAllocsContainer().getOverAllocs().clear();
+		this.pfDBCtr.getOverAllocsContainer().setPlSum(0);
+		this.pfDBCtr.getOverAllocsContainer().setPlSumStr("");
+		this.pfDBCtr.getOverAllocsContainer().setTxnSum(0);
+		this.pfDBCtr.getOverAllocsContainer().setTxnSumStr("");
+
+		if (this.areOverAllocationsPresent() && viewList != null)
+		{
+			if (viewList.getOverAllocList().size() > 0)
+			{
+				List<PFHoldingsPL> overallocHoldings = this.pfDBCtr.getHoldings().stream()
+						.filter(x -> x.getDepAmnt() < 0).collect(Collectors.toList());
+				if (overallocHoldings != null)
+				{
+					if (overallocHoldings.size() > 0)
+					{
+
+						double txnAmount = 0;
+						for (PFHoldingsPL overlAllocHolding : overallocHoldings)
+						{
+							IDS_PF_OverAllocations ovAlloc = new IDS_PF_OverAllocations();
+							ovAlloc.setScCode(overlAllocHolding.getScCode());
+							ovAlloc.setCmp(overlAllocHolding.getCmp());
+							ovAlloc.setDepAmnt(overlAllocHolding.getDepAmnt());
+							ovAlloc.setDepAmntStr(overlAllocHolding.getDepAmntStr());
+							ovAlloc.setDepPer(overlAllocHolding.getDepPer());
+
+							IDS_PF_OverAllocations vwHolding = viewList.getOverAllocList().stream()
+									.filter(x -> x.getScCode().equals(overlAllocHolding.getScCode())).findFirst().get();
+							if (vwHolding != null)
+							{
+								if (vwHolding.getUnitsSell() <= overlAllocHolding.getUnits())
+								{
+									ovAlloc.setUnitsSell(vwHolding.getUnitsSell());
+
+									ovAlloc.setPl(
+											Precision.round(((overlAllocHolding.getCmp() - overlAllocHolding.getPpu())
+													* ovAlloc.getUnitsSell()), 1));
+								} else
+								{
+									ovAlloc.setUnitsSell(
+											(int) (overlAllocHolding.getDepAmnt() * -1 / ovAlloc.getCmp()));
+									ovAlloc.setPl(
+											Precision.round(((overlAllocHolding.getCmp() - overlAllocHolding.getPpu())
+													* ovAlloc.getUnitsSell()), 1));
+								}
+								ovAlloc.setSelect(vwHolding.isSelect());
+							}
+
+							if (vwHolding.isSelect())
+							{
+								txnAmount += (ovAlloc.getUnitsSell() * ovAlloc.getCmp());
+							}
+
+							this.pfDBCtr.getOverAllocsContainer().getOverAllocs().add(ovAlloc);
+
+						}
+
+						this.pfDBCtr.getOverAllocsContainer()
+								.setPlSum(this.pfDBCtr.getOverAllocsContainer().getOverAllocs().stream()
+										.filter(w -> w.isSelect() == true).collect(Collectors.toList()).stream()
+										.mapToDouble(IDS_PF_OverAllocations::getPl).sum());
+
+						this.pfDBCtr.getOverAllocsContainer().setPlSumStr(UtilDecimaltoMoneyString
+								.getMoneyStringforDecimal(this.pfDBCtr.getOverAllocsContainer().getPlSum(), 2));
+
+						this.pfDBCtr.getOverAllocsContainer().setTxnSum(Precision.round(txnAmount, 2));
+						this.pfDBCtr.getOverAllocsContainer()
+								.setTxnSumStr(UtilDecimaltoMoneyString.getMoneyStringforDecimal(txnAmount, 2));
+					}
+				}
+			}
+
+		}
+
+		return this.pfDBCtr.getOverAllocsContainer();
+	}
+
+	@Override
+	@Transactional
+	public void commitOverAllocationsSells(IDSOverAllocList viewList) throws Exception
+	{
+		for (IDS_PF_OverAllocations overAlloc : viewList.getOverAllocList())
+		{
+			if (overAlloc.isSelect() && overAlloc.getUnitsSell() > 0)
+			{
+				// Commit the SAle
+				HCI sellTxn = new HCI();
+				sellTxn.setDate(UtilDurations.getTodaysDateOnly());
+				sellTxn.setSccode(overAlloc.getScCode());
+				sellTxn.setTxntype(EnumTxnType.Sell);
+				sellTxn.setSmarank(0);
+				sellTxn.setTxnppu(overAlloc.getCmp());
+				sellTxn.setUnits(overAlloc.getUnitsSell());
+
+				/*
+				 * Implicit Holistic Adjustment of Sales would happen
+				 */
+				corePFSrv.processCorePFTxn(sellTxn);
+
+			}
+		}
+
+	}
+
+	@Override
+	public void refreshSchemaPostTxn() throws Exception
+	{
+		if (entityManager != null)
+		{
+			entityManager.clear();
+			if (repoPFSchema != null && repoPFSchema.count() > 0)
+			{
+				this.pfDBCtr.setSchemaDetails(repoPFSchema.findAll());
+			}
+		}
+
+	}
+
 	/**
 	 * -------------------------------------------------------------------
 	 * ----------- PRIVATE METHODS ---------------------------------------
@@ -273,6 +485,7 @@ public class IDS_PFDashBoardUISrv implements stocktales.IDS.srv.intf.IDS_PFDashB
 			List<HC> pfHoldings = repoHC.findAll();
 			if (pfHoldings.size() > 0)
 			{
+
 				for (HC hc : pfHoldings)
 				{
 

@@ -523,6 +523,18 @@
 				</div>
 
 
+				<!--  Actions - Row Starts-->
+
+				<div th:if="${isOverAlloc == true}" class="row flex-align-start"
+					style="margin: 10px">
+					<a href="#" class="button primary rounded outline"
+						th:href="@{/ids/realign}" role="button"> <span
+						class="mif-tree icon" style="margin-left: 0px"></span> <span
+						style="margin-left: 3px">Re-Align</span>
+					</a>
+				</div>
+				<!-- Actions- Row ends -->
+
 				<!--Table Row - Starts  -->
 				<div class="row" style="margin-top: 20px">
 					<div class="colspan-12">
