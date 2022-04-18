@@ -262,7 +262,8 @@ public class IDSController
 					if (pfDashBSrv.getPFDashBoardContainer4mSession().getBuyProposals().getBuyP().size() > 0)
 					{
 						IDSBuyPropMassUpdateList props = new IDSBuyPropMassUpdateList();
-						for (IDS_SCBuyProposal prop : pfDashBSrv.getPFDashBoardContainer().getBuyProposals().getBuyP())
+						for (IDS_SCBuyProposal prop : pfDashBSrv.getPFDashBoardContainer4mSession().getBuyProposals()
+								.getBuyP())
 						{
 							HCI hci = new HCI();
 

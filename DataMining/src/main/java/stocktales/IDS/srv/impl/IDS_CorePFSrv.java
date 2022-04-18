@@ -117,6 +117,7 @@ public class IDS_CorePFSrv implements stocktales.IDS.srv.intf.IDS_CorePFSrv
 	private final String allocSumErr = "";
 
 	private static final long daysFreshBuyGap = 20;
+	private static final double minbuymnt = 3000;
 
 	@Override
 	public List<IDS_VPDetails> refreshPFVolatilityProfiles() throws Exception
@@ -565,6 +566,10 @@ public class IDS_CorePFSrv implements stocktales.IDS.srv.intf.IDS_CorePFSrv
 		{
 			if (buyProps.size() > 0)
 			{
+				/*
+				 * Remove Individual Purchases below minimum threshold amount
+				 */
+				buyProps.removeIf(s -> s.getAmount() < minbuymnt);
 				buyP.setBuyP(buyProps);
 				populateBuyProposalHeaderandSMA(buyP);
 				buyP.getBuyPHeader().setScurl(urls.getCorepfUrl());
