@@ -577,7 +577,7 @@ public class IDS_CorePFSrv implements stocktales.IDS.srv.intf.IDS_CorePFSrv
 					buyP.getBuyPHeader().setScurl(urls.getCorepfUrl());
 				} else
 				{
-					buyP = null;
+					buyP = new IDS_BuyProposalBO();
 				}
 
 			}
