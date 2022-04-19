@@ -197,14 +197,12 @@ public class IDSController
 
 		} else
 		{
-			// Get latest Buy Proposals from DB and also Update in PF Dashboard Container
-			IDS_BuyProposalBO proposal = pfCoreSrv.getBuyProposals();
+			IDS_BuyProposalBO proposal = pfDashBSrv.getPFDashBoardContainer4mSession().getBuyProposals();
+
 			if (proposal != null)
 			{
 				if (proposal.getBuyP().size() > 0)
 				{
-					// Synch to PF DashBoard Container
-					pfDashBSrv.refreshContainer4RoundTrip(proposal);
 
 					// Add to model
 					model.addAttribute("proposal", proposal);

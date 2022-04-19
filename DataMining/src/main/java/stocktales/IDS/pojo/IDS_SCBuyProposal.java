@@ -18,6 +18,8 @@ public class IDS_SCBuyProposal extends PFBuyPropEnh
 	private double ppuBuy;
 	private double amount;
 	private String amountStr;
+	private double depAmnt;
+	private String depAmntStr;
 	private EnumSMABreach smaBreach;
 
 }

@@ -123,9 +123,25 @@
 										<th style="text-align: center;">T. Units</th>
 										<th style="text-align: center;">N. PPU</th>
 										<th style="text-align: center;">E. PPU</th>
-										<th style="text-align: center;">Utilization</th>
+										<th style="text-align: center;">Avail. Rs.</th>
+										<th style="text-align: center;">% Utilz. <!--Buttons - Info  -->
+											<a style="margin-left: 12px; margin-top: -2px"
+											class="button info cycle mini" data-role="hint"
+											data-hint-text="Percentage Of Amount Utilized of Nett. Available Amount for Scrip in Current Buy Proposal."
+											data-cls-hint="bg-white fg-black drop-shadow"
+											data-hint-position="right"><span
+												class="mif-info  fg-white"></span></a> <!--Buttons - Info  -->
+										</th>
 										<th style="text-align: center;"></th>
-										<th style="text-align: center;">Amnt. POST</th>
+										<th style="text-align: center;">% POST <a
+											style="margin-left: 12px; margin-top: -2px"
+											class="button info cycle mini" data-role="hint"
+											data-hint-text="Percentage Amount available for Scrip based to Total Deployable Amount for Scrip (Schema) POST Current Buy Proposal execution."
+											data-cls-hint="bg-white fg-black drop-shadow"
+											data-hint-position="right"><span
+												class="mif-info  fg-white"></span></a> <!--Buttons - Info  -->
+
+										</th>
 										<th style="text-align: center;"></th>
 										<th style="text-align: center;">VP</th>
 
@@ -163,6 +179,10 @@
 										<td
 											style="text-align: center;; color: #4FB05C; font-weight: bolder;"
 											th:text="${proposal.getEffectppu()}"></td>
+
+										<td
+											style="text-align: center; color: #1B1B01; font-weight: bold; background: #EBFEFE"
+											th:text="${proposal.getDepAmntStr()}"></td>
 
 
 										<td style="text-align: center">

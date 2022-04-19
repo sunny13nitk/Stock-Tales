@@ -117,7 +117,7 @@ public class IDS_CorePFSrv implements stocktales.IDS.srv.intf.IDS_CorePFSrv
 	private final String allocSumErr = "";
 
 	private static final long daysFreshBuyGap = 20;
-	private static final double minbuymnt = 3000;
+	private static final double minbuymnt = 4000;
 
 	@Override
 	public List<IDS_VPDetails> refreshPFVolatilityProfiles() throws Exception
@@ -570,9 +570,15 @@ public class IDS_CorePFSrv implements stocktales.IDS.srv.intf.IDS_CorePFSrv
 				 * Remove Individual Purchases below minimum threshold amount
 				 */
 				buyProps.removeIf(s -> s.getAmount() < minbuymnt);
-				buyP.setBuyP(buyProps);
-				populateBuyProposalHeaderandSMA(buyP);
-				buyP.getBuyPHeader().setScurl(urls.getCorepfUrl());
+				if (buyProps.size() > 0)
+				{
+					buyP.setBuyP(buyProps);
+					populateBuyProposalHeaderandSMA(buyP);
+					buyP.getBuyPHeader().setScurl(urls.getCorepfUrl());
+				} else
+				{
+					buyP = null;
+				}
 
 			}
 		}
@@ -1293,7 +1299,7 @@ public class IDS_CorePFSrv implements stocktales.IDS.srv.intf.IDS_CorePFSrv
 		int units = (int) Precision.round((buyAmnt / cmp), 0);
 		double currInv = Precision.round((units * cmp), 0);
 		int totalUnits;
-		double nppu, utilz, effect, depAvail = 0, totals, post;
+		double nppu, utilz, effect, depAvail = 0, totals, post, depAmnt;
 
 		Optional<HC> currHoldingO = repoHC.findById(pfSchema.getSccode());
 		if (currHoldingO.isPresent())
@@ -1304,7 +1310,7 @@ public class IDS_CorePFSrv implements stocktales.IDS.srv.intf.IDS_CorePFSrv
 			utilz = Precision.round(((units * cmp) / pfSchema.getDepamnt()) * 100, 1);
 			totals = pfSchema.getDepamnt() + currHoldingO.get().getUnits() * currHoldingO.get().getPpu();
 			post = totals - (totalUnits * nppu);
-
+			depAmnt = pfSchema.getDepamnt();
 			depAvail = (post / totals) * 100;
 			effect = UtilPercentages.getPercentageDelta(currHoldingO.get().getPpu(), nppu, 1);
 		} else
@@ -1313,6 +1319,7 @@ public class IDS_CorePFSrv implements stocktales.IDS.srv.intf.IDS_CorePFSrv
 			nppu = cmp;
 			utilz = Precision.round(((totalUnits * nppu) / pfSchema.getDepamnt()) * 100, 1);
 			totals = pfSchema.getDepamnt();
+			depAmnt = pfSchema.getDepamnt();
 			post = totals - (units * cmp);
 			depAvail = (post / totals) * 100;
 
@@ -1327,6 +1334,8 @@ public class IDS_CorePFSrv implements stocktales.IDS.srv.intf.IDS_CorePFSrv
 		buyP.setPpuBuy(cmp);
 		buyP.setScCode(pfSchema.getSccode());
 		buyP.setSmaBreach(null);
+		buyP.setDepAmnt(depAmnt);
+		buyP.setDepAmntStr(UtilDecimaltoMoneyString.getMoneyStringforDecimal(depAmnt, 1));
 		buyP.setSmaBreach(smaBreach);
 		buyP.setTotalUnits(totalUnits);
 		buyP.setUtilz(utilz);
