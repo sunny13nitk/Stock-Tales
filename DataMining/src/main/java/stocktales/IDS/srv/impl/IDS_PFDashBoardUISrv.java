@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -329,34 +330,41 @@ public class IDS_PFDashBoardUISrv implements stocktales.IDS.srv.intf.IDS_PFDashB
 							ovAlloc.setDepAmntStr(overlAllocHolding.getDepAmntStr());
 							ovAlloc.setDepPer(overlAllocHolding.getDepPer());
 
-							IDS_PF_OverAllocations vwHolding = viewList.getOverAllocList().stream()
-									.filter(x -> x.getScCode().equals(overlAllocHolding.getScCode())).findFirst().get();
-							if (vwHolding != null)
+							try
 							{
-								if (vwHolding.getUnitsSell() <= overlAllocHolding.getUnits())
+								IDS_PF_OverAllocations vwHolding = viewList.getOverAllocList().stream()
+										.filter(x -> x.getScCode().equals(overlAllocHolding.getScCode())).findFirst()
+										.get();
+								if (vwHolding != null)
 								{
-									ovAlloc.setUnitsSell(vwHolding.getUnitsSell());
+									if (vwHolding.getUnitsSell() <= overlAllocHolding.getUnits())
+									{
+										ovAlloc.setUnitsSell(vwHolding.getUnitsSell());
 
-									ovAlloc.setPl(
-											Precision.round(((overlAllocHolding.getCmp() - overlAllocHolding.getPpu())
-													* ovAlloc.getUnitsSell()), 1));
-								} else
-								{
-									ovAlloc.setUnitsSell(
-											(int) (overlAllocHolding.getDepAmnt() * -1 / ovAlloc.getCmp()));
-									ovAlloc.setPl(
-											Precision.round(((overlAllocHolding.getCmp() - overlAllocHolding.getPpu())
-													* ovAlloc.getUnitsSell()), 1));
+										ovAlloc.setPl(Precision
+												.round(((overlAllocHolding.getCmp() - overlAllocHolding.getPpu())
+														* ovAlloc.getUnitsSell()), 1));
+									} else
+									{
+										ovAlloc.setUnitsSell(
+												(int) (overlAllocHolding.getDepAmnt() * -1 / ovAlloc.getCmp()));
+										ovAlloc.setPl(Precision
+												.round(((overlAllocHolding.getCmp() - overlAllocHolding.getPpu())
+														* ovAlloc.getUnitsSell()), 1));
+									}
+									ovAlloc.setSelect(vwHolding.isSelect());
 								}
-								ovAlloc.setSelect(vwHolding.isSelect());
-							}
 
-							if (vwHolding.isSelect())
+								if (vwHolding.isSelect())
+								{
+									txnAmount += (ovAlloc.getUnitsSell() * ovAlloc.getCmp());
+								}
+
+								this.pfDBCtr.getOverAllocsContainer().getOverAllocs().add(ovAlloc);
+							} catch (NoSuchElementException e)
 							{
-								txnAmount += (ovAlloc.getUnitsSell() * ovAlloc.getCmp());
+								// do Nothing
 							}
-
-							this.pfDBCtr.getOverAllocsContainer().getOverAllocs().add(ovAlloc);
 
 						}
 

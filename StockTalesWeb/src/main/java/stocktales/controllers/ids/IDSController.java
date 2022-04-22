@@ -3,6 +3,7 @@ package stocktales.controllers.ids;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -15,10 +16,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import stocktales.IDS.enums.EnumVolatilityProfile;
 import stocktales.IDS.model.pf.entity.HCI;
 import stocktales.IDS.model.pf.entity.MoneyBag;
+import stocktales.IDS.model.pf.entity.PriceAnomalies;
 import stocktales.IDS.model.pf.repo.RepoPFSchema;
+import stocktales.IDS.model.pf.repo.RepoPriceAnomalies;
 import stocktales.IDS.pojo.IDS_SCBuyProposal;
+import stocktales.IDS.pojo.IDS_VPDetails;
 import stocktales.IDS.pojo.PFSchemaRebalUI;
 import stocktales.IDS.pojo.UI.IDSBuyPropMassUpdateList;
 import stocktales.IDS.pojo.UI.IDSOverAllocList;
@@ -52,6 +57,9 @@ public class IDSController
 
 	@Autowired
 	private MessageSource msgSrc;
+
+	@Autowired
+	private RepoPriceAnomalies repoPriceAnaomalies;
 
 	@Autowired
 	private RepoPFSchema repoPFSchema;
@@ -157,7 +165,18 @@ public class IDSController
 
 		if (pfCoreSrv != null && idsCfgSrv != null)
 		{
-			model.addAttribute("vp", pfCoreSrv.refreshPFVolatilityProfiles());
+			List<IDS_VPDetails> vpList = pfCoreSrv.refreshPFVolatilityProfiles();
+			if (vpList != null)
+			{
+				if (vpList.size() > 0)
+				{
+					/*
+					 * Remove Default Profiles as they Distort the View
+					 */
+					vpList.removeIf(d -> d.getVolprofile() == EnumVolatilityProfile.Default);
+				}
+			}
+			model.addAttribute("vp", vpList);
 			model.addAttribute("smaWts", idsCfgSrv.getSMAWts());
 			model.addAttribute("vpDeps", idsCfgSrv.getVPDeployments());
 			model.addAttribute("vpRange", idsCfgSrv.getVPRange());
@@ -251,6 +270,7 @@ public class IDSController
 	@GetMapping("/buyP/edit")
 	public String showbuyProposalMassUpdate(Model model) throws Exception
 	{
+		List<PriceAnomalies> anomalies = null;
 		if (pfDashBSrv != null)
 		{
 			if (pfDashBSrv.getPFDashBoardContainer4mSession().getBuyProposals() != null)
@@ -259,19 +279,43 @@ public class IDSController
 				{
 					if (pfDashBSrv.getPFDashBoardContainer4mSession().getBuyProposals().getBuyP().size() > 0)
 					{
+						if (repoPriceAnaomalies.count() > 0)
+						{
+							anomalies = repoPriceAnaomalies.findAll();
+						}
 						IDSBuyPropMassUpdateList props = new IDSBuyPropMassUpdateList();
 						for (IDS_SCBuyProposal prop : pfDashBSrv.getPFDashBoardContainer4mSession().getBuyProposals()
 								.getBuyP())
 						{
-							HCI hci = new HCI();
+							if (anomalies != null)
+							{
+								Optional<PriceAnomalies> anomalyO = anomalies.stream()
+										.filter(x -> x.getSccode().equals(prop.getScCode())).findFirst();
+								if (!anomalyO.isPresent())
+								{
+									HCI hci = new HCI();
 
-							hci.setTxntype(EnumTxnType.Buy);
-							hci.setSccode(prop.getScCode());
-							hci.setSmarank(prop.getSmaBreach().ordinal());
-							hci.setTxnppu(prop.getPpuBuy());
-							hci.setUnits(prop.getNumUnitsBuy());
+									hci.setTxntype(EnumTxnType.Buy);
+									hci.setSccode(prop.getScCode());
+									hci.setSmarank(prop.getSmaBreach().ordinal());
+									hci.setTxnppu(prop.getPpuBuy());
+									hci.setUnits(prop.getNumUnitsBuy());
 
-							props.getBuyList().add(hci);
+									props.getBuyList().add(hci);
+								}
+
+							} else
+							{
+								HCI hci = new HCI();
+
+								hci.setTxntype(EnumTxnType.Buy);
+								hci.setSccode(prop.getScCode());
+								hci.setSmarank(prop.getSmaBreach().ordinal());
+								hci.setTxnppu(prop.getPpuBuy());
+								hci.setUnits(prop.getNumUnitsBuy());
+
+								props.getBuyList().add(hci);
+							}
 
 						}
 						model.addAttribute("propList", props);

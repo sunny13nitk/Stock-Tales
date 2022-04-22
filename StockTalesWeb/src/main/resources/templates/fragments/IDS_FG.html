@@ -18,7 +18,7 @@
 
 		</div>
 
-		<div class="cell-8 flex-align-center" style="margin-left: 10px;">
+		<div class="cell-7 flex-align-center" style="margin-left: 10px;">
 			<ul class="t-menu open horizontal compact">
 				<li><a th:href="@{'/ids/buyP'}" data-role="hint"
 					data-hint-position="bottom" data-cls-hint="bg-white fg-dark"
@@ -47,11 +47,20 @@
 			</ul>
 		</div>
 
-		<div class="cell flex-align-end">
-			<a href="#" class="button steel rounded outline"
-				style="border: none;" th:href="@{/}" role="button"> <span
-				class="mif-home  mif-3x"></span>
+		<div class="cell-2 flex-align-end">
+
+			<a href="https://in.tradingview.com/chart/"
+				class="button steel rounded outline" th:target="_blank"
+				style="border: none; margin: 3px;" role="button"> <span
+				class="mif-chart-dots mif-2x "></span>
+			</a> <a href="#" class="button steel rounded outline"
+				style="border: none; margin: 3px" th:href="@{/}" role="button">
+				<span class="mif-home  mif-3x"></span>
 			</a>
+
+
+
+
 		</div>
 	</div>
 

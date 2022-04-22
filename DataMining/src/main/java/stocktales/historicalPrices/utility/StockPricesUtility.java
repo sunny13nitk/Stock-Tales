@@ -91,14 +91,14 @@ public class StockPricesUtility
 					if (HistQuotes.size() > 0)
 					{
 						// Got History - sort it in Descending Order by Date
-						descHQ = HistQuotes.stream().filter(x -> x.getClose() != null).collect(Collectors.toList());
+						descHQ = HistQuotes.stream().filter(x -> x.getAdjClose() != null).collect(Collectors.toList());
 						descHQ = descHQ.stream().sorted(Comparator.comparing(HistoricalQuote::getDate).reversed())
 								.collect(Collectors.toList());
 						topNHQ = descHQ.stream().limit(numDaysSMA).collect(Collectors.toList());
 
 						if (topNHQ.size() > 0)
 						{
-							avgprice = topNHQ.stream().map(HistoricalQuote::getClose)
+							avgprice = topNHQ.stream().map(HistoricalQuote::getAdjClose)
 									.reduce(BigDecimal.ZERO, BigDecimal::add)
 									.divide(new BigDecimal(topNHQ.size()), RoundingMode.CEILING).doubleValue();
 
@@ -216,12 +216,12 @@ public class StockPricesUtility
 										{
 											if (hQuote != null)
 											{
-												if (hQuote.getDate() != null && hQuote.getClose() != null)
+												if (hQuote.getDate() != null && hQuote.getAdjClose() != null)
 												{
 													stocktales.historicalPrices.pojo.HistoricalQuote newQuote = new stocktales.historicalPrices.pojo.HistoricalQuote(
 															format1.format(hQuote.getDate().getTime()),
 															hQuote.getDate().getTime(),
-															Precision.round(hQuote.getClose().doubleValue(), 1));
+															Precision.round(hQuote.getAdjClose().doubleValue(), 1));
 													stHist.getPriceHistory().add(newQuote);
 												}
 											}
@@ -306,7 +306,7 @@ public class StockPricesUtility
 										{
 											if (hQuote != null)
 											{
-												if (hQuote.getDate() != null && hQuote.getClose() != null)
+												if (hQuote.getDate() != null && hQuote.getAdjClose() != null)
 												{
 													stHQuote.getQuotesH().add(hQuote);
 												}
@@ -419,9 +419,9 @@ public class StockPricesUtility
 
 										scReturns.getReturns()
 												.add(new IntvPriceCAGR(amount[i] + intvSuffix,
-														Precision.round(hQuote.getClose().doubleValue(), 2),
+														Precision.round(hQuote.getAdjClose().doubleValue(), 2),
 														Precision.round(UtilCAGRCalculation.calculateCAGR(
-																Precision.round(hQuote.getClose().doubleValue(), 2),
+																Precision.round(hQuote.getAdjClose().doubleValue(), 2),
 																scReturns.getCmp(), amount[i]), 2)));
 									}
 
@@ -494,7 +494,7 @@ public class StockPricesUtility
 						{
 							if (hQuote != null)
 							{
-								if (hQuote.getDate() != null && hQuote.getClose() != null)
+								if (hQuote.getDate() != null && hQuote.getAdjClose() != null)
 								{
 									stockHPrices.getQuotesH().add(hQuote);
 								}
@@ -568,7 +568,7 @@ public class StockPricesUtility
 						{
 							if (hQuote != null)
 							{
-								if (hQuote.getDate() != null && hQuote.getClose() != null)
+								if (hQuote.getDate() != null && hQuote.getAdjClose() != null)
 								{
 									stockHPrices.getQuotesH().add(hQuote);
 								}
@@ -621,9 +621,9 @@ public class StockPricesUtility
 
 						if (hQuote != null)
 						{
-							if (hQuote.getDate() != null && hQuote.getClose() != null)
+							if (hQuote.getDate() != null && hQuote.getAdjClose() != null)
 							{
-								price = hQuote.getClose().doubleValue();
+								price = hQuote.getAdjClose().doubleValue();
 							}
 						}
 
@@ -697,11 +697,11 @@ public class StockPricesUtility
 							{
 								if (hQuote != null)
 								{
-									if (hQuote.getDate() != null && hQuote.getClose() != null)
+									if (hQuote.getDate() != null && hQuote.getAdjClose() != null)
 									{
 										stocktales.historicalPrices.pojo.HistoricalQuote newQuote = new stocktales.historicalPrices.pojo.HistoricalQuote(
 												format1.format(hQuote.getDate().getTime()), hQuote.getDate().getTime(),
-												Precision.round(hQuote.getClose().doubleValue(), 1));
+												Precision.round(hQuote.getAdjClose().doubleValue(), 1));
 										stockHistory.getPriceHistory().add(newQuote);
 									}
 								}
@@ -900,11 +900,11 @@ public class StockPricesUtility
 							{
 								if (hQuote != null)
 								{
-									if (hQuote.getDate() != null && hQuote.getClose() != null)
+									if (hQuote.getDate() != null && hQuote.getAdjClose() != null)
 									{
 										stocktales.historicalPrices.pojo.HistoricalQuote newQuote = new stocktales.historicalPrices.pojo.HistoricalQuote(
 												format1.format(hQuote.getDate().getTime()), hQuote.getDate().getTime(),
-												Precision.round(hQuote.getClose().doubleValue(), 1));
+												Precision.round(hQuote.getAdjClose().doubleValue(), 1));
 										stockPrices.getPriceHistory().add(newQuote);
 									}
 								}
@@ -985,12 +985,12 @@ public class StockPricesUtility
 								{
 									if (hQuote != null)
 									{
-										if (hQuote.getDate() != null && hQuote.getClose() != null)
+										if (hQuote.getDate() != null && hQuote.getAdjClose() != null)
 										{
 											stocktales.historicalPrices.pojo.HistoricalQuote newQuote = new stocktales.historicalPrices.pojo.HistoricalQuote(
 													format1.format(hQuote.getDate().getTime()),
 													hQuote.getDate().getTime(),
-													Precision.round(hQuote.getClose().doubleValue(), 1));
+													Precision.round(hQuote.getAdjClose().doubleValue(), 1));
 											stockPrices.getPriceHistory().add(newQuote);
 										}
 									}
@@ -1074,12 +1074,12 @@ public class StockPricesUtility
 								{
 									if (hQuote != null)
 									{
-										if (hQuote.getDate() != null && hQuote.getClose() != null)
+										if (hQuote.getDate() != null && hQuote.getAdjClose() != null)
 										{
 											stocktales.historicalPrices.pojo.HistoricalQuote newQuote = new stocktales.historicalPrices.pojo.HistoricalQuote(
 													format1.format(hQuote.getDate().getTime()),
 													hQuote.getDate().getTime(),
-													Precision.round(hQuote.getClose().doubleValue(), 1));
+													Precision.round(hQuote.getAdjClose().doubleValue(), 1));
 											stockPrices.getPriceHistory().add(newQuote);
 										}
 									}
@@ -1169,12 +1169,12 @@ public class StockPricesUtility
 								{
 									if (hQuote != null)
 									{
-										if (hQuote.getDate() != null && hQuote.getClose() != null)
+										if (hQuote.getDate() != null && hQuote.getAdjClose() != null)
 										{
 											stocktales.historicalPrices.pojo.HistoricalQuote newQuote = new stocktales.historicalPrices.pojo.HistoricalQuote(
 													format1.format(hQuote.getDate().getTime()),
 													hQuote.getDate().getTime(),
-													Precision.round(hQuote.getClose().doubleValue(), 1));
+													Precision.round(hQuote.getAdjClose().doubleValue(), 1));
 											stockPrices.getPriceHistory().add(newQuote);
 										}
 									}
@@ -1415,7 +1415,7 @@ public class StockPricesUtility
 									List<HistoricalQuote> subList = historicalPrices.subList(daystart, loopupto);
 
 									// Get Avg SMa Price for the sublist
-									double SMA = Precision.round(subList.stream().map(HistoricalQuote::getClose)
+									double SMA = Precision.round(subList.stream().map(HistoricalQuote::getAdjClose)
 											.reduce(BigDecimal.ZERO, BigDecimal::add)
 											.divide(new BigDecimal(subList.size()), RoundingMode.CEILING).doubleValue(),
 											2);
@@ -1459,7 +1459,7 @@ public class StockPricesUtility
 							{
 								IDS_SMASpread smaSpread = new IDS_SMASpread();
 								smaSpread.setDate(hQ.getDate().getTime());
-								smaSpread.setClosePrice(Precision.round(hQ.getClose().doubleValue(), 2));
+								smaSpread.setClosePrice(Precision.round(hQ.getAdjClose().doubleValue(), 2));
 								for (int i = 0; i < smaIntervals.length; i++)
 								{
 									if (loopPass > smaIntervals[i])
@@ -1559,7 +1559,7 @@ public class StockPricesUtility
 									List<HistoricalQuote> subList = historicalPrices.subList(daystart, loopupto);
 
 									// Get Avg SMa Price for the sublist
-									double SMA = Precision.round(subList.stream().map(HistoricalQuote::getClose)
+									double SMA = Precision.round(subList.stream().map(HistoricalQuote::getAdjClose)
 											.reduce(BigDecimal.ZERO, BigDecimal::add)
 											.divide(new BigDecimal(subList.size()), RoundingMode.CEILING).doubleValue(),
 											2);
@@ -1603,7 +1603,7 @@ public class StockPricesUtility
 							{
 								IDS_SMASpread smaSpread = new IDS_SMASpread();
 								smaSpread.setDate(hQ.getDate().getTime());
-								smaSpread.setClosePrice(Precision.round(hQ.getClose().doubleValue(), 2));
+								smaSpread.setClosePrice(Precision.round(hQ.getAdjClose().doubleValue(), 2));
 								for (int i = 0; i < smaIntervals.length; i++)
 								{
 									if (loopPass > smaIntervals[i])
@@ -1700,7 +1700,7 @@ public class StockPricesUtility
 									List<HistoricalQuote> subList = historicalPrices.subList(daystart, loopupto);
 
 									// Get Avg SMa Price for the sublist
-									double SMA = Precision.round(subList.stream().map(HistoricalQuote::getClose)
+									double SMA = Precision.round(subList.stream().map(HistoricalQuote::getAdjClose)
 											.reduce(BigDecimal.ZERO, BigDecimal::add)
 											.divide(new BigDecimal(subList.size()), RoundingMode.CEILING).doubleValue(),
 											2);
@@ -1744,7 +1744,7 @@ public class StockPricesUtility
 							{
 								IDS_SMASpread smaSpread = new IDS_SMASpread();
 								smaSpread.setDate(hQ.getDate().getTime());
-								smaSpread.setClosePrice(Precision.round(hQ.getClose().doubleValue(), 2));
+								smaSpread.setClosePrice(Precision.round(hQ.getAdjClose().doubleValue(), 2));
 								for (int i = 0; i < smaIntervals.length; i++)
 								{
 									if (loopPass > smaIntervals[i])
