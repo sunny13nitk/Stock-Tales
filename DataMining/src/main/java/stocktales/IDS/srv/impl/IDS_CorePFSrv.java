@@ -55,6 +55,7 @@ import stocktales.IDS.pojo.IDS_ScripUnits;
 import stocktales.IDS.pojo.IDS_VPDetails;
 import stocktales.IDS.pojo.XIRRContainer;
 import stocktales.IDS.pojo.UI.IDS_BuyProposalBO;
+import stocktales.IDS.pojo.UI.IDS_PFTxn_UI;
 import stocktales.IDS.pojo.UI.IDS_PF_BuyPHeader;
 import stocktales.IDS.pojo.UI.IDS_Scrip_Details;
 import stocktales.IDS.srv.intf.IDS_DeploymentAmntSrv;
@@ -1124,8 +1125,11 @@ public class IDS_CorePFSrv implements stocktales.IDS.srv.intf.IDS_CorePFSrv
 	@Override
 	public IDS_Scrip_Details getScripDetails4Scrip(String scCode) throws Exception
 	{
-		// TODO Auto-generated method stub
-		return null;
+		IDS_Scrip_Details scDetails = null;
+
+		scDetails = populateDetails4Scrip(scCode);
+
+		return scDetails;
 	}
 
 	@Override
@@ -1283,6 +1287,16 @@ public class IDS_CorePFSrv implements stocktales.IDS.srv.intf.IDS_CorePFSrv
 
 	}
 
+	@Override
+	public IDS_PFTxn_UI getScripTxnDetails(String scCode) throws Exception
+	{
+		IDS_PFTxn_UI scDetails = null;
+
+		scDetails = populateTxnDetails4Scrip(scCode);
+
+		return scDetails;
+	}
+
 	/*
 	 * --------------------------------------------------- ---------------------
 	 * ------------------------------ PRIVATE SECTION -------------------------
@@ -1406,6 +1420,51 @@ public class IDS_CorePFSrv implements stocktales.IDS.srv.intf.IDS_CorePFSrv
 		}
 
 		return value;
+	}
+
+	private IDS_Scrip_Details populateDetails4Scrip(String scCode)
+	{
+		IDS_Scrip_Details scDetails = null;
+
+		if (StringUtils.hasText(scCode))
+		{
+			if (repoHC != null)
+			{
+				Optional<HC> holdingO = repoHC.findById(scCode);
+				if (holdingO.isPresent())
+				{
+					scDetails = new IDS_Scrip_Details();
+					scDetails.getFormData().setScCode(scCode);
+					scDetails.getFormData().setNumSharesTxn(holdingO.get().getUnits());
+					scDetails.getFormData().setPpuTxn(holdingO.get().getPpu());
+				}
+			}
+		}
+
+		return scDetails;
+	}
+
+	private IDS_PFTxn_UI populateTxnDetails4Scrip(String scCode) throws Exception
+	{
+		IDS_PFTxn_UI scTxnDetails = null;
+
+		if (StringUtils.hasText(scCode))
+		{
+			if (repoHC != null)
+			{
+				Optional<HC> holdingO = repoHC.findById(scCode);
+				if (holdingO.isPresent())
+				{
+					scTxnDetails = new IDS_PFTxn_UI();
+					scTxnDetails.setScCode(scCode);
+					scTxnDetails.setNumSharesTxn(holdingO.get().getUnits());
+					scTxnDetails.setPpuTxn(Precision
+							.round(StockPricesUtility.getQuoteforScrip(scCode).getQuote().getPrice().doubleValue(), 2));
+				}
+			}
+		}
+
+		return scTxnDetails;
 	}
 
 }

@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -14,9 +15,11 @@ import javax.transaction.Transactional;
 
 import org.apache.commons.math3.util.Precision;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.context.WebApplicationContext;
 
 import lombok.AllArgsConstructor;
@@ -26,24 +29,31 @@ import lombok.Setter;
 import stocktales.IDS.enums.EnumSMABreach;
 import stocktales.IDS.model.pf.entity.HC;
 import stocktales.IDS.model.pf.entity.HCI;
+import stocktales.IDS.model.pf.entity.MoneyBag;
 import stocktales.IDS.model.pf.entity.PFSchema;
 import stocktales.IDS.model.pf.repo.RepoHC;
 import stocktales.IDS.model.pf.repo.RepoHCI;
 import stocktales.IDS.model.pf.repo.RepoPFSchema;
+import stocktales.IDS.pojo.IDS_SC_BonusIP;
+import stocktales.IDS.pojo.IDS_SC_SplitIP;
 import stocktales.IDS.pojo.IDS_SMAPreview;
 import stocktales.IDS.pojo.UI.IDSOverAllocList;
 import stocktales.IDS.pojo.UI.IDS_BuyProposalBO;
+import stocktales.IDS.pojo.UI.IDS_PFTxn_UI;
 import stocktales.IDS.pojo.UI.IDS_PF_OverAllocations;
 import stocktales.IDS.pojo.UI.IDS_PF_OverAllocsContainer;
 import stocktales.IDS.pojo.UI.PFDBContainer;
 import stocktales.IDS.pojo.UI.PFHoldingsPL;
 import stocktales.IDS.pojo.UI.PFStatsH;
 import stocktales.IDS.pojo.UI.ScripPLSS;
+import stocktales.IDS.srv.intf.IDS_MoneyBagSrv;
 import stocktales.IDS.srv.intf.IDS_PFSchema_REbalUI_Srv;
+import stocktales.IDS.srv.intf.IDS_PFTxn_Validator;
 import stocktales.IDS.utility.SMASortUtility;
 import stocktales.NFS.enums.EnumMCapClassification;
 import stocktales.NFS.model.config.NFSConfig;
 import stocktales.durations.UtilDurations;
+import stocktales.exceptions.PFTxnInvalidException;
 import stocktales.historicalPrices.utility.StockPricesUtility;
 import stocktales.maths.UtilPercentages;
 import stocktales.money.UtilDecimaltoMoneyString;
@@ -62,6 +72,13 @@ public class IDS_PFDashBoardUISrv implements stocktales.IDS.srv.intf.IDS_PFDashB
 	/**
 	 * ----------------------- AUTOWIRED SECTION STARTS --------
 	 */
+
+	@Autowired
+	private MessageSource msgSrc;
+
+	@Autowired
+	private IDS_PFTxn_Validator txnValidSrv;
+
 	@Autowired
 	private RepoHC repoHC;
 
@@ -79,6 +96,9 @@ public class IDS_PFDashBoardUISrv implements stocktales.IDS.srv.intf.IDS_PFDashB
 
 	@Autowired
 	private NFSConfig nfsConfig;
+
+	@Autowired
+	private IDS_MoneyBagSrv mbSrv;
 
 	@Autowired
 	private EntityManager entityManager;
@@ -424,6 +444,205 @@ public class IDS_PFDashBoardUISrv implements stocktales.IDS.srv.intf.IDS_PFDashB
 			if (repoPFSchema != null && repoPFSchema.count() > 0)
 			{
 				this.pfDBCtr.setSchemaDetails(repoPFSchema.findAll());
+			}
+		}
+
+	}
+
+	@Override
+	@Transactional
+	public void processUIPFTxn(IDS_PFTxn_UI pfTxnUI) throws Exception
+	{
+		if (pfTxnUI != null)
+		{
+			boolean rankFoundinSess = false;
+			if (StringUtils.hasText(pfTxnUI.getScCode()))
+			{
+				switch (pfTxnUI.getTxnType())
+				{
+				case Buy:
+					if (pfTxnUI.getNumSharesTxn() > 0 && pfTxnUI.getPpuTxn() > 0)
+					{
+						HCI pfTxn = new HCI();
+						pfTxn.setSccode(pfTxnUI.getScCode());
+						/*
+						 * Get Current SMA of the Scrip as per CMP
+						 */
+						if (this.getPFDashBoardContainer4mSession() != null)
+						{
+							if (this.getPFDashBoardContainer4mSession().getHoldings() != null)
+							{
+								if (this.getPFDashBoardContainer4mSession().getHoldings().size() > 0)
+								{
+									Optional<PFHoldingsPL> holdingSessO = this.getPFDashBoardContainer4mSession()
+											.getHoldings().stream()
+											.filter(f -> f.getScCode().equals(pfTxnUI.getScCode())).findFirst();
+									if (holdingSessO.isPresent())
+									{
+										pfTxn.setSmarank(holdingSessO.get().getSmaLvl().ordinal());
+										rankFoundinSess = true;
+									}
+
+								}
+							}
+						}
+						if (!rankFoundinSess)
+						{
+							pfTxn.setSmarank(0);
+						}
+
+						pfTxn.setTxnppu(pfTxnUI.getPpuTxn());
+						pfTxn.setUnits(pfTxnUI.getNumSharesTxn());
+						pfTxn.setTxntype(EnumTxnType.Buy);
+						pfTxn.setDate(UtilDurations.getTodaysDateOnly());
+
+						/**
+						 * Validator Explicitly called as in LS_PFTxn it is not possible to throw and
+						 * thus capture the exception
+						 */
+
+						if (txnValidSrv.isTxnValid(pfTxn))
+						{
+
+							/**
+							 * Process the Transaction - Core PF Service
+							 */
+							corePFSrv.processCorePFTxn(pfTxn);
+						}
+
+					} else
+					{
+						throw new PFTxnInvalidException("Quantity & Buy Price/Unit should be > 0 for Purchase Txn.");
+
+					}
+
+					break;
+
+				case Sell:
+					if (pfTxnUI.getNumSharesTxn() > 0 && pfTxnUI.getPpuTxn() > 0)
+					{
+						HCI pfTxn = new HCI();
+						pfTxn.setSccode(pfTxnUI.getScCode());
+						/*
+						 * Get Current SMA of the Scrip as per CMP
+						 */
+						if (this.getPFDashBoardContainer4mSession() != null)
+						{
+							if (this.getPFDashBoardContainer4mSession().getHoldings() != null)
+							{
+								if (this.getPFDashBoardContainer4mSession().getHoldings().size() > 0)
+								{
+									Optional<PFHoldingsPL> holdingSessO = this.getPFDashBoardContainer4mSession()
+											.getHoldings().stream()
+											.filter(f -> f.getScCode().equals(pfTxnUI.getScCode())).findFirst();
+									if (holdingSessO.isPresent())
+									{
+										pfTxn.setSmarank(holdingSessO.get().getSmaLvl().ordinal());
+										rankFoundinSess = true;
+									}
+
+								}
+							}
+						}
+						if (!rankFoundinSess)
+						{
+							pfTxn.setSmarank(0);
+						}
+
+						pfTxn.setTxnppu(pfTxnUI.getPpuTxn());
+						pfTxn.setUnits(pfTxnUI.getNumSharesTxn());
+						pfTxn.setTxntype(EnumTxnType.Sell);
+						pfTxn.setDate(UtilDurations.getTodaysDateOnly());
+
+						/**
+						 * Validator Explicitly called as in LS_PFTxn it is not possible to throw and
+						 * thus capture the exception
+						 */
+						if (txnValidSrv.isTxnValid(pfTxn))
+						{
+
+							/**
+							 * Process the Transaction - Core PF Service
+							 */
+							corePFSrv.processCorePFTxn(pfTxn);
+						}
+
+					} else
+					{
+						throw new PFTxnInvalidException("Quantity & Buy Price/Unit should be > 0 for Sell Txn.");
+
+					}
+					break;
+
+				case Dividend:
+					if (pfTxnUI.getNumSharesTxn() > 0 && pfTxnUI.getDivPS() > 0)
+					{
+						if (repoHC != null)
+						{
+							Optional<HC> holdingO = repoHC.findById(pfTxnUI.getScCode());
+							if (holdingO.isPresent())
+							{
+								HC holding = holdingO.get();
+								if (holding.getUnits() < pfTxnUI.getNumSharesTxn())
+								{
+									// Trigger Custom Exception
+									throw new PFTxnInvalidException(msgSrc.getMessage("pfTxn.divQty", new Object[]
+									{ pfTxnUI.getNumSharesTxn(), holding.getUnits() }, Locale.ENGLISH));
+								} else
+								{
+									double CMP = StockPricesUtility.getQuoteforScrip(pfTxnUI.getScCode()).getQuote()
+											.getPrice().doubleValue();
+
+									if ((CMP * .2) <= pfTxnUI.getDivPS())
+									{
+										// Trigger Custom Exception
+										throw new PFTxnInvalidException(msgSrc.getMessage("pfTxn.divAmnt", new Object[]
+										{ pfTxnUI.getDivPS(), (CMP * .2) }, Locale.ENGLISH));
+									} else
+									{
+										MoneyBag mbTxn = new MoneyBag();
+										mbTxn.setType(stocktales.IDS.enums.EnumTxnType.Dividend);
+										mbTxn.setDate(UtilDurations.getTodaysDateOnly());
+										mbTxn.setRemarks("Dividend : " + pfTxnUI.getScCode());
+										mbTxn.setAmount(
+												Precision.round(pfTxnUI.getDivPS() * pfTxnUI.getNumSharesTxn(), 1));
+										mbSrv.processMBagTxn(mbTxn);
+									}
+
+								}
+							}
+						}
+
+					} else
+					{
+
+						throw new PFTxnInvalidException(
+								"Quantity & Dividend per share should be > 0 for Dividend Txn.");
+
+					}
+					break;
+
+				case Split:
+					if (pfTxnUI.getOneToSplitIntoSharesNum() > 1)
+					{
+						IDS_SC_SplitIP splitIP = new IDS_SC_SplitIP(pfTxnUI.getScCode(),
+								pfTxnUI.getOneToSplitIntoSharesNum());
+						corePFSrv.adjustPF4StockSplit(splitIP);
+					}
+
+					break;
+
+				case Bonus:
+					if (pfTxnUI.getForeveryNShares() > 1 && pfTxnUI.getToGetSharesNum() > 1)
+					{
+						IDS_SC_BonusIP bonusIP = new IDS_SC_BonusIP(pfTxnUI.getScCode(), pfTxnUI.getForeveryNShares(),
+								pfTxnUI.getToGetSharesNum());
+						corePFSrv.adjustPF4StockBonus(bonusIP);
+					}
+
+				default:
+					break;
+				}
 			}
 		}
 

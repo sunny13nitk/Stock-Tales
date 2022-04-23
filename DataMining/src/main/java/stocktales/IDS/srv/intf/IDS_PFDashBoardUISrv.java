@@ -2,6 +2,7 @@ package stocktales.IDS.srv.intf;
 
 import stocktales.IDS.pojo.UI.IDSOverAllocList;
 import stocktales.IDS.pojo.UI.IDS_BuyProposalBO;
+import stocktales.IDS.pojo.UI.IDS_PFTxn_UI;
 import stocktales.IDS.pojo.UI.IDS_PF_OverAllocsContainer;
 import stocktales.IDS.pojo.UI.PFDBContainer;
 
@@ -54,5 +55,13 @@ public interface IDS_PFDashBoardUISrv
 	public void refreshContainer4Txn() throws Exception;
 
 	public void refreshSchemaPostTxn() throws Exception;
+
+	/**
+	 * Process UI Adhoc Transaction that might include Buy/Sell/Dividend/Split/Bonus
+	 * 
+	 * @param pfTxnUI: UI Container for Txn. Commit Filled In
+	 * @throws Exception
+	 */
+	public void processUIPFTxn(IDS_PFTxn_UI pfTxnUI) throws Exception;
 
 }

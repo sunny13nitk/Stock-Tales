@@ -249,7 +249,6 @@ public class LS_CorePFTxn implements ApplicationListener<EV_PFTxn>
 				}
 			}
 		}
-
 	}
 
 	/**

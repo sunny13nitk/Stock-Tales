@@ -12,6 +12,7 @@ import stocktales.IDS.pojo.IDS_ScAllocMassUpdate;
 import stocktales.IDS.pojo.IDS_VPDetails;
 import stocktales.IDS.pojo.XIRRContainer;
 import stocktales.IDS.pojo.UI.IDS_BuyProposalBO;
+import stocktales.IDS.pojo.UI.IDS_PFTxn_UI;
 import stocktales.IDS.pojo.UI.IDS_Scrip_Details;
 
 public interface IDS_CorePFSrv
@@ -134,5 +135,15 @@ public interface IDS_CorePFSrv
 	 * @throws Exception
 	 */
 	public void adjustPF4StockBonus(IDS_SC_BonusIP scBonusIP) throws Exception;
+
+	/**
+	 * Get Transaction specific Details for Scrip for UI Adhoc Transaction that
+	 * might include Buy/Sell/Dividend/Split/Bonus
+	 * 
+	 * @param scCode - Scrip to be Transacted
+	 * @return - IDS_PFTxn_UI : UI Container for Txn. Initiation
+	 * @throws Exception
+	 */
+	public IDS_PFTxn_UI getScripTxnDetails(String scCode) throws Exception;
 
 }

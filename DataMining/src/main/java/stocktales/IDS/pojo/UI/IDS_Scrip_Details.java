@@ -1,5 +1,6 @@
 package stocktales.IDS.pojo.UI;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -23,14 +24,16 @@ public class IDS_Scrip_Details
 
 	private IDS_SMADeltas cmpDeltas;
 
-	private List<HCI> txns;
+	private List<HCI> txns = new ArrayList<HCI>();
 
-	private List<IDS_SCSellDetails> sellTxns;
+	private List<IDS_SCSellDetails> sellTxns = new ArrayList<IDS_SCSellDetails>();
 
-	private List<IDS_SCBuyDetails> buyTxns;
+	private List<IDS_SCBuyDetails> buyTxns = new ArrayList<IDS_SCBuyDetails>();
 
-	private List<DateAmount> buyChartData;
+	private List<DateAmount> buyChartData = new ArrayList<DateAmount>();
 
-	private List<DateAmount> sellChartData;
+	private List<DateAmount> sellChartData = new ArrayList<DateAmount>();;
+
+	private IDS_PFTxn_UI formData = new IDS_PFTxn_UI();
 
 }

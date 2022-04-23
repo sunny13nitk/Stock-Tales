@@ -96,6 +96,11 @@ public class IDS_PFTxn_ValidSrv implements IDS_PFTxn_Validator
 							if (hcO.get().getUnits() >= pfTxn.getUnits())
 							{
 								isValid = true;
+							} else
+							{
+								// Trigger Custom Exception
+								throw new PFTxnInvalidException(msgSrc.getMessage("pfTxn.sellQty", new Object[]
+								{ pfTxn.getUnits(), hcO.get().getUnits() }, Locale.ENGLISH));
 							}
 						}
 					}
@@ -112,6 +117,11 @@ public class IDS_PFTxn_ValidSrv implements IDS_PFTxn_Validator
 							if (hcO.get().getUnits() >= pfTxn.getUnits())
 							{
 								isValid = true;
+							} else
+							{
+								// Trigger Custom Exception
+								throw new PFTxnInvalidException(msgSrc.getMessage("pfTxn.sellQty", new Object[]
+								{ pfTxn.getUnits(), hcO.get().getUnits() }, Locale.ENGLISH));
 							}
 						}
 					}
@@ -126,6 +136,11 @@ public class IDS_PFTxn_ValidSrv implements IDS_PFTxn_Validator
 							if (hcO.get().getUnits() >= pfTxn.getUnits())
 							{
 								isValid = true;
+							} else
+							{
+								// Trigger Custom Exception
+								throw new PFTxnInvalidException(msgSrc.getMessage("pfTxn.sellQty", new Object[]
+								{ pfTxn.getUnits(), hcO.get().getUnits() }, Locale.ENGLISH));
 							}
 						} else
 						{

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<div th:replace="fragments/header :: STHeader"></div>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script type="text/javascript"
+	src="https://www.gstatic.com/charts/loader.js"></script>
+</head>
+</head>
+<body style="overflow: hidden">
+
+	<div th:replace="fragments/IDS_FG :: IDSMenu"></div>
+
+	<div style="margin-top: 32px;">
+		<div id="overview">
+			<div class="frame"
+				style="height: 570px; overflow: scroll; padding: 8px">
+
+
+				<div class="row flex-justify-left">
+
+					<!-- Form - for SCrips Adding -->
+
+					<form th:object="${scDetails}" th:action="@{/ids/pfTxn}"
+						method="post">
+
+						<!-- Place for messages: error, alert etc ... -->
+						<div class="form-group">
+							<div class="col-xs-15">
+								<div th:if="${formError != null}">
+
+									<!-- Check for Form error -->
+
+									<div class="remark alert"
+										style="padding-top: 10px; margin: 2px">
+										<label th:text="'ERROR : ' + ${formError}"></label>
+									</div>
+								</div>
+							</div>
+
+							<div class="col-xs-15">
+								<div th:if="${formSucc != null}">
+
+
+									<div class="remark success"
+										style="padding-top: 10px; margin: 2px">
+										<label th:text=" ${formSucc}"></label>
+									</div>
+
+
+
+								</div>
+							</div>
+						</div>
+
+
+						<!--Select Scrips Title  -->
+						<div data-role="panel" data-title-caption="Transaction Form"
+							data-collapsible="true" data-width="1250"
+							data-title-icon="<span class='mif-opencart mif-2x fg-orange'></span>"
+							data-cls-title="bg-white fg-steel"
+							style="padding: 10px; margin-left: 10px; margin-top: 2px">
+
+							<input type="hidden" th:value="*{scCode}" name="scCode" />
+							<div data-role="splitter" class="h-100"
+								data-split-mode="vertical">
+								<div class="d-flex flex-justify-start flex-align-start">
+
+									<div class="col-md-3 form-group">
+										<label>Transaction Type:</label> <select class="form-control"
+											th:field="*{txnType}" name="txnType">
+											<option
+												th:each="txnType : ${T(stocktales.IDS.enums.EnumPFTxnUI).values()}"
+												th:value="${txnType.name()}" th:text="${txnType.name()}"></option>
+										</select>
+									</div>
+
+									<div class="cell-5 offset-2">
+
+										<h3 style="color: #4465a1">
+											For <span style="color: #B1365B"
+												th:text="${scDetails.scCode}"></span> ! <span
+												class="mif-book-reference"></span>
+										</h3>
+
+									</div>
+								</div>
+								<div class="row flex-align-center">
+									<h6 style="color: #4465a1; margin-left: 10px">Buy/Sell/Dividend
+										Section</h6>
+								</div>
+								<div class="d-flex flex-justify-start flex-align-start">
+
+									<div class="row" style="margin-top: 10px; margin-bottom: 10px">
+
+										<div class="cell-md-3 offset-1">
+											<label style="margin-left: 5px"> # Shares </label> <input
+												class="metro-input input-large" type="text"
+												data-role="input" th:field="*{numSharesTxn}"
+												name="numSharesTxn" /> <small class="text-muted">Number
+												of Units for Transaction</small>
+										</div>
+
+										<div class="cell-md-3 offset-1">
+											<label>Price/Unit </label> <input
+												class="metro-input input-large" type="text"
+												data-role="input"
+												data-prepend="<span style = 'padding-top:7px' class='mif-inr mif-3x'></span>"
+												th:field="*{ppuTxn}" /> <small class="text-muted">Enter
+												Price per Unit for Buy/Sell Txn.!</small>
+										</div>
+
+										<div class="cell-md-3 offset-1">
+											<label>Dividend/Unit </label> <input
+												class="metro-input input-large" type="text"
+												data-role="input"
+												data-prepend="<span style = 'padding-top:7px' class='mif-inr mif-3x'></span>"
+												th:field="*{divPS}" /> <small class="text-muted">Enter
+												Dividend declared per Share for Dividend Transaction!</small>
+										</div>
+
+									</div>
+
+								</div>
+
+								<div class="row flex-align-center">
+									<h6 style="color: #4465a1; margin-left: 10px">Stock
+										Split/Bonus Section</h6>
+								</div>
+
+								<div class="d-flex flex-justify-center flex-align-center">
+
+									<div data-role="splitter" data-split-mode="horizontal">
+
+										<div class="d-flex flex-justify-center flex-align-center">
+
+											<div class="cell flex-align-self-center">
+												<label style="margin-left: 5px"> 1 Share to be Split
+													into </label> <input class="metro-input input-large" type="text"
+													data-role="input" th:field="*{oneToSplitIntoSharesNum}"
+													data-append="<span style = 'padding-top:50px'>shares</span>" />
+												<small class="text-muted">Share Split Ratio</small>
+											</div>
+										</div>
+
+										<div class="d-flex flex-justify-center flex-align-center">
+
+											<div class="cell flex-align-self-center">
+												<label style="margin-left: 5px"> You will get </label> <input
+													class="metro-input input-large" type="text"
+													data-role="input" th:field="*{toGetSharesNum}"
+													data-append="<span style = 'padding-top:50px'>shares for every</span>" />
+												<small class="text-muted">Shares to Get - Bonus
+													Scenario</small>
+											</div>
+
+											<div class="cell flex-align-self-center">
+												<label style="margin-left: 5px"> Shares Held </label> <input
+													class="metro-input input-large" type="text"
+													data-role="input" th:field="*{foreveryNShares}"
+													data-append="<span style = 'padding-top:50px'>shares held </span>" />
+												<small class="text-muted">Shares held - Bonus
+													Scenario</small>
+											</div>
+										</div>
+
+									</div>
+								</div>
+
+							</div>
+
+
+
+
+							<div class="d-flex flex-row-r"
+								style="margin-top: 30px; margin-bottom: 10px;">
+								<button class="button rounded "
+									style="color: #004466; background: #00ffb3" data-role="hint"
+									data-hint-position="left" data-cls-hint="fg-black"
+									data-hint-text="Commit Transaction">
+									<span class="mif-beenhere" style="margin-left: 0px"> </span> <span
+										style="margin-left: 3px">Commit</span>
+								</button>
+
+							</div>
+						</div>
+
+
+
+					</form>
+
+				</div>
+
+
+
+
+			</div>
+
+
+
+
+
+
+
+		</div>
+
+
+	</div>
+
+	<!--Charts Starts  -->
+
+
+	<!-- Charts - ENDS -->
+
+
+	<!-- Metro 4 -->
+	<script src="https://cdn.metroui.org.ua/v4.3.2/js/metro.min.js"></script>
+</body>
+</html>

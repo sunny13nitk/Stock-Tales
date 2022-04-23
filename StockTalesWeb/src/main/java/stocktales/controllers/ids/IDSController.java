@@ -10,6 +10,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,6 +29,7 @@ import stocktales.IDS.pojo.PFSchemaRebalUI;
 import stocktales.IDS.pojo.UI.IDSBuyPropMassUpdateList;
 import stocktales.IDS.pojo.UI.IDSOverAllocList;
 import stocktales.IDS.pojo.UI.IDS_BuyProposalBO;
+import stocktales.IDS.pojo.UI.IDS_PFTxn_UI;
 import stocktales.IDS.pojo.UI.IDS_PF_Chart_DepAmnt;
 import stocktales.IDS.pojo.UI.IDS_PF_Chart_PFReturns;
 import stocktales.IDS.pojo.UI.IDS_PF_Chart_PLSpread;
@@ -448,6 +450,20 @@ public class IDSController
 
 	}
 
+	@GetMapping("/scTxn/{scCode}")
+	public String showTxnDetails4Scrip(@PathVariable("scCode") String scCode, Model model) throws Exception
+	{
+
+		String viewName = "ids/IDS_scTxn";
+		if (StringUtils.hasText(scCode))
+		{
+			IDS_PFTxn_UI scDetails = pfCoreSrv.getScripTxnDetails(scCode);
+			model.addAttribute("scDetails", scDetails);
+		}
+
+		return viewName;
+	}
+
 	/**
 	 * ----------------------------- POST MAPPINGS -------------------------------
 	 */
@@ -712,6 +728,32 @@ public class IDSController
 		}
 
 		return reRouteDBVw;
+	}
+
+	@PostMapping(value = "/pfTxn")
+	public String commitPFTxn(@ModelAttribute("scDetails") IDS_PFTxn_UI pfTxnUI, Model model
+
+	)
+	{
+		String viewNameSucc = reRouteDBVw;
+		String viewNameFail = "ids/IDS_scTxn";
+		String viewName = null;
+
+		if (pfTxnUI != null && pfDashBSrv != null)
+		{
+			try
+			{
+				pfDashBSrv.processUIPFTxn(pfTxnUI);
+				viewName = viewNameSucc;
+			} catch (Exception e)
+			{
+				model.addAttribute("formError", e.getMessage());
+				model.addAttribute("scDetail", pfTxnUI);
+				viewName = viewNameFail;
+			}
+		}
+
+		return viewName;
 	}
 
 }
