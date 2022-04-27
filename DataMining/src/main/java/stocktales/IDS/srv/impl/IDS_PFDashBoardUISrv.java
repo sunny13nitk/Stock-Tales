@@ -479,7 +479,13 @@ public class IDS_PFDashBoardUISrv implements stocktales.IDS.srv.intf.IDS_PFDashB
 											.filter(f -> f.getScCode().equals(pfTxnUI.getScCode())).findFirst();
 									if (holdingSessO.isPresent())
 									{
-										pfTxn.setSmarank(holdingSessO.get().getSmaLvl().ordinal());
+										if (holdingSessO.get().getSmaLvl() != null)
+										{
+											pfTxn.setSmarank(holdingSessO.get().getSmaLvl().ordinal());
+										} else
+										{
+											pfTxn.setSmarank(EnumSMABreach.sma1.ordinal()); // Default
+										}
 										rankFoundinSess = true;
 									}
 
