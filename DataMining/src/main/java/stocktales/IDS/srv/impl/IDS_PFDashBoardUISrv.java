@@ -514,6 +514,11 @@ public class IDS_PFDashBoardUISrv implements stocktales.IDS.srv.intf.IDS_PFDashB
 							 * Process the Transaction - Core PF Service
 							 */
 							corePFSrv.processCorePFTxn(pfTxn);
+
+							/*
+							 * REfresh the Schema load
+							 */
+							this.refreshSchemaPostTxn();
 						}
 
 					} else
@@ -571,6 +576,11 @@ public class IDS_PFDashBoardUISrv implements stocktales.IDS.srv.intf.IDS_PFDashB
 							 * Process the Transaction - Core PF Service
 							 */
 							corePFSrv.processCorePFTxn(pfTxn);
+
+							/*
+							 * REfresh the Schema load
+							 */
+							this.refreshSchemaPostTxn();
 						}
 
 					} else
@@ -609,10 +619,15 @@ public class IDS_PFDashBoardUISrv implements stocktales.IDS.srv.intf.IDS_PFDashB
 										MoneyBag mbTxn = new MoneyBag();
 										mbTxn.setType(stocktales.IDS.enums.EnumTxnType.Dividend);
 										mbTxn.setDate(UtilDurations.getTodaysDateOnly());
-										mbTxn.setRemarks("Dividend : " + pfTxnUI.getScCode());
+										mbTxn.setRemarks("Dividend:" + pfTxnUI.getScCode());
 										mbTxn.setAmount(
 												Precision.round(pfTxnUI.getDivPS() * pfTxnUI.getNumSharesTxn(), 1));
 										mbSrv.processMBagTxn(mbTxn);
+
+										/*
+										 * REfresh the Schema load
+										 */
+										this.refreshSchemaPostTxn();
 									}
 
 								}
