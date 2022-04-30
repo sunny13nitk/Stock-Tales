@@ -9,15 +9,18 @@ import java.util.Optional;
 
 import org.apache.commons.math3.util.Precision;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
+import stocktales.DataLake.srv.intf.DL_HistoricalPricesSrv;
 import stocktales.IDS.model.pf.repo.RepoPFSchema;
 import stocktales.IDS.model.pf.repo.intf.IPFSchemaIdealAlloc;
 import stocktales.basket.allocations.autoAllocation.strategy.interfaces.IStgyAllocShort;
 import stocktales.basket.allocations.autoAllocation.strategy.pojos.StgyAlloc;
 import stocktales.basket.allocations.autoAllocation.strategy.repo.RepoStgyAllocations;
+import stocktales.durations.UtilDurations;
 import stocktales.exceptions.SchemaUpdateException;
 import stocktales.historicalPrices.enums.EnumInterval;
 import stocktales.historicalPrices.pojo.DateStgySummary;
@@ -39,6 +42,10 @@ public class TimeSeriesStgyValuationsSrv implements ITimeSeriesStgyValuationSrv
 
 	@Autowired
 	private RepoPFSchema repoPFSchema;
+
+	@Autowired
+	@Qualifier("DL_HistoricalPricesSrv_IDS")
+	private DL_HistoricalPricesSrv hpDBSrv;
 
 	@Autowired
 	private MessageSource msgSrc;
@@ -101,7 +108,7 @@ public class TimeSeriesStgyValuationsSrv implements ITimeSeriesStgyValuationSrv
 		if (this.stgyAllocs != null)
 		{
 			// 2. Process Valuations Centrally
-			processValuations(interval);
+			processValuationsIDS(interval);
 		}
 
 		return this.stgyRelValuations;
@@ -220,6 +227,26 @@ public class TimeSeriesStgyValuationsSrv implements ITimeSeriesStgyValuationSrv
 		}
 	}
 
+	private void processValuationsIDS(EnumInterval interval) throws Exception
+	{
+		// 2. Get the Price for Each Scrip in strategy as per Interval
+
+		getScripCodes();
+
+		if (scrips.length > 0)
+		{
+			populatePriceDataIDS(interval);
+			fromDate = getNextDate();
+		}
+
+		// 3. Calculate Value for Each Day for each scrip as per allocation
+		ParseData();
+
+		// 4. Base the result from starting day and populate relative valuation
+		BaseRefData();
+
+	}
+
 	private void getScripCodes()
 	{
 
@@ -306,6 +333,75 @@ public class TimeSeriesStgyValuationsSrv implements ITimeSeriesStgyValuationSrv
 					Interval.DAILY);
 			amount = 10;
 			intervalCal = Calendar.YEAR;
+			break;
+
+		default:
+			break;
+		}
+	}
+
+	private void populatePriceDataIDS(EnumInterval interval) throws Exception
+	{
+		switch (interval)
+		{
+		case LastMonth:
+
+			this.to = UtilDurations.getTodaysCalendarDateOnly();
+			this.from = UtilDurations.getTodaysCalendarDateOnly();
+			from.add(Calendar.MONTH, -1);
+
+			this.stocksHistory = hpDBSrv.getStocksHistory4mContainer(from.getTime(), to.getTime());
+			break;
+
+		case Last3Months:
+			this.to = UtilDurations.getTodaysCalendarDateOnly();
+			this.from = UtilDurations.getTodaysCalendarDateOnly();
+			from.add(Calendar.MONTH, -3);
+
+			this.stocksHistory = hpDBSrv.getStocksHistory4mContainer(from.getTime(), to.getTime());
+			break;
+
+		case Last6Months:
+			this.to = UtilDurations.getTodaysCalendarDateOnly();
+			this.from = UtilDurations.getTodaysCalendarDateOnly();
+			from.add(Calendar.MONTH, -6);
+
+			this.stocksHistory = hpDBSrv.getStocksHistory4mContainer(from.getTime(), to.getTime());
+			break;
+
+		case Last1Yr:
+			this.to = UtilDurations.getTodaysCalendarDateOnly();
+			this.from = UtilDurations.getTodaysCalendarDateOnly();
+			from.add(Calendar.YEAR, -1);
+
+			this.stocksHistory = hpDBSrv.getStocksHistory4mContainer(from.getTime(), to.getTime());
+			break;
+
+		case Last2Yrs:
+			this.to = UtilDurations.getTodaysCalendarDateOnly();
+			this.from = UtilDurations.getTodaysCalendarDateOnly();
+			from.add(Calendar.YEAR, -2);
+
+			this.stocksHistory = hpDBSrv.getStocksHistory4mRepo(from.getTime(), to.getTime());
+			break;
+
+		case Last3Yrs:
+			this.to = UtilDurations.getTodaysCalendarDateOnly();
+			this.from = UtilDurations.getTodaysCalendarDateOnly();
+			from.add(Calendar.YEAR, -3);
+
+			this.stocksHistory = hpDBSrv.getStocksHistory4mRepo(from.getTime(), to.getTime());
+			break;
+
+		case Last5Yrs:
+		case Last7Yrs:
+		case Last10Yrs:
+
+			this.to = UtilDurations.getTodaysCalendarDateOnly();
+			this.from = UtilDurations.getTodaysCalendarDateOnly();
+			from.add(Calendar.YEAR, -5);
+
+			this.stocksHistory = hpDBSrv.getStocksHistory4mRepo(from.getTime(), to.getTime());
 			break;
 
 		default:

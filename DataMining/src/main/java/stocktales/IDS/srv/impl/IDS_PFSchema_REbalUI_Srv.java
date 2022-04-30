@@ -34,6 +34,7 @@ import stocktales.IDS.pojo.ScripMcapCatg;
 import stocktales.NFS.enums.EnumMCapClassification;
 import stocktales.NFS.model.config.NFSConfig;
 import stocktales.basket.allocations.autoAllocation.strategy.pojos.StgyAlloc;
+import stocktales.basket.allocations.config.pojos.SCPricesMode;
 import stocktales.exceptions.SchemaUpdateException;
 import stocktales.historicalPrices.enums.EnumInterval;
 import stocktales.historicalPrices.srv.intf.ITimeSeriesStgyValuationSrv;
@@ -53,6 +54,9 @@ public class IDS_PFSchema_REbalUI_Srv implements stocktales.IDS.srv.intf.IDS_PFS
 
 	@Autowired
 	private MessageSource msgSrc;
+
+	@Autowired
+	private SCPricesMode scPricesMode;
 
 	@Autowired
 	private NFSConfig nfsConfig;
@@ -425,8 +429,19 @@ public class IDS_PFSchema_REbalUI_Srv implements stocktales.IDS.srv.intf.IDS_PFS
 				stgyAllocs.add(new StgyAlloc(scAlloc.getScCode(), scAlloc.getIdealAlloc()));
 			}
 
-			rebalContainer.getStats()
-					.setDateVals(valSrv.getValuationsforScripsAllocList(EnumInterval.Last5Yrs, stgyAllocs));
+			if (scPricesMode != null)
+			{
+				if (scPricesMode.getScpricesDBMode() == 1)
+				{
+					// REturns Computation Using DB
+					rebalContainer.getStats().setDateVals(valSrv.getValuationsforSchema(EnumInterval.Last5Yrs));
+
+				} else
+				{
+					rebalContainer.getStats()
+							.setDateVals(valSrv.getValuationsforScripsAllocList(EnumInterval.Last5Yrs, stgyAllocs));
+				}
+			}
 		}
 
 	}

@@ -21,32 +21,30 @@ import stocktales.scripsEngine.uploadEngine.validations.implementations.WBFilepa
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class XLS_Scrip_Upload_Srv implements IXLS_Scrip_Upload_Srv
 {
-	
+
 	@Autowired
 	private IXLS_Scrip_Create_Srv scCRSrv;
-	
+
 	@Autowired
 	private IXLS_Scrip_Update_Srv scUPDSrv;
-	
+
 	@Autowired
 	private ISCDetCrUpd_Mode modeDetSrv;
-	
+
 	@Autowired
 	private FilepathValidationService fpValSrv;
-	
+
 	@Autowired
 	private WBFilepathService wbfpSrv;
-	
+
 	/**
 	 * ---------------- Interface Methods ----------------------------------
 	 */
 	@Override
-	public boolean Upload_Scrip_from_XLS_Filepath(
-	        String FilePath
-	) throws EX_General
+	public boolean Upload_Scrip_from_XLS_Filepath(String FilePath) throws EX_General
 	{
 		boolean uploaded = false;
-		
+
 		if (FilePath != null)
 		{
 			if (fpValSrv != null)
@@ -68,23 +66,21 @@ public class XLS_Scrip_Upload_Srv implements IXLS_Scrip_Upload_Srv
 				{
 					EX_General egen = new EX_General("FILENOTFOUND", new Object[]
 					{ FilePath });
-					
+
 					throw egen;
 				}
 			}
 		}
-		
+
 		return uploaded;
 	}
-	
+
 	@SuppressWarnings("incomplete-switch")
 	@Override
-	public boolean Upload_Scrip_from_XLS_WBCtxt(
-	        XSSFWorkbook wbCtxt
-	) throws EX_General
+	public boolean Upload_Scrip_from_XLS_WBCtxt(XSSFWorkbook wbCtxt) throws EX_General
 	{
 		boolean uploaded = false;
-		
+
 		if (wbCtxt != null)
 		{
 			// 1. Get the Scrip Create/Update Mode
@@ -92,28 +88,28 @@ public class XLS_Scrip_Upload_Srv implements IXLS_Scrip_Upload_Srv
 			if (modeDet != null)
 			{
 				switch (modeDet.getMode())
-				
+
 				{
-					case CREATE:
-						if (scCRSrv != null)
-						{
-							uploaded = scCRSrv.Create_Scrip_WbContext(wbCtxt);
-						}
-						break;
-					
-					case UPDATE:
-						if (scUPDSrv != null)
-						{
-							uploaded = scUPDSrv.Update_Scrip_WbContext(wbCtxt);
-						}
-						
-						break;
+				case CREATE:
+					if (scCRSrv != null)
+					{
+						uploaded = scCRSrv.Create_Scrip_WbContext(wbCtxt);
+					}
+					break;
+
+				case UPDATE:
+					if (scUPDSrv != null)
+					{
+						uploaded = scUPDSrv.Update_Scrip_WbContext(wbCtxt);
+					}
+
+					break;
 				}
 			}
-			
+
 		}
-		
+
 		return uploaded;
 	}
-	
+
 }

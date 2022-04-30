@@ -15,6 +15,7 @@ import javax.transaction.Transactional;
 
 import org.apache.commons.math3.util.Precision;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
@@ -26,6 +27,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import stocktales.DataLake.srv.intf.DL_HistoricalPricesSrv;
 import stocktales.IDS.enums.EnumSMABreach;
 import stocktales.IDS.model.pf.entity.HC;
 import stocktales.IDS.model.pf.entity.HCI;
@@ -75,6 +77,10 @@ public class IDS_PFDashBoardUISrv implements stocktales.IDS.srv.intf.IDS_PFDashB
 
 	@Autowired
 	private MessageSource msgSrc;
+
+	@Autowired
+	@Qualifier("DL_HistoricalPricesSrv_IDS")
+	private DL_HistoricalPricesSrv hpDBSrv;
 
 	@Autowired
 	private IDS_PFTxn_Validator txnValidSrv;

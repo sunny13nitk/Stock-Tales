@@ -16,7 +16,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
+import stocktales.DataLake.srv.intf.DL_ScripPricesUploadSrv;
 import stocktales.IDS.enums.EnumVolatilityProfile;
 import stocktales.IDS.model.pf.entity.HCI;
 import stocktales.IDS.model.pf.entity.MoneyBag;
@@ -85,6 +88,9 @@ public class IDSController
 	private IDS_ConfigLoader idsCfgSrv;
 
 	@Autowired
+	private DL_ScripPricesUploadSrv dlScSrv;
+
+	@Autowired
 	private IDS_VPSrv idsVPSrv;
 
 	@Autowired
@@ -144,6 +150,24 @@ public class IDSController
 		}
 
 		return "ids/IDShome";
+	}
+
+	@GetMapping("/upload")
+	public String uploadScrip(Model model)
+	{
+
+		return "ids/uploadForScripPrice";
+	}
+
+	@GetMapping("/upload/{scCode}")
+	public String uploadScrip(@PathVariable("scCode") String scCode, Model model)
+	{
+		if (StringUtils.hasText(scCode))
+		{
+			model.addAttribute("scCode", scCode);
+		}
+
+		return "ids/uploadForScripPrice";
 	}
 
 	@GetMapping("/xirr")
@@ -756,4 +780,47 @@ public class IDSController
 		return viewName;
 	}
 
+	@PostMapping(value = "/uploadScrip", params = "action=upload")
+	public String handlescripUpload(
+
+			@RequestParam("file") MultipartFile file, Model model)
+	{
+		if (file != null && dlScSrv != null)
+		{
+			try
+			{
+				dlScSrv.UploadScripPrices(file);
+			} catch (Exception e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				// to be replaced with properties messages
+				model.addAttribute("formError", e.getMessage());
+			}
+		}
+
+		return "redirect:/ids/upload";
+	}
+
+	@PostMapping(value = "/uploadScrip", params = "action=replace")
+	public String handlescripRefreshUpload(
+
+			@RequestParam("file") MultipartFile file, Model model)
+	{
+		if (file != null && dlScSrv != null)
+		{
+			try
+			{
+				dlScSrv.RefreshAndUploadScripPrices(file);
+			} catch (Exception e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				// to be replaced with properties messages
+				model.addAttribute("formError", e.getMessage());
+			}
+		}
+
+		return "redirect:/ids/upload";
+	}
 }

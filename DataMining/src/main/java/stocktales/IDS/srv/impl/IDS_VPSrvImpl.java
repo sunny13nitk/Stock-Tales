@@ -6,12 +6,14 @@ import java.util.Optional;
 
 import org.apache.commons.math3.util.Precision;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import stocktales.DataLake.srv.intf.DL_HistoricalPricesSrv;
 import stocktales.IDS.enums.EnumVolatilityProfile;
 import stocktales.IDS.model.cfg.entity.IDS_CF_SMAWts;
 import stocktales.IDS.model.cfg.entity.IDS_CF_VPRange;
@@ -20,6 +22,7 @@ import stocktales.IDS.pojo.IDS_ScSMASpread;
 import stocktales.IDS.pojo.IDS_VPDetails;
 import stocktales.IDS.srv.intf.IDS_VPSrv;
 import stocktales.NFS.model.pojo.NFSStockHistoricalQuote;
+import stocktales.basket.allocations.config.pojos.SCPricesMode;
 import stocktales.historicalPrices.utility.StockPricesUtility;
 import yahoofinance.histquotes.Interval;
 
@@ -33,6 +36,13 @@ public class IDS_VPSrvImpl implements IDS_VPSrv
 	@Autowired
 	private IDS_ConfigLoaderSrv idsCfgSrv;
 
+	@Autowired
+	@Qualifier("DL_HistoricalPricesSrv_IDS")
+	private DL_HistoricalPricesSrv hpDBSrv;
+
+	@Autowired
+	private SCPricesMode scPriceModeDB;
+
 	private int[] smaIntervals = new int[]
 	{ 18, 40, 70, 170 };
 
@@ -45,9 +55,17 @@ public class IDS_VPSrvImpl implements IDS_VPSrv
 		{
 			if (scCode.trim().length() > 0)
 			{
+				IDS_ScSMASpread scSMASpread = null;
 				// 1. Get the SMA Details for the Scrip
-				IDS_ScSMASpread scSMASpread = StockPricesUtility.getSMASpreadforScrip(scCode, smaIntervals,
-						Calendar.YEAR, 1, Interval.DAILY);
+				if (scPriceModeDB.getScpricesDBMode() == 1)
+				{
+					scSMASpread = hpDBSrv.getSMASpreadforScrip(scCode, smaIntervals);
+
+				} else
+				{
+					scSMASpread = StockPricesUtility.getSMASpreadforScrip(scCode, smaIntervals, Calendar.YEAR, 1,
+							Interval.DAILY);
+				}
 
 				if (scSMASpread != null)
 				{

@@ -17,6 +17,7 @@ import org.apache.commons.math3.util.Precision;
 import org.decampo.xirr.Transaction;
 import org.decampo.xirr.Xirr;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
@@ -27,6 +28,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import stocktales.DataLake.srv.intf.DL_HistoricalPricesSrv;
 import stocktales.IDS.enums.EnumSMABreach;
 import stocktales.IDS.enums.EnumSchemaDepAmntsUpdateMode;
 import stocktales.IDS.events.EV_PFTxn;
@@ -61,6 +63,7 @@ import stocktales.IDS.pojo.UI.IDS_Scrip_Details;
 import stocktales.IDS.srv.intf.IDS_DeploymentAmntSrv;
 import stocktales.IDS.srv.intf.IDS_MoneyBagSrv;
 import stocktales.IDS.srv.intf.IDS_VPSrv;
+import stocktales.basket.allocations.config.pojos.SCPricesMode;
 import stocktales.basket.allocations.config.pojos.Urls;
 import stocktales.durations.UtilDurations;
 import stocktales.exceptions.SchemaUpdateException;
@@ -83,6 +86,13 @@ public class IDS_CorePFSrv implements stocktales.IDS.srv.intf.IDS_CorePFSrv
 {
 	@Autowired
 	private RepoPFVolProfile repoPFVP;
+
+	@Autowired
+	@Qualifier("DL_HistoricalPricesSrv_IDS")
+	private DL_HistoricalPricesSrv hpDBSrv;
+
+	@Autowired
+	private SCPricesMode scPriceModeDB;
 
 	@Autowired
 	private RepoPFSchema repoPFSchema;
@@ -195,8 +205,14 @@ public class IDS_CorePFSrv implements stocktales.IDS.srv.intf.IDS_CorePFSrv
 				IDS_ScSMASpread scSMASpread = null;
 				try
 				{
-					scSMASpread = StockPricesUtility.getSMASpreadforScrip(pfSchema.getSccode(), smaIntervals,
-							Calendar.YEAR, 1, Interval.DAILY);
+					if (scPriceModeDB.getScpricesDBMode() == 1)
+					{
+						scSMASpread = hpDBSrv.getSMASpreadforScrip(pfSchema.getSccode(), smaIntervals);
+					} else
+					{
+						scSMASpread = StockPricesUtility.getSMASpreadforScrip(pfSchema.getSccode(), smaIntervals,
+								Calendar.YEAR, 1, Interval.DAILY);
+					}
 				} catch (Exception e)
 				{
 					// DO nothing Ignore that Scrip
@@ -205,17 +221,57 @@ public class IDS_CorePFSrv implements stocktales.IDS.srv.intf.IDS_CorePFSrv
 				{
 					if (scSMASpread.getPrSMAList().size() > 0)
 					{
-						IDS_SMASpread smaSpread = scSMASpread.getPrSMAList().get(scSMASpread.getPrSMAList().size() - 1);
-						if (smaSpread != null)
+						if (scPriceModeDB.getScpricesDBMode() == 1)
 						{
 							IDS_SMAPreview smaPreview = new IDS_SMAPreview();
 							smaPreview.setScCode(pfSchema.getSccode());
-							smaPreview.setClosePrice(Precision.round(smaSpread.getClosePrice(), 0));
-							smaPreview.setSMAI1(Precision.round(smaSpread.getSMAI1(), 0));
-							smaPreview.setSMAI2(Precision.round(smaSpread.getSMAI2(), 0));
-							smaPreview.setSMAI3(Precision.round(smaSpread.getSMAI3(), 0));
-							smaPreview.setSMAI4(Precision.round(smaSpread.getSMAI4(), 0));
+							smaPreview.setClosePrice(
+									Precision.round(scSMASpread.getPrSMAList().get(0).getClosePrice(), 0));
+
+							// Get SMA1
+							IDS_SMASpread sma1Entry = scSMASpread.getPrSMAList().get(smaIntervals[0]);
+							if (sma1Entry != null)
+							{
+								smaPreview.setSMAI1(Precision.round(sma1Entry.getSMAI1(), 0));
+							}
+
+							// Get SMA2
+							IDS_SMASpread sma2Entry = scSMASpread.getPrSMAList().get(smaIntervals[1]);
+							if (sma2Entry != null)
+							{
+								smaPreview.setSMAI2(Precision.round(sma2Entry.getSMAI2(), 0));
+							}
+
+							// Get SMA3
+							IDS_SMASpread sma3Entry = scSMASpread.getPrSMAList().get(smaIntervals[2]);
+							if (sma3Entry != null)
+							{
+								smaPreview.setSMAI3(Precision.round(sma3Entry.getSMAI3(), 0));
+							}
+
+							// Get SMA4
+							IDS_SMASpread sma4Entry = scSMASpread.getPrSMAList().get(smaIntervals[3]);
+							if (sma4Entry != null)
+							{
+								smaPreview.setSMAI4(Precision.round(sma4Entry.getSMAI4(), 0));
+							}
 							pfSMAPreview.add(smaPreview);
+
+						} else
+						{
+							IDS_SMASpread smaSpread = scSMASpread.getPrSMAList()
+									.get(scSMASpread.getPrSMAList().size() - 1);
+							if (smaSpread != null)
+							{
+								IDS_SMAPreview smaPreview = new IDS_SMAPreview();
+								smaPreview.setScCode(pfSchema.getSccode());
+								smaPreview.setClosePrice(Precision.round(smaSpread.getClosePrice(), 0));
+								smaPreview.setSMAI1(Precision.round(smaSpread.getSMAI1(), 0));
+								smaPreview.setSMAI2(Precision.round(smaSpread.getSMAI2(), 0));
+								smaPreview.setSMAI3(Precision.round(smaSpread.getSMAI3(), 0));
+								smaPreview.setSMAI4(Precision.round(smaSpread.getSMAI4(), 0));
+								pfSMAPreview.add(smaPreview);
+							}
 						}
 					}
 
@@ -240,9 +296,11 @@ public class IDS_CorePFSrv implements stocktales.IDS.srv.intf.IDS_CorePFSrv
 					.collect(Collectors.toList());
 			if (pfSchEntitiesPosDepAmnts.size() > 0)
 			{
-
+				List<IDS_SMAPreview> pfSMAPvw = null;
 				buyP = new IDS_BuyProposalBO();
-				List<IDS_SMAPreview> pfSMAPvw = this.getPFSchemaSMAPreview();
+
+				pfSMAPvw = this.getPFSchemaSMAPreview();
+
 				if (pfSMAPvw != null)
 				{
 					if (pfSMAPvw.size() > 0)

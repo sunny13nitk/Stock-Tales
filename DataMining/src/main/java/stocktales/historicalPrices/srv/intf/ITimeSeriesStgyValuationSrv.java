@@ -39,4 +39,5 @@ public interface ITimeSeriesStgyValuationSrv
 	 */
 	public List<StgyRelValuation> getValuationsforScripsAllocList(EnumInterval interval, List<StgyAlloc> scAllocs)
 			throws Exception;
+
 }

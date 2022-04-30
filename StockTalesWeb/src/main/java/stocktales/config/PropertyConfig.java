@@ -15,6 +15,7 @@ import stocktales.basket.allocations.config.pojos.DurationWeights;
 import stocktales.basket.allocations.config.pojos.FinancialSectors;
 import stocktales.basket.allocations.config.pojos.FinancialsConfig;
 import stocktales.basket.allocations.config.pojos.MCapAllocations;
+import stocktales.basket.allocations.config.pojos.SCPricesMode;
 import stocktales.basket.allocations.config.pojos.StrengthWeights;
 import stocktales.basket.allocations.config.pojos.Urls;
 
@@ -70,6 +71,16 @@ public class PropertyConfig
 		Urls urls = new Urls(coreScUl);
 
 		return urls;
+	}
+
+	@Bean
+	@Autowired // For PropertySourcesPlaceholderConfigurer
+	public SCPricesMode setPriceModeBean(@Value("${scpricesDBMode}") int scpriceMode)
+
+	{
+		SCPricesMode scMode = new SCPricesMode(scpriceMode);
+
+		return scMode;
 	}
 
 	@Bean

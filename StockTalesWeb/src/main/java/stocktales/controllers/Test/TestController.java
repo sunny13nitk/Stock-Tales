@@ -1,5 +1,6 @@
 package stocktales.controllers.Test;
 
+import java.io.IOException;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import java.util.Optional;
 
 import org.apache.commons.math3.util.Precision;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -23,6 +25,9 @@ import stocktales.BackTesting.IDS.pojo.BT_EP_IDS;
 import stocktales.BackTesting.IDS.pojo.BT_IP_IDS;
 import stocktales.BackTesting.IDS.pojo.BT_ScripAllocs;
 import stocktales.BackTesting.IDS.srv.intf.IBT_IDS_Srv;
+import stocktales.DataLake.model.entity.DL_ScripPrice;
+import stocktales.DataLake.model.repo.RepoScripPrices;
+import stocktales.DataLake.srv.intf.DL_HistoricalPricesSrv;
 import stocktales.IDS.enums.EnumSMABreach;
 import stocktales.IDS.enums.EnumSchemaDepAmntsUpdateMode;
 import stocktales.IDS.enums.EnumTxnType;
@@ -129,6 +134,7 @@ import stocktales.topgun.model.pojo.TopGunContainer;
 import stocktales.topgun.srv.intf.ITopGunSrv;
 import stocktales.usersPF.repo.RepoHoldings;
 import yahoofinance.Stock;
+import yahoofinance.YahooFinance;
 import yahoofinance.histquotes.Interval;
 
 @Controller
@@ -236,6 +242,13 @@ public class TestController
 
 	@Autowired
 	private INFS_CashBookSrv nfsCBSrv;
+
+	@Autowired
+	private RepoScripPrices repoScPrices;
+
+	@Autowired
+	@Qualifier("DL_HistoricalPricesSrv_IDS")
+	private DL_HistoricalPricesSrv hpDBSrv;
 
 	@GetMapping("/edrcSrv/{scCode}")
 	public String testEDRCSrv(@PathVariable String scCode
@@ -958,7 +971,8 @@ public class TestController
 	{
 
 		String[] stocks = new String[]
-		{ "BAJFINANCE", "ALKYLAMINE", "LTI", "AFFLE" };
+		{ "BAJFINANCE" };
+		// { "BAJFINANCE", "ALKYLAMINE", "LTI", "AFFLE" };
 
 		try
 		{
@@ -1033,7 +1047,7 @@ public class TestController
 		List<StgyRelValuation> valuationsbyDate;
 		try
 		{
-			valuationsbyDate = timeSeriesSrv.getValuationsforSchema(EnumInterval.Last6Months);
+			valuationsbyDate = timeSeriesSrv.getValuationsforSchema(EnumInterval.Last5Yrs);
 			if (valuationsbyDate != null)
 			{
 				for (StgyRelValuation stgyRelValuation : valuationsbyDate)
@@ -2251,6 +2265,79 @@ public class TestController
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+
+		return "success";
+	}
+
+	@GetMapping("/yahoo")
+	public String testYahooAPI()
+	{
+		Stock tesla;
+		try
+		{
+			tesla = YahooFinance.get("TSLA");
+			System.out.println(tesla.getQuote().getPrice());
+			System.out.println("Current Quote : ON");
+
+			Calendar from = UtilDurations.getTodaysCalendarDateOnly();
+			Calendar to = UtilDurations.getTodaysCalendarDateOnly();
+			from.add(Calendar.YEAR, -1);
+
+			tesla = YahooFinance.get("TSLA", from, to);
+			if (tesla.getHistory() != null)
+			{
+				System.out.println("Historical Quote : ON");
+			}
+
+		} catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return "success";
+	}
+
+	@GetMapping("/scPrices/{scCode}")
+	public String testSCPrices(@PathVariable String scCode)
+	{
+		if (StringUtils.hasText(scCode))
+		{
+			Calendar to = UtilDurations.getTodaysCalendarDateOnly();
+
+			Calendar from = UtilDurations.getTodaysCalendarDateOnly();
+			from.add(Calendar.MONTH, -2);
+
+			List<DL_ScripPrice> scPrices = repoScPrices.findAllBySccodeAndDateBetweenOrderByDateDesc(scCode,
+					from.getTime(), to.getTime());
+			if (scPrices != null)
+			{
+				if (scPrices.size() > 0)
+				{
+					System.out.println(scPrices.size() + " Records found!");
+				}
+			}
+		}
+
+		return "success";
+
+	}
+
+	@GetMapping("/dbPrices/{scCode}")
+	public String testDBAPI(@PathVariable String scCode)
+	{
+		if (hpDBSrv != null && StringUtils.hasText(scCode))
+
+		{
+			List<DL_ScripPrice> scPrices = hpDBSrv.getHistoricalPricesByScripPast1Yr(scCode);
+			if (scPrices != null)
+			{
+				if (scPrices.size() > 0)
+				{
+					System.out.println(scPrices.size() + " Records found!");
+				}
+			}
 		}
 
 		return "success";
