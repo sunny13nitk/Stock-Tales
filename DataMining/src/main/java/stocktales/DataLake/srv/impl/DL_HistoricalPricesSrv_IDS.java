@@ -1,13 +1,16 @@
 package stocktales.DataLake.srv.impl;
 
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
+import javax.transaction.Transactional;
 
 import org.apache.commons.math3.util.Precision;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +22,8 @@ import org.springframework.web.context.WebApplicationContext;
 
 import stocktales.DataLake.model.entity.DL_ScripPrice;
 import stocktales.DataLake.model.repo.RepoScripPrices;
+import stocktales.DataLake.model.repo.intf.IDL_IDSStats;
+import stocktales.DataLake.model.repo.intf.IScMaxDate;
 import stocktales.IDS.model.pf.repo.RepoPFSchema;
 import stocktales.IDS.pojo.IDS_SMASpread;
 import stocktales.IDS.pojo.IDS_ScSMASpread;
@@ -26,6 +31,8 @@ import stocktales.basket.allocations.config.pojos.SCPricesMode;
 import stocktales.durations.UtilDurations;
 import stocktales.historicalPrices.pojo.HistoricalQuote;
 import stocktales.historicalPrices.pojo.StockHistory;
+import stocktales.historicalPrices.utility.StockPricesUtility;
+import yahoofinance.Stock;
 
 /**
  * 
@@ -325,6 +332,81 @@ public class DL_HistoricalPricesSrv_IDS implements stocktales.DataLake.srv.intf.
 
 		}
 		return scSMASpread;
+	}
+
+	@Override
+	public List<IDL_IDSStats> getStats()
+	{
+		List<IDL_IDSStats> stats = null;
+		if (repoSCPrices != null)
+		{
+			stats = repoSCPrices.getIDSDataHubStats();
+		}
+		return stats;
+	}
+
+	@Override
+	@Transactional
+	public void updateDailyPrices() throws Exception
+	{
+		// Get Latest Prices Maintain Dates from Data Lake for PF Schema Scrips
+		List<IScMaxDate> scMaxDatesList = repoSCPrices.getIDSDataHubLatestSripDate();
+		if (scMaxDatesList != null)
+		{
+			if (scMaxDatesList.size() > 0)
+			{
+				List<DL_ScripPrice> scPricesInsert = new ArrayList<DL_ScripPrice>();
+				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+						Locale.ENGLISH);
+
+				for (IScMaxDate dlEntry : scMaxDatesList)
+				{
+					Stock curr = StockPricesUtility.getQuoteforScrip(dlEntry.getSccode());
+
+					Date lastTradedDate = UtilDurations.getDateOnly4mCalendar(curr.getQuote().getLastTradeTime());
+
+					if (lastTradedDate.equals(dlEntry.getMaxdate()))
+					{
+						// Same Day Entry Found - Check for Amount difference
+
+						double savedClosedPrice = repoSCPrices.getClosePricebyId(dlEntry.getId());
+
+						// If Amount Difference Found - Only then Trigger an Update
+						if (savedClosedPrice != Precision.round(curr.getQuote().getPrice().doubleValue(), 2))
+						{
+
+							repoSCPrices.updateClosePrice(dlEntry.getId(),
+									Precision.round(curr.getQuote().getPrice().doubleValue(), 2));
+						}
+
+					} else // No entry found for Last Traded day
+					{
+						if (lastTradedDate.after(dlEntry.getMaxdate()))
+						{
+							// Last Entry in Data Lake before the last Traded Day Entry - INSERT
+							// Build the Collection
+							DL_ScripPrice insertEntity = new DL_ScripPrice();
+							insertEntity.setSccode(dlEntry.getSccode());
+							insertEntity.setCloseprice(Precision.round(curr.getQuote().getPrice().doubleValue(), 2));
+							insertEntity.setDate(curr.getQuote().getLastTradeTime().getTime());
+
+							scPricesInsert.add(insertEntity);
+						}
+					}
+				}
+
+				// Perform All Inserts
+				if (scPricesInsert != null)
+				{
+					if (scPricesInsert.size() > 0)
+					{
+						repoSCPrices.saveAll(scPricesInsert);
+
+					}
+				}
+			}
+		}
+
 	}
 
 	@PostConstruct

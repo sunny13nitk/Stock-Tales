@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<div th:replace="fragments/header :: STHeader"></div>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script type="text/javascript"
+	src="https://www.gstatic.com/charts/loader.js"></script>
+</head>
+<body>
+
+	<div th:replace="fragments/IDS_FG :: IDSMenu"></div>
+
+	<div style="margin-top: 32px;">
+		<div id="overview">
+			<div class="frame"
+				style="height: 540px; overflow: scroll; padding: 8px">
+
+
+				<div class="row flex-align-center">
+					<div class="colspan-2" style="margin-left: 10px">
+						<h6 style="color: #778D54">
+							<span class="mif-database" style="margin-right: 5px"></span> Data
+							Hub Statistics
+						</h6>
+					</div>
+
+					<div class="colspan-7" style="margin-left: 10px">
+						<div class="remark success"
+							style="padding-top: 10px; margin: 2px; color: #567436; font-weight: bold">
+							Current Repository Statistics : <span
+								style="color: #8A26F3; margin-left: 10px; font-weight: bold;"
+								th:text="${numSchema}"> </span> <span
+								style="color: #8A26F3; font-weight: bold;"> - # Scrips
+								Schema</span> <span
+								style="color: #F32628; margin-left: 10px; font-weight: bold;"
+								th:text="${numDL}">- # Data Lake Scrips</span> <span
+								style="color: #F32628; font-weight: bold;">- # Data Lake
+								Scrips</span>
+						</div>
+
+					</div>
+
+					<!--Actions  -->
+					<div class="colspan-2" style="margin-left: 10px">
+
+						<a href="#" class="button primary cycle outline"
+							style="margin-left: 20px" th:href="@{/ids/hubdaily}"
+							role="button" data-role="hint" data-hint-position="bottom"
+							data-cls-hint="bg-transparent fg-grayMouse"
+							data-hint-text="Update Data Hub with Today's Closing Prices.">
+							<span class="mif-calendar" style="margin-left: 0px"></span>
+						</a> <a href="#" class="button alert cycle outline"
+							style="margin-left: 10px" th:href="@{/ids/upload}" role="button"
+							data-role="hint" data-hint-position="right"
+							data-cls-hint="bg-transparent fg-grayMouse"
+							data-hint-text="Upload Data for Scrip not in Below List!"> <span
+							class="mif-upload2" style="margin-left: 0px"></span>
+						</a>
+
+					</div>
+
+				</div>
+
+
+				<!--Table Row - Starts  -->
+				<div class="row flex-align-center" style="margin-top: 20px">
+					<div class="colspan-12">
+						<table class="table compact striped table-border row-hover mt-4"
+							id="t-inspector" data-role="table" data-show-search="true"
+							data-show-rows-steps="false"
+							data-table-search-title="Search By Scrip Code :"
+							data-search-min-length="1" data-search-threshold="300"
+							data-rows="-1" data-search-fields="getSccode()"
+							data-horizontal-scroll="true"
+							data-info-wrapper=".my-info-wrapper" data-thousand-separator=","
+							data-pagination-wrapper=".my-pagination-wrapper">
+							<thead>
+								<tr>
+
+									<th data-name="getSccode()" class="sortable-column sort-asc">Scrip
+										Name</th>
+
+									<th data-name="getMindate()" class="sortable-column sort-asc"
+										data-cls-column=" text-center">From</th>
+
+									<th data-name="getMaxdate()" class="sortable-column sort-asc"
+										data-cls-column=" text-center">To</th>
+
+
+									<th data-name="getNumentries()"
+										class="sortable-column sort-asc" data-format="number"
+										data-cls-column=" text-center">Entries</th>
+
+
+
+									<th data-cls-column=" text-center"></th>
+
+
+								</tr>
+							</thead>
+							<tbody>
+
+
+								<tr th:each="stat : ${stats}">
+									<td th:text="${stat.getSccode()}"></td>
+
+
+									<td style="text-align: center"
+										th:text="${#dates.format(stat.getMindate(),'dd-MMM-yyyy')}"></td>
+									<td style="text-align: center"
+										th:text="${#dates.format(stat.getMaxdate(),'dd-MMM-yyyy')}"></td>
+									<td style="text-align: center"
+										th:text="${stat.getNumentries()}"></td>
+									<!--Buttons - OCA  -->
+									<td style="text-align: center;"><a
+										class="button yellow cycle small outline"
+										th:href="@{'/ids/upload/' + ${stat.getSccode()}}"
+										data-role="hint" data-hint-text="Upload Data from CSV"
+										data-cls-hint="bg-lightyellow fg-black drop-shadow"
+										data-hint-position="bottom"><span
+											class="mif-upload fg-orange"></span></a></td>
+									<!--Buttons - OCA  -->
+								</tr>
+
+							</tbody>
+						</table>
+
+						<p class="h5  text-center my-info-wrapper "></p>
+						<div class="d-flex flex-justify-center my-pagination-wrapper"></div>
+					</div>
+				</div>
+				<!--Table Row - Ends -->
+
+
+
+			</div>
+
+
+		</div>
+	</div>
+
+
+	<!-- Metro 4 -->
+	<script src="https://cdn.metroui.org.ua/v4.3.2/js/metro.min.js"></script>
+</body>
+</html>

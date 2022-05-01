@@ -212,6 +212,24 @@ public class UtilDurations
 		return date;
 	}
 
+	public static Date getDateOnly4mCalendar(Calendar calSource)
+	{
+		// Get Today's Date
+		long millis = System.currentTimeMillis();
+
+		java.util.Date date = new java.util.Date(millis);
+
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(calSource.getTime());
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		date = cal.getTime();
+
+		return date;
+	}
+
 	public static Calendar getTodaysCalendarDateOnly()
 	{
 		// Get Today's Date

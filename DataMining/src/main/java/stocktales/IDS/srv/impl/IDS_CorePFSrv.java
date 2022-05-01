@@ -128,7 +128,7 @@ public class IDS_CorePFSrv implements stocktales.IDS.srv.intf.IDS_CorePFSrv
 	private final String allocSumErr = "";
 
 	private static final long daysFreshBuyGap = 20;
-	private static final double minbuymnt = 4000;
+	private static final double minbuymnt = 3000;
 
 	@Override
 	public List<IDS_VPDetails> refreshPFVolatilityProfiles() throws Exception
@@ -196,7 +196,7 @@ public class IDS_CorePFSrv implements stocktales.IDS.srv.intf.IDS_CorePFSrv
 		{
 			pfSMAPreview = new ArrayList<IDS_SMAPreview>();
 			int[] smaIntervals = new int[]
-			{ 18, 40, 70, 170 };
+			{ 23, 45, 75, 175 };
 
 			for (PFSchema pfSchema : repoPFSchema.findAll())
 			{

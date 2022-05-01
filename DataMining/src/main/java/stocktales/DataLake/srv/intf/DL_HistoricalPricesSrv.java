@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import stocktales.DataLake.model.entity.DL_ScripPrice;
+import stocktales.DataLake.model.repo.intf.IDL_IDSStats;
 import stocktales.IDS.pojo.IDS_ScSMASpread;
 import stocktales.historicalPrices.pojo.StockHistory;
 
@@ -36,4 +37,20 @@ public interface DL_HistoricalPricesSrv
 	public List<StockHistory> getStocksHistory4mRepo(Date from, Date to);
 
 	public IDS_ScSMASpread getSMASpreadforScrip(String scrip, int[] smaIntervals);
+
+	/**
+	 * GET Data hub Stats by Scrip
+	 * 
+	 * @return - List<IDL_IDSStats>
+	 */
+	public List<IDL_IDSStats> getStats();
+
+	/**
+	 * Update Daily Prices for Scrips - Handled Separately in respective IDS and NFS
+	 * Implementations
+	 * 
+	 * @throws Exception
+	 */
+	public void updateDailyPrices() throws Exception;
+
 }

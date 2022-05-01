@@ -27,6 +27,7 @@ import stocktales.BackTesting.IDS.pojo.BT_ScripAllocs;
 import stocktales.BackTesting.IDS.srv.intf.IBT_IDS_Srv;
 import stocktales.DataLake.model.entity.DL_ScripPrice;
 import stocktales.DataLake.model.repo.RepoScripPrices;
+import stocktales.DataLake.model.repo.intf.IDL_IDSStats;
 import stocktales.DataLake.srv.intf.DL_HistoricalPricesSrv;
 import stocktales.IDS.enums.EnumSMABreach;
 import stocktales.IDS.enums.EnumSchemaDepAmntsUpdateMode;
@@ -2273,19 +2274,19 @@ public class TestController
 	@GetMapping("/yahoo")
 	public String testYahooAPI()
 	{
-		Stock tesla;
+		Stock curr;
 		try
 		{
-			tesla = YahooFinance.get("TSLA");
-			System.out.println(tesla.getQuote().getPrice());
+			curr = YahooFinance.get("ASTRAL.NS");
+			System.out.println(curr.getQuote().getPrice());
 			System.out.println("Current Quote : ON");
 
 			Calendar from = UtilDurations.getTodaysCalendarDateOnly();
 			Calendar to = UtilDurations.getTodaysCalendarDateOnly();
 			from.add(Calendar.YEAR, -1);
 
-			tesla = YahooFinance.get("TSLA", from, to);
-			if (tesla.getHistory() != null)
+			curr = YahooFinance.get("TSLA", from, to);
+			if (curr.getHistory() != null)
 			{
 				System.out.println("Historical Quote : ON");
 			}
@@ -2336,6 +2337,28 @@ public class TestController
 				if (scPrices.size() > 0)
 				{
 					System.out.println(scPrices.size() + " Records found!");
+				}
+			}
+		}
+
+		return "success";
+	}
+
+	@GetMapping("/hubStatsIDS")
+	public String getHubStats()
+	{
+		if (repoScPrices != null)
+		{
+			List<IDL_IDSStats> hubStats = repoScPrices.getIDSDataHubStats();
+			if (hubStats != null)
+			{
+				if (hubStats.size() > 0)
+				{
+					for (IDL_IDSStats stats : hubStats)
+					{
+						System.out.println(
+								stats.getSccode() + stats.getMindate() + stats.getMaxdate() + stats.getNumentries());
+					}
 				}
 			}
 		}

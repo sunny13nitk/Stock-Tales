@@ -6,6 +6,7 @@ import java.util.Locale;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
@@ -19,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import stocktales.DataLake.model.repo.intf.IDL_IDSStats;
+import stocktales.DataLake.srv.intf.DL_HistoricalPricesSrv;
 import stocktales.DataLake.srv.intf.DL_ScripPricesUploadSrv;
 import stocktales.IDS.enums.EnumVolatilityProfile;
 import stocktales.IDS.model.pf.entity.HCI;
@@ -89,6 +92,10 @@ public class IDSController
 
 	@Autowired
 	private DL_ScripPricesUploadSrv dlScSrv;
+
+	@Autowired
+	@Qualifier("DL_HistoricalPricesSrv_IDS")
+	private DL_HistoricalPricesSrv hpDBSrv;
 
 	@Autowired
 	private IDS_VPSrv idsVPSrv;
@@ -168,6 +175,36 @@ public class IDSController
 		}
 
 		return "ids/uploadForScripPrice";
+	}
+
+	@GetMapping("/hubdaily")
+	public String updateDailyClosingPrices()
+	{
+		if (hpDBSrv != null)
+		{
+			try
+			{
+				hpDBSrv.updateDailyPrices();
+			} catch (Exception e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return "redirect:/ids/datahub";
+	}
+
+	@GetMapping("/datahub")
+	public String showIDSDataHub(Model model)
+	{
+		if (hpDBSrv != null)
+		{
+			List<IDL_IDSStats> statsHub = hpDBSrv.getStats();
+			model.addAttribute("stats", statsHub);
+			model.addAttribute("numSchema", repoPFSchema.count());
+			model.addAttribute("numDL", statsHub.size());
+		}
+		return "ids/IDSDAtaHub";
 	}
 
 	@GetMapping("/xirr")
@@ -799,7 +836,7 @@ public class IDSController
 			}
 		}
 
-		return "redirect:/ids/upload";
+		return "redirect:/ids/datahub";
 	}
 
 	@PostMapping(value = "/uploadScrip", params = "action=replace")
@@ -821,6 +858,6 @@ public class IDSController
 			}
 		}
 
-		return "redirect:/ids/upload";
+		return "redirect:/ids/datahub";
 	}
 }
