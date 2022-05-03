@@ -1,8 +1,12 @@
 package stocktales.historicalPrices.utility;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.net.URL;
+import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,11 +15,16 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 import org.apache.commons.math3.util.Precision;
+import org.springframework.util.StringUtils;
+
+import com.sun.org.apache.xerces.internal.impl.xpath.regex.ParseException;
 
 import stocktales.IDS.pojo.IDS_SMASpread;
 import stocktales.IDS.pojo.IDS_ScSMASpread;
@@ -42,6 +51,127 @@ import yahoofinance.histquotes.Interval;
 
 public class StockPricesUtility
 {
+
+	/**
+	 * Get Scrip Price History
+	 * 
+	 * @param scripCode - Scrip Code
+	 * @param from      - Calendar From
+	 * @param to        - Calendar To
+	 * @param Interval  - yahoofinance.histquotes.Interval
+	 * @param inclCMP   - true if with last row as last trade price desired
+	 * @return - List<HistoricalQuote> with last row as last trade price
+	 * @throws Exception
+	 */
+	public static List<HistoricalQuote> getHistory(String scripCode, Calendar from, Calendar to, Interval Interval,
+			boolean inclCMP) throws Exception
+	{
+		List<HistoricalQuote> scHistory = new ArrayList<HistoricalQuote>();
+
+		if (StringUtils.hasText(scripCode))
+		{
+			String nseScCode = scripCode + ".NS";
+
+			String interval;
+
+			if (from != null && to != null && to.after(from))
+			{
+				long fromDate = datechange(from).getTime() / 1000;
+
+				long toDate = datechange(to).getTime() / 1000;
+
+				switch (Interval)
+				{
+				case DAILY:
+					interval = "1d";
+					break;
+
+				case MONTHLY:
+					interval = "1mo";
+					break;
+
+				case WEEKLY:
+					interval = "1wk";
+					break;
+
+				default:
+					interval = "1d";
+					break;
+				}
+
+				String link = "https://query1.finance.yahoo.com/v7/finance/download/" + nseScCode + "?period1="
+						+ fromDate + "&period2=" + toDate + "&interval=" + interval + "&events=history";
+
+				URL url = new URL(link);
+				URLConnection urlConn = url.openConnection();
+				if (urlConn != null)
+				{
+					InputStreamReader inStream = new InputStreamReader(urlConn.getInputStream());
+					BufferedReader buf = new BufferedReader(inStream);
+					String line = buf.readLine();
+					int i = 0;
+					while (line != null)
+					{
+						line = buf.readLine();
+
+						if (line != null && i >= 1)
+						{
+							String[] attrbs = line.split("\\,");
+							if (attrbs.length > 0)
+							{
+
+								String[] coords = attrbs[0].split("-");
+
+								Calendar cal = Calendar.getInstance();
+
+								int year = new Integer(coords[0]).intValue();
+								int mon = new Integer(coords[1]).intValue();
+								int day = new Integer(coords[2]).intValue();
+								cal.clear();
+								cal.set(year, mon - 1, day); // Jan = 0
+
+								HistoricalQuote hQ = new HistoricalQuote(scripCode, cal, new BigDecimal(attrbs[1]),
+										new BigDecimal(attrbs[3]), new BigDecimal(attrbs[2]), new BigDecimal(attrbs[4]),
+										new BigDecimal(attrbs[5]), Long.parseLong(attrbs[6]));
+								if (hQ != null)
+								{
+									scHistory.add(hQ);
+								}
+
+							}
+						}
+						i++;
+					}
+				}
+
+			}
+
+		}
+
+		if (inclCMP != true)
+		{
+			scHistory.remove(scHistory.size() - 1); // Take out Last Trade Price - CMP if Not needed
+		}
+
+		return scHistory;
+
+	}
+
+	public static Date datechange(Calendar cal) throws ParseException, java.text.ParseException
+	{
+		Date dateOne = cal.getTime();
+
+		String a = dateOne.toString();
+		String b[] = a.split(" ");
+		String c = b[1] + " " + b[2] + " " + b[5];
+		SimpleDateFormat sdf = new SimpleDateFormat("MMM dd yyyy", Locale.ENGLISH);
+		sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+		cal.setTime(sdf.parse(c));
+		dateOne = cal.getTime();
+		sdf.format(dateOne);
+		return dateOne;
+
+	}
 
 	/**
 	 * REturn the Scrip's CMP and its SMA Number of Days specified Price Delta in

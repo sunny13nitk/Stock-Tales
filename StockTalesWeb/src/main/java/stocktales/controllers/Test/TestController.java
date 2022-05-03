@@ -2283,7 +2283,8 @@ public class TestController
 		Stock curr;
 		try
 		{
-			curr = YahooFinance.get("EMAMIPAP.NS");
+
+			curr = YahooFinance.get("ASTRAL.NS");
 			System.out.println(curr.getQuote().getPrice());
 			System.out.println("Current Quote : ON");
 
@@ -2291,10 +2292,22 @@ public class TestController
 			Calendar to = UtilDurations.getTodaysCalendarDateOnly();
 			from.add(Calendar.YEAR, -1);
 
-			curr = YahooFinance.get("TSLA", from, to);
-			if (curr.getHistory() != null)
+			try
 			{
-				System.out.println("Historical Quote : ON");
+				List<yahoofinance.histquotes.HistoricalQuote> scHistory = StockPricesUtility.getHistory("ASTRAL", from,
+						to, Interval.MONTHLY, false);
+				if (scHistory != null)
+				{
+					System.out.println("Historical Quote : ON");
+					for (yahoofinance.histquotes.HistoricalQuote historicalQuote : scHistory)
+					{
+						System.out.println(historicalQuote.getDate().getTime() + " : " + historicalQuote.getAdjClose());
+					}
+				}
+			} catch (Exception e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 
 		} catch (IOException e)
