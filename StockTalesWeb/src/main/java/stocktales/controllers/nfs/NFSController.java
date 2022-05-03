@@ -23,6 +23,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import stocktales.ATH.model.pojo.ATHContainer;
+import stocktales.ATH.srv.intf.ATHProcessorSrv;
+import stocktales.ATH.ui.pojo.ATH_UI_Summary;
 import stocktales.NFS.model.config.NFSConfig;
 import stocktales.NFS.model.pojo.NFSContainer;
 import stocktales.NFS.model.pojo.NFSPFExitSS;
@@ -42,6 +45,7 @@ import stocktales.NFS.srv.intf.INFSPFUISrv;
 import stocktales.NFS.srv.intf.INFSProcessor;
 import stocktales.NFS.srv.intf.INFSRebalanceUISrv;
 import stocktales.NFS.srv.intf.INFS_CashBookSrv;
+import stocktales.basket.allocations.config.pojos.SCPricesMode;
 import stocktales.strategy.helperPOJO.SectorAllocations;
 
 @Controller
@@ -54,6 +58,12 @@ public class NFSController
 {
 	@Autowired
 	private INFSProcessor nfsProcSrv;
+
+	@Autowired
+	private SCPricesMode scPricesMode;
+
+	@Autowired
+	private ATHProcessorSrv ATHProcSrv;
 
 	@Autowired
 	private INFSRebalanceUISrv nfsRebalSrv;
@@ -80,6 +90,8 @@ public class NFSController
 	private final String errMinAmnt = "";
 
 	private NFSContainer nfsContainer;
+
+	private ATHContainer athContainer;
 
 	@GetMapping("/launch")
 	private String showNFSHome(Model model)
@@ -222,28 +234,61 @@ public class NFSController
 		String viewName = "success";
 		NFSContainer nfsContainer = null;
 
-		if (nfsProcSrv != null)
+		if (scPricesMode != null)
 		{
+			if (scPricesMode.getScpricesDBMode() == 1)
+			{
+				if (ATHProcSrv != null)
+				{
+					long start = System.currentTimeMillis();
+					long elapsedMins = 0;
+					try
+					{
+						this.athContainer = ATHProcSrv.generateProposal(true).get();
+						if (this.athContainer != null)
+						{
+							if (this.athContainer.getProposals().size() > 0)
+							{
+								elapsedMins = (System.currentTimeMillis() - start) / 60000;
+								this.athContainer.getAthStats().setElapsedMins(elapsedMins);
+								viewName = "redirect:/nfs/showStats";
+							}
+						}
+					} catch (Exception e)
+					{
+						// Exception Centrally Handled at the service level - Autodirected to Global
+						// Exception Handler
+						e.printStackTrace();
+					}
 
-			long start = System.currentTimeMillis();
-			long elapsedMins = 0;
-			try
+				}
+
+			} else
 			{
-				this.nfsContainer = nfsProcSrv.generateProposal(true).get();
-			} catch (Exception e)
-			{
-				// Exception Centrally Handled at the service level - Autodirected to Global
-				// Exception Handler
-				e.printStackTrace();
-			}
-			if (this.nfsContainer != null)
-			{
-				if (this.nfsContainer.getBaseDataPool().size() > 0)
+				if (nfsProcSrv != null)
 				{
 
-					elapsedMins = (System.currentTimeMillis() - start) / 60000;
-					this.nfsContainer.getNfsStats().setElapsedMins(elapsedMins);
-					viewName = "redirect:/nfs/showStats";
+					long start = System.currentTimeMillis();
+					long elapsedMins = 0;
+					try
+					{
+						this.nfsContainer = nfsProcSrv.generateProposal(true).get();
+					} catch (Exception e)
+					{
+						// Exception Centrally Handled at the service level - Autodirected to Global
+						// Exception Handler
+						e.printStackTrace();
+					}
+					if (this.nfsContainer != null)
+					{
+						if (this.nfsContainer.getBaseDataPool().size() > 0)
+						{
+
+							elapsedMins = (System.currentTimeMillis() - start) / 60000;
+							this.nfsContainer.getNfsStats().setElapsedMins(elapsedMins);
+							viewName = "redirect:/nfs/showStats";
+						}
+					}
 				}
 			}
 		}
@@ -254,66 +299,121 @@ public class NFSController
 	@GetMapping("/showStats")
 	private String showNFSLaunch(Model model)
 	{
-		if (nfsProcSrv != null && nfsContainer.getNfsStats() != null)
+		String viewName = null;
+		if (scPricesMode != null)
 		{
-			model.addAttribute("stats", nfsContainer.getNfsStats());
-
-			List<NFS_UI_Summary> statsList = new ArrayList<NFS_UI_Summary>();
-
-			NFS_UI_Summary listedScrips = new NFS_UI_Summary("Total Listed Scrips", 0,
-					nfsContainer.getNfsStats().getNumScripsTotal());
-			statsList.add(listedScrips);
-
-			NFS_UI_Summary avScrips = new NFS_UI_Summary("Data Available ",
-					nfsContainer.getNfsStats().getNumScripsTotal() - nfsContainer.getNfsStats().getNumScripsDataAvail(),
-					nfsContainer.getNfsStats().getNumScripsDataAvail());
-			statsList.add(avScrips);
-
-			NFS_UI_Summary mcapFltr = new NFS_UI_Summary("Market Cap Filter ",
-					nfsContainer.getNfsStats().getNumMcapFltOut(),
-					nfsContainer.getNfsStats().getNumScripsDataAvail() - nfsContainer.getNfsStats().getNumMcapFltOut());
-			statsList.add(mcapFltr);
-
-			NFS_UI_Summary actvFltr = new NFS_UI_Summary("Active Trading Days Filter ",
-					nfsContainer.getNfsStats().getNumDurationFltOut(),
-					nfsContainer.getNfsStats().getNumScripsDataAvail() - nfsContainer.getNfsStats().getNumMcapFltOut()
-							- nfsContainer.getNfsStats().getNumDurationFltOut());
-			statsList.add(actvFltr);
-
-			NFS_UI_Summary consFltr = new NFS_UI_Summary("Returns Consistency Filter ",
-					nfsContainer.getNfsStats().getNumConsistencyFltOut(),
-					nfsContainer.getNfsStats().getNumScripsDataAvail() - nfsContainer.getNfsStats().getNumMcapFltOut()
-							- nfsContainer.getNfsStats().getNumDurationFltOut()
-							- nfsContainer.getNfsStats().getNumConsistencyFltOut());
-			statsList.add(consFltr);
-
-			NFS_UI_Summary momFltr = new NFS_UI_Summary("Price Momentum Filter ",
-					nfsContainer.getNfsStats().getNumSMACMP_Trends_FltOut(),
-					consFltr.getNumscrips() - nfsContainer.getNfsStats().getNumSMACMP_Trends_FltOut());
-			statsList.add(momFltr);
-
-			NFS_UI_Summary manPFltr = new NFS_UI_Summary("Price Manipulation Filter ",
-					nfsContainer.getNfsStats().getPriceManipulationFltOut(),
-					momFltr.getNumscrips() - nfsContainer.getNfsStats().getPriceManipulationFltOut());
-			statsList.add(manPFltr);
-
-			if (nfsContainer.getNfsStats().getNumMcapFltOut() > 0)
+			if (scPricesMode.getScpricesDBMode() == 1)
 			{
-				NFS_UI_Summary cmpFltr = new NFS_UI_Summary("T2T Category & Max PF Lot Size  Filter ",
-						manPFltr.getNumscrips() - nfsContainer.getNfsStats().getNumFinalScrips(),
-						nfsContainer.getNfsStats().getNumFinalScrips());
-				statsList.add(cmpFltr);
-			}
-			model.addAttribute("statsList", statsList);
+				viewName = "ath/nfsStats";
 
-			/*
-			 * DO not allow PF creation if Number of Scrips selected is less that minimum
-			 * threshold Scrips
-			 */
-			if (nfsContainer.getNfsStats().getNumFinalScrips() < (nfsConfig.getPfSize() * 1.2))
+				model.addAttribute("stats", athContainer.getAthStats());
+
+				List<ATH_UI_Summary> statsList = new ArrayList<ATH_UI_Summary>();
+
+				ATH_UI_Summary listedScrips = new ATH_UI_Summary("Total Listed Scrips",
+						athContainer.getAthStats().getTotalScrips());
+				statsList.add(listedScrips);
+
+				ATH_UI_Summary availableScrips = new ATH_UI_Summary("Data Available",
+						athContainer.getAthStats().getTotalScrips() - athContainer.getAthStats().getDataError());
+				statsList.add(availableScrips);
+
+				ATH_UI_Summary mCapScrips = new ATH_UI_Summary("MCap > 1000 Cr. & Trade Days Sieved Scrips",
+						athContainer.getAthStats().getMcapFltRemain());
+				statsList.add(mCapScrips);
+
+				ATH_UI_Summary momScrips = new ATH_UI_Summary("Momentum Sieved Scrips",
+						athContainer.getAthStats().getMomentumRemain());
+				statsList.add(momScrips);
+
+				ATH_UI_Summary finalScrips = new ATH_UI_Summary("Finally Sieved & Ranked Scrips",
+						athContainer.getAthStats().getNumFinalScrips());
+				statsList.add(finalScrips);
+
+				model.addAttribute("statsList", statsList);
+
+				/*
+				 * DO not allow PF creation if Number of Scrips selected is less that minimum
+				 * threshold Scrips
+				 */
+				if (athContainer.getAthStats().getNumFinalScrips() < (nfsConfig.getPfSize() * 1.2))
+				{
+					model.addAttribute("noPF", true);
+
+				}
+
+			} else
 			{
-				model.addAttribute("noPF", true);
 
+				if (nfsProcSrv != null && nfsContainer.getNfsStats() != null)
+				{
+					viewName = "nfs/nfsStats";
+
+					model.addAttribute("stats", nfsContainer.getNfsStats());
+
+					List<NFS_UI_Summary> statsList = new ArrayList<NFS_UI_Summary>();
+
+					NFS_UI_Summary listedScrips = new NFS_UI_Summary("Total Listed Scrips", 0,
+							nfsContainer.getNfsStats().getNumScripsTotal());
+					statsList.add(listedScrips);
+
+					NFS_UI_Summary avScrips = new NFS_UI_Summary("Data Available ",
+							nfsContainer.getNfsStats().getNumScripsTotal()
+									- nfsContainer.getNfsStats().getNumScripsDataAvail(),
+							nfsContainer.getNfsStats().getNumScripsDataAvail());
+					statsList.add(avScrips);
+
+					NFS_UI_Summary mcapFltr = new NFS_UI_Summary("Market Cap Filter ",
+							nfsContainer.getNfsStats().getNumMcapFltOut(),
+							nfsContainer.getNfsStats().getNumScripsDataAvail()
+									- nfsContainer.getNfsStats().getNumMcapFltOut());
+					statsList.add(mcapFltr);
+
+					NFS_UI_Summary actvFltr = new NFS_UI_Summary("Active Trading Days Filter ",
+							nfsContainer.getNfsStats().getNumDurationFltOut(),
+							nfsContainer.getNfsStats().getNumScripsDataAvail()
+									- nfsContainer.getNfsStats().getNumMcapFltOut()
+									- nfsContainer.getNfsStats().getNumDurationFltOut());
+					statsList.add(actvFltr);
+
+					NFS_UI_Summary consFltr = new NFS_UI_Summary("Returns Consistency Filter ",
+							nfsContainer.getNfsStats().getNumConsistencyFltOut(),
+							nfsContainer.getNfsStats().getNumScripsDataAvail()
+									- nfsContainer.getNfsStats().getNumMcapFltOut()
+									- nfsContainer.getNfsStats().getNumDurationFltOut()
+									- nfsContainer.getNfsStats().getNumConsistencyFltOut());
+					statsList.add(consFltr);
+
+					NFS_UI_Summary momFltr = new NFS_UI_Summary("Price Momentum Filter ",
+							nfsContainer.getNfsStats().getNumSMACMP_Trends_FltOut(),
+							consFltr.getNumscrips() - nfsContainer.getNfsStats().getNumSMACMP_Trends_FltOut());
+					statsList.add(momFltr);
+
+					NFS_UI_Summary manPFltr = new NFS_UI_Summary("Price Manipulation Filter ",
+							nfsContainer.getNfsStats().getPriceManipulationFltOut(),
+							momFltr.getNumscrips() - nfsContainer.getNfsStats().getPriceManipulationFltOut());
+					statsList.add(manPFltr);
+
+					if (nfsContainer.getNfsStats().getNumMcapFltOut() > 0)
+					{
+						NFS_UI_Summary cmpFltr = new NFS_UI_Summary("T2T Category & Max PF Lot Size  Filter ",
+								manPFltr.getNumscrips() - nfsContainer.getNfsStats().getNumFinalScrips(),
+								nfsContainer.getNfsStats().getNumFinalScrips());
+						statsList.add(cmpFltr);
+					}
+					model.addAttribute("statsList", statsList);
+
+					/*
+					 * DO not allow PF creation if Number of Scrips selected is less that minimum
+					 * threshold Scrips
+					 */
+					if (nfsContainer.getNfsStats().getNumFinalScrips() < (nfsConfig.getPfSize() * 1.2))
+					{
+						model.addAttribute("noPF", true);
+
+					}
+
+				}
 			}
 
 			// If PF already Exists
@@ -328,7 +428,7 @@ public class NFSController
 			}
 
 		}
-		return "nfs/nfsStats";
+		return viewName;
 	}
 
 	@GetMapping("/pf/list")

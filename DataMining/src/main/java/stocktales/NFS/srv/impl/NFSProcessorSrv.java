@@ -62,6 +62,7 @@ import stocktales.NFS.repo.RepoNFSTmp;
 import stocktales.NFS.srv.intf.INFSProcessor;
 import stocktales.NFS.srv.intf.INFS_CashBookSrv;
 import stocktales.NFS.srv.intf.INFS_DD_Srv;
+import stocktales.basket.allocations.config.pojos.SCPricesMode;
 import stocktales.durations.UtilDurations;
 import stocktales.historicalPrices.pojo.HistoricalQuote;
 import stocktales.historicalPrices.utility.StockPricesUtility;
@@ -106,6 +107,9 @@ public class NFSProcessorSrv implements INFSProcessor
 
 	@Autowired
 	private MessageSource msgSrc;
+
+	@Autowired
+	private SCPricesMode scPriceMode;
 
 	@Value("${nfs.minmAmntErr}")
 	private final String errMinAmnt = "";
@@ -363,25 +367,39 @@ public class NFSProcessorSrv implements INFSProcessor
 					pfExitEnt.setScCode(holding.getSccode());
 					pfExitEnt.setRank(holding.getRankcurr());
 					pfExitEnt.setPriceIncl(holding.getPriceincl());
-					if (holding.getRankcurr() >= nfsConfig.getNfsSlotMax())
-					{
-						/*
-						 * Check with SMA Rank Lower - (lower one 35 days) In holding Rank = Rank Max
-						 * when not found in Latest proposals from Re-balance
-						 */
-						smaCmp = StockPricesUtility.getDeltaSMAforDaysfromCMP(holding.getSccode(),
-								nfsConfig.getSmaExitDays());
 
+					if (scPriceMode.getScpricesDBMode() == 1)
+					{
+						Stock stock = StockPricesUtility.getQuoteforScrip(holding.getSccode());
+						if (stock != null)
+						{
+							smaCmp = new NFSExitSMADelta(stock.getQuote().getPrice().doubleValue(),
+									stock.getQuote().getPriceAvg50().doubleValue(),
+									stock.getQuote().getChangeFromAvg50InPercent().doubleValue() * -1);
+						}
 					} else
 					{
-						/*
-						 * Rank Intact and Within Current Proposals Check with SMA Rank Exit Fail-
-						 * (higher one 45 days - more breathing space) In holding Rank = Rank Max when
-						 * not found in Latest proposals from Re-balance
-						 */
-						smaCmp = StockPricesUtility.getDeltaSMAforDaysfromCMP(holding.getSccode(),
-								nfsConfig.getSmaExitRankFailDays());
 
+						if (holding.getRankcurr() >= nfsConfig.getNfsSlotMax())
+						{
+							/*
+							 * Check with SMA Rank Lower - (lower one 35 days) In holding Rank = Rank Max
+							 * when not found in Latest proposals from Re-balance
+							 */
+							smaCmp = StockPricesUtility.getDeltaSMAforDaysfromCMP(holding.getSccode(),
+									nfsConfig.getSmaExitDays());
+
+						} else
+						{
+							/*
+							 * Rank Intact and Within Current Proposals Check with SMA Rank Exit Fail-
+							 * (higher one 45 days - more breathing space) In holding Rank = Rank Max when
+							 * not found in Latest proposals from Re-balance
+							 */
+							smaCmp = StockPricesUtility.getDeltaSMAforDaysfromCMP(holding.getSccode(),
+									nfsConfig.getSmaExitRankFailDays());
+
+						}
 					}
 
 					if (smaCmp != null)
@@ -650,8 +668,13 @@ public class NFSProcessorSrv implements INFSProcessor
 
 					ebEntity.setDateincl(holdingO.get().getDateincl());
 
-					ebEntity.setPpuincl(Precision.round(
-							StockPricesUtility.getHistoricalPricesforScrip4Date(scCode, ebEntity.getDateincl()), 2));
+					if (scPriceMode.getScpricesDBMode() != 1)
+					{
+
+						ebEntity.setPpuincl(Precision.round(
+								StockPricesUtility.getHistoricalPricesforScrip4Date(scCode, ebEntity.getDateincl()),
+								2));
+					}
 
 					ebEntity.setPpuavg(holdingO.get().getPriceincl());
 
@@ -663,8 +686,12 @@ public class NFSProcessorSrv implements INFSProcessor
 					ebEntity.setRealplper(
 							UtilPercentages.getPercentageDelta(ebEntity.getPpuavg(), ebEntity.getPpuexit(), 2));
 
-					ebEntity.setRealplperincl(
-							UtilPercentages.getPercentageDelta(ebEntity.getPpuincl(), ebEntity.getPpuexit(), 2));
+					if (scPriceMode.getScpricesDBMode() != 1)
+					{
+
+						ebEntity.setRealplperincl(
+								UtilPercentages.getPercentageDelta(ebEntity.getPpuincl(), ebEntity.getPpuexit(), 2));
+					}
 
 					ebEntity.setNumdays(
 							UtilDurations.getNumDaysbwSysDates(ebEntity.getDateincl(), ebEntity.getDateexit()));
@@ -1355,16 +1382,73 @@ public class NFSProcessorSrv implements INFSProcessor
 						if (proposal4mCurrHolding.isPresent()) // Update or Delete Based on Rank and Rank Fail SMA check
 						{
 
-							// Scan the Current Rank from Proposal for Current Holding
-							if (proposal4mCurrHolding.get().getRank() > nfsConfig.getNfsSlotMax())
+							if (scPriceMode.getScpricesDBMode() == 1)
 							{
-								/*
-								 * Rank Slipped than Max Allowed (> Max; e.g. 30) check for SMA configured (e.g.
-								 * 45 - Rank Fail SMA)
-								 */
+								Stock stock = StockPricesUtility.getQuoteforScrip(holding.getSccode());
+								if (stock != null)
+								{
+									NFSExitSMADelta smaRankFailDelta = new NFSExitSMADelta(
+											stock.getQuote().getPrice().doubleValue(),
+											stock.getQuote().getPriceAvg50().doubleValue(),
+											stock.getQuote().getChangeFromAvg50InPercent().doubleValue() * -1);
 
-								NFSExitSMADelta smaRankFailDelta = StockPricesUtility.getDeltaSMAforDaysfromCMP(
-										holding.getSccode(), nfsConfig.getSmaExitRankFailDays());
+									if (smaRankFailDelta.getDelta() > 0) // Delta of SMA w.r.t CMP should be -ve : good
+									{
+										/*
+										 * Move to Replacement Container
+										 */
+										nfsContainer.getRC().add(holding);
+									}
+								}
+							} else
+							{
+
+								// Scan the Current Rank from Proposal for Current Holding
+								if (proposal4mCurrHolding.get().getRank() > nfsConfig.getNfsSlotMax())
+								{
+									/*
+									 * Rank Slipped than Max Allowed (> Max; e.g. 30) check for SMA configured (e.g.
+									 * 45 - Rank Fail SMA)
+									 */
+
+									NFSExitSMADelta smaRankFailDelta = StockPricesUtility.getDeltaSMAforDaysfromCMP(
+											holding.getSccode(), nfsConfig.getSmaExitRankFailDays());
+									if (smaRankFailDelta.getDelta() > 0) // Delta of SMA w.r.t CMP should be -ve : good
+									{
+										/*
+										 * Move to Replacement Container
+										 */
+										nfsContainer.getRC().add(holding);
+									}
+
+								}
+							}
+
+						} else // Go for SMA Slag Limit Check to retain/hold
+						{
+							if (scPriceMode.getScpricesDBMode() == 1)
+							{
+								Stock stock = StockPricesUtility.getQuoteforScrip(holding.getSccode());
+								if (stock != null)
+								{
+									NFSExitSMADelta smaRankFailDelta = new NFSExitSMADelta(
+											stock.getQuote().getPrice().doubleValue(),
+											stock.getQuote().getPriceAvg50().doubleValue(),
+											stock.getQuote().getChangeFromAvg50InPercent().doubleValue() * -1);
+
+									if (smaRankFailDelta.getDelta() > 0) // Delta of SMA w.r.t CMP should be -ve : good
+									{
+										/*
+										 * Move to Replacement Container
+										 */
+										nfsContainer.getRC().add(holding);
+									}
+								}
+							} else
+							{
+
+								NFSExitSMADelta smaRankFailDelta = StockPricesUtility
+										.getDeltaSMAforDaysfromCMP(holding.getSccode(), nfsConfig.getSmaExitDays());
 								if (smaRankFailDelta.getDelta() > 0) // Delta of SMA w.r.t CMP should be -ve : good
 								{
 									/*
@@ -1372,20 +1456,6 @@ public class NFSProcessorSrv implements INFSProcessor
 									 */
 									nfsContainer.getRC().add(holding);
 								}
-
-							}
-
-						} else // Go for SMA Slag Limit Check to retain/hold
-						{
-
-							NFSExitSMADelta smaRankFailDelta = StockPricesUtility
-									.getDeltaSMAforDaysfromCMP(holding.getSccode(), nfsConfig.getSmaExitDays());
-							if (smaRankFailDelta.getDelta() > 0) // Delta of SMA w.r.t CMP should be -ve : good
-							{
-								/*
-								 * Move to Replacement Container
-								 */
-								nfsContainer.getRC().add(holding);
 							}
 						}
 					}

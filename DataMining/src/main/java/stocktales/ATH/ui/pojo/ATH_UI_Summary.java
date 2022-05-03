@@ -1,4 +1,4 @@
-package stocktales.NFS.model.ui;
+package stocktales.ATH.ui.pojo;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,10 +9,9 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class NFS_UI_Summary
+public class ATH_UI_Summary
 {
 	private String title;
-	private int numfltr;
 	private int numscrips;
 
 }

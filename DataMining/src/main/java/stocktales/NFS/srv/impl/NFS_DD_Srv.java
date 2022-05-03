@@ -19,9 +19,11 @@ import stocktales.NFS.model.pojo.ScripPPU;
 import stocktales.NFS.model.pojo.ScripPPUUnitsRank;
 import stocktales.NFS.model.ui.NFSPFExit;
 import stocktales.NFS.srv.intf.INFS_DD_Srv;
+import stocktales.basket.allocations.config.pojos.SCPricesMode;
 import stocktales.historicalPrices.utility.StockPricesUtility;
 import stocktales.maths.UtilPercentages;
 import stocktales.money.UtilDecimaltoMoneyString;
+import yahoofinance.Stock;
 
 @Service
 public class NFS_DD_Srv implements INFS_DD_Srv
@@ -29,6 +31,9 @@ public class NFS_DD_Srv implements INFS_DD_Srv
 
 	@Autowired
 	private NFSConfig nfsConfig;
+
+	@Autowired
+	private SCPricesMode scPriceMode;
 
 	@Override
 	public NFS_DD4ListScrips getDDByScrips(List<String> SC_List) throws Exception
@@ -46,7 +51,19 @@ public class NFS_DD_Srv implements INFS_DD_Srv
 				for (String scrip : SC_List)
 				{
 					NFSExitSMADelta smaCmp = null;
-					smaCmp = StockPricesUtility.getDeltaSMAforDaysfromCMP(scrip, nfsConfig.getSmaExitDays());
+					if (scPriceMode.getScpricesDBMode() == 1)
+					{
+						Stock stock = StockPricesUtility.getQuoteforScrip(scrip);
+						if (stock != null)
+						{
+							smaCmp = new NFSExitSMADelta(stock.getQuote().getPrice().doubleValue(),
+									stock.getQuote().getPriceAvg50().doubleValue(),
+									stock.getQuote().getChangeFromAvg50InPercent().doubleValue() * -1);
+						}
+					} else
+					{
+						smaCmp = StockPricesUtility.getDeltaSMAforDaysfromCMP(scrip, nfsConfig.getSmaExitDays());
+					}
 					if (smaCmp != null)
 					{
 						NFS_DD4ListScripsI itemDD = new NFS_DD4ListScripsI();
@@ -85,8 +102,21 @@ public class NFS_DD_Srv implements INFS_DD_Srv
 				for (ScripPPU scrip : SC_PPU_List)
 				{
 					NFSExitSMADelta smaCmp = null;
-					smaCmp = StockPricesUtility.getDeltaSMAforDaysfromCMP(scrip.getSccode(),
-							nfsConfig.getSmaExitDays());
+
+					if (scPriceMode.getScpricesDBMode() == 1)
+					{
+						Stock stock = StockPricesUtility.getQuoteforScrip(scrip.getSccode());
+						if (stock != null)
+						{
+							smaCmp = new NFSExitSMADelta(stock.getQuote().getPrice().doubleValue(),
+									stock.getQuote().getPriceAvg50().doubleValue(),
+									stock.getQuote().getChangeFromAvg50InPercent().doubleValue() * -1);
+						}
+					} else
+					{
+						smaCmp = StockPricesUtility.getDeltaSMAforDaysfromCMP(scrip.getSccode(),
+								nfsConfig.getSmaExitDays());
+					}
 					if (smaCmp != null)
 					{
 						NFS_DD4ListScripsI itemDD = new NFS_DD4ListScripsI();
@@ -130,25 +160,39 @@ public class NFS_DD_Srv implements INFS_DD_Srv
 					pfExitEnt.setScCode(holding.getSccode());
 					pfExitEnt.setRank(holding.getRankCurr());
 					pfExitEnt.setPriceIncl(holding.getPpu());
-					if (holding.getRankCurr() >= nfsConfig.getNfsSlotMax())
-					{
-						/*
-						 * Check with SMA Rank Lower - (lower one 38 days) In holding Rank = Rank Max
-						 * when not found in Latest proposals from Re-balance
-						 */
-						smaCmp = StockPricesUtility.getDeltaSMAforDaysfromCMP(holding.getSccode(),
-								nfsConfig.getSmaExitDays());
 
+					if (scPriceMode.getScpricesDBMode() == 1)
+					{
+						Stock stock = StockPricesUtility.getQuoteforScrip(holding.getSccode());
+						if (stock != null)
+						{
+							smaCmp = new NFSExitSMADelta(stock.getQuote().getPrice().doubleValue(),
+									stock.getQuote().getPriceAvg50().doubleValue(),
+									stock.getQuote().getChangeFromAvg50InPercent().doubleValue() * -1);
+						}
 					} else
 					{
-						/*
-						 * Rank Intact and Within Current Proposals Check with SMA Rank Exit Fail-
-						 * (higher one 48 days - more breathing space) In holding Rank = Rank Max when
-						 * not found in Latest proposals from Re-balance
-						 */
-						smaCmp = StockPricesUtility.getDeltaSMAforDaysfromCMP(holding.getSccode(),
-								nfsConfig.getSmaExitRankFailDays());
 
+						if (holding.getRankCurr() >= nfsConfig.getNfsSlotMax())
+						{
+							/*
+							 * Check with SMA Rank Lower - (lower one 38 days) In holding Rank = Rank Max
+							 * when not found in Latest proposals from Re-balance
+							 */
+							smaCmp = StockPricesUtility.getDeltaSMAforDaysfromCMP(holding.getSccode(),
+									nfsConfig.getSmaExitDays());
+
+						} else
+						{
+							/*
+							 * Rank Intact and Within Current Proposals Check with SMA Rank Exit Fail-
+							 * (higher one 48 days - more breathing space) In holding Rank = Rank Max when
+							 * not found in Latest proposals from Re-balance
+							 */
+							smaCmp = StockPricesUtility.getDeltaSMAforDaysfromCMP(holding.getSccode(),
+									nfsConfig.getSmaExitRankFailDays());
+
+						}
 					}
 
 					if (smaCmp != null)

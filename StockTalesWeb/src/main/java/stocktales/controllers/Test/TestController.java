@@ -8,6 +8,7 @@ import java.util.Calendar;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 import org.apache.commons.math3.util.Precision;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import stocktales.ATH.model.pojo.ATHContainer;
+import stocktales.ATH.srv.intf.ATHProcessorSrv;
 import stocktales.BackTesting.IDS.pojo.BT_EP_IDS;
 import stocktales.BackTesting.IDS.pojo.BT_IP_IDS;
 import stocktales.BackTesting.IDS.pojo.BT_ScripAllocs;
@@ -250,6 +253,9 @@ public class TestController
 	@Autowired
 	@Qualifier("DL_HistoricalPricesSrv_IDS")
 	private DL_HistoricalPricesSrv hpDBSrv;
+
+	@Autowired
+	private ATHProcessorSrv ATHSrv;
 
 	@GetMapping("/edrcSrv/{scCode}")
 	public String testEDRCSrv(@PathVariable String scCode
@@ -2277,7 +2283,7 @@ public class TestController
 		Stock curr;
 		try
 		{
-			curr = YahooFinance.get("ASTRAL.NS");
+			curr = YahooFinance.get("EMAMIPAP.NS");
 			System.out.println(curr.getQuote().getPrice());
 			System.out.println("Current Quote : ON");
 
@@ -2360,6 +2366,28 @@ public class TestController
 								stats.getSccode() + stats.getMindate() + stats.getMaxdate() + stats.getNumentries());
 					}
 				}
+			}
+		}
+
+		return "success";
+	}
+
+	@GetMapping("/ath")
+	public String getATHContainer()
+	{
+		if (ATHSrv != null)
+		{
+			try
+			{
+				CompletableFuture<ATHContainer> athContainer = ATHSrv.generateProposal(true);
+				if (athContainer != null)
+				{
+					System.out.println("Container Filled");
+				}
+			} catch (Exception e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 

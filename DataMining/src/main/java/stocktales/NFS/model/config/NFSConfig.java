@@ -30,6 +30,12 @@ public class NFSConfig
 	// SMA 100 Inclusion Percentage Delta w.r.t CMP
 	private double sma100DeltaIncl;
 
+	// Consolidated Score - 50 SMA CMP/Delta WT. - Momentum
+	private double sma50DeltaIncl;
+
+	// Consolidated Score - 200 SMA CMP/Delta WT. - Momentum
+	private double sma200DeltaIncl;
+
 	// Consolidated Score - 20 SMA CMP/Delta WT. - Momentum
 	private double wt20SMADelta;
 

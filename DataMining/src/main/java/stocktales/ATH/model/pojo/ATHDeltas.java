@@ -1,4 +1,4 @@
-package stocktales.NFS.model.ui;
+package stocktales.ATH.model.pojo;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,10 +9,10 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class NFS_UI_Summary
+public class ATHDeltas
 {
-	private String title;
-	private int numfltr;
-	private int numscrips;
-
+	private String sccode;
+	private double yearHighDelta;
+	private double sma50Delta;
+	private double sma200Delta;
 }

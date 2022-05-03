@@ -83,14 +83,10 @@
 						<tr>
 
 							<th data-name="title">Particulars</th>
-							<th data-name="numfltr" data-cls-column="text-center"
-								data-format="number"># Scrips Filtered</th>
+
 
 							<th data-name="numScrips" data-cls-column="text-center"
 								data-format="number">Total Scrips Remaining</th>
-
-
-
 
 
 
@@ -102,7 +98,6 @@
 						<tr th:each="statsI : ${statsList}">
 
 							<td th:text="${statsI.title}">Particulars</td>
-							<td style="text-align: center;" th:text="${statsI.numfltr}">45</td>
 
 							<td style="text-align: center;" th:text="${statsI.numscrips}">150</td>
 

@@ -131,7 +131,9 @@ public class PropertyConfig
 			@Value("${MinMcapCr}") final double mcap, @Value("${TopDataSetPercentRR}") final double dsPer,
 			@Value("${RRThresholdEmerging}") final double rrAllow,
 			@Value("${SMA20DeltaInclPercent}") final double sma20Delta,
-			@Value("${SMA100DeltaInclPercent}") final double sma100Delta, @Value("${WtMR}") final double wtMR,
+			@Value("${SMA100DeltaInclPercent}") final double sma100Delta,
+			@Value("${SMA50DeltaInclPercent}") final double sma50Delta,
+			@Value("${SMA200DeltaInclPercent}") final double sma200Delta, @Value("${WtMR}") final double wtMR,
 			@Value("${Wt20SMADelta}") final double sma20Wt, @Value("${Wt100SMADelta}") final double sma100Wt,
 			@Value("${T2TMaxPerPF}") final double t2tMaxPer, @Value("${PFSize}") final int pfSize,
 			@Value("${screenerpf}") final String screenerPfx, @Value("${screenersf}") final String screenerSfx,
@@ -141,9 +143,10 @@ public class PropertyConfig
 			@Value("${smaNFSExitRankFailCompare}") final int nfsSlotMaxRankFail,
 			@Value("${topGunPFSize}") final int topGunPFScrips, @Value("${topGunPFSlotMax}") final int topGunPFSlotMax)
 	{
-		NFSConfig nfsConfig = new NFSConfig(months, mcap, dsPer, rrAllow, sma20Delta, sma100Delta, sma20Wt, sma100Wt,
-				wtMR, t2tMaxPer, pfSize, screenerPfx, screenerSfx, smallCapMCap, largeCapMCap, t2tSeriesName,
-				maxpfLotSize, smadays, nfsSlotMax, nfsSlotMaxRankFail, topGunPFScrips, topGunPFSlotMax);
+		NFSConfig nfsConfig = new NFSConfig(months, mcap, dsPer, rrAllow, sma20Delta, sma100Delta, sma50Delta,
+				sma200Delta, sma20Wt, sma100Wt, wtMR, t2tMaxPer, pfSize, screenerPfx, screenerSfx, smallCapMCap,
+				largeCapMCap, t2tSeriesName, maxpfLotSize, smadays, nfsSlotMax, nfsSlotMaxRankFail, topGunPFScrips,
+				topGunPFSlotMax);
 
 		return nfsConfig;
 	}
