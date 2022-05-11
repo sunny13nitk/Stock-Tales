@@ -173,7 +173,7 @@ public class NFSRebalanceUISrv implements INFSRebalanceUISrv
 			 * Scan for Complete Exit - Curr PF Size + Entries - Exits is less than 60%
 			 * ideal PF SIZE
 			 */
-			if ((repoNFSPF.count() + entries.size() - exits.size()) < nfsConfig.getPfSize() * .6)
+			if ((repoNFSPF.count() + entries.size() - exits.size()) <= nfsConfig.getPfSize() * .6)
 			{
 				// Exit All - // Process Entries in NFSExit Book implictly coded in exit
 				// Portfolio

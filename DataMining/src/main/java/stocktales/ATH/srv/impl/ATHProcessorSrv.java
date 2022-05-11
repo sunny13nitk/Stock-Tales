@@ -86,11 +86,14 @@ public class ATHProcessorSrv implements stocktales.ATH.srv.intf.ATHProcessorSrv
 	private void persist2DB()
 	{
 
-		if (athContainer.getProposals().size() >= nfsConfig.getPfSize())
+		if (athContainer.getProposals().size() >= 0)
 		{
 			repoNFSTmp.deleteAll();
 
 			repoNFSTmp.saveAll(athContainer.getProposals());
+		} else
+		{
+			repoNFSTmp.deleteAll();
 		}
 	}
 

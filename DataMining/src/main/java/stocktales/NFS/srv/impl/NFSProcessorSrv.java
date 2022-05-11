@@ -1460,6 +1460,29 @@ public class NFSProcessorSrv implements INFSProcessor
 						}
 					}
 				}
+
+				else // No Proposals - Only Exits
+				{
+					for (NFSPF holding : holdings)
+					{
+						Stock stock = StockPricesUtility.getQuoteforScrip(holding.getSccode());
+						if (stock != null)
+						{
+							NFSExitSMADelta smaRankFailDelta = new NFSExitSMADelta(
+									stock.getQuote().getPrice().doubleValue(),
+									stock.getQuote().getPriceAvg50().doubleValue(),
+									stock.getQuote().getChangeFromAvg50InPercent().doubleValue() * -1);
+
+							if (smaRankFailDelta.getDelta() > 0) // Delta of SMA w.r.t CMP should be -ve : good
+							{
+								/*
+								 * Move to Replacement Container
+								 */
+								nfsContainer.getRC().add(holding);
+							}
+						}
+					}
+				}
 			} else
 			{
 				create_pf(incrementalInvestment, updateDb); // In Case of No Holdings
@@ -1737,50 +1760,54 @@ public class NFSProcessorSrv implements INFSProcessor
 
 		// Get Last Run Proposal Results and Sort by Ranks Ascending
 
-		List<NFSRunTmp> proposals = repoNFSTmp.findAll().stream().sorted(Comparator.comparingInt(NFSRunTmp::getRank))
-				.collect(Collectors.toList());
-
-		if (proposals.size() > 0)
+		if (repoNFSTmp.count() > 0)
 		{
-			int numExits = this.nfsContainer.getRC().size();
-			int i = 1;
 
-			// for Each Proposal
-			for (NFSRunTmp proposal : proposals)
+			List<NFSRunTmp> proposals = repoNFSTmp.findAll().stream()
+					.sorted(Comparator.comparingInt(NFSRunTmp::getRank)).collect(Collectors.toList());
+
+			if (proposals.size() > 0)
 			{
-				if (i <= numExits)
+				int numExits = this.nfsContainer.getRC().size();
+				int i = 1;
+
+				// for Each Proposal
+				for (NFSRunTmp proposal : proposals)
 				{
-					// Scan in Current Holdings - PF
-					Optional<NFSPF> holdingO = this.nfsContainer.getNFSPortfolio().stream()
-							.filter(x -> x.getSccode().equals(proposal.getSccode())).findFirst();
-					if (holdingO.isPresent())
+					if (i <= numExits)
 					{
-						// Move to Next Current Proposal is already In PF
-					} else
-					{
-						// Not In - Grab it IN
+						// Scan in Current Holdings - PF
+						Optional<NFSPF> holdingO = this.nfsContainer.getNFSPortfolio().stream()
+								.filter(x -> x.getSccode().equals(proposal.getSccode())).findFirst();
+						if (holdingO.isPresent())
+						{
+							// Move to Next Current Proposal is already In PF
+						} else
+						{
+							// Not In - Grab it IN
 
-						NFSPF tgHolding = new NFSPF();
-						tgHolding.setSccode(proposal.getSccode());
-						long millis = System.currentTimeMillis();
-						java.util.Date dateToday = new java.util.Date(millis);
-						tgHolding.setDateincl(dateToday);
-						double cmp = Precision.round(StockPricesUtility.getQuoteforScrip(tgHolding.getSccode())
-								.getQuote().getPrice().doubleValue(), 2);
-						tgHolding.setPriceincl(cmp);
-						tgHolding.setRankincl(proposal.getRank());
-						tgHolding.setRankcurr(proposal.getRank());
+							NFSPF tgHolding = new NFSPF();
+							tgHolding.setSccode(proposal.getSccode());
+							long millis = System.currentTimeMillis();
+							java.util.Date dateToday = new java.util.Date(millis);
+							tgHolding.setDateincl(dateToday);
+							double cmp = Precision.round(StockPricesUtility.getQuoteforScrip(tgHolding.getSccode())
+									.getQuote().getPrice().doubleValue(), 2);
+							tgHolding.setPriceincl(cmp);
+							tgHolding.setRankincl(proposal.getRank());
+							tgHolding.setRankcurr(proposal.getRank());
 
-						update_holding(cmp, nfsContainer.getPerPosInvestment(), tgHolding);
+							update_holding(cmp, nfsContainer.getPerPosInvestment(), tgHolding);
 
-						// Add to Replacement Target for Stats Updation
-						nfsContainer.getRT().add(tgHolding);
+							// Add to Replacement Target for Stats Updation
+							nfsContainer.getRT().add(tgHolding);
 
-						i++; // REplacement Found and Added
+							i++; // REplacement Found and Added
+						}
 					}
 				}
-			}
 
+			}
 		}
 
 	}

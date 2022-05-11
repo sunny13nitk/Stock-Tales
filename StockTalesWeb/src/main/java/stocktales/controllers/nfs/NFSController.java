@@ -252,6 +252,9 @@ public class NFSController
 								elapsedMins = (System.currentTimeMillis() - start) / 60000;
 								this.athContainer.getAthStats().setElapsedMins(elapsedMins);
 								viewName = "redirect:/nfs/showStats";
+							} else
+							{
+								viewName = "redirect:/nfs/pf/list";
 							}
 						}
 					} catch (Exception e)

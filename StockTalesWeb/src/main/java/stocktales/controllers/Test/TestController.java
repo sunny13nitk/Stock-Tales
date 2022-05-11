@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import stocktales.ATH.model.pojo.ATHContainer;
 import stocktales.ATH.srv.intf.ATHProcessorSrv;
+import stocktales.BackTesting.ATH.model.pojo.SC_CMP_52wkPenultimatePrice_Delta;
 import stocktales.BackTesting.IDS.pojo.BT_EP_IDS;
 import stocktales.BackTesting.IDS.pojo.BT_IP_IDS;
 import stocktales.BackTesting.IDS.pojo.BT_ScripAllocs;
@@ -2294,8 +2295,8 @@ public class TestController
 
 			try
 			{
-				List<yahoofinance.histquotes.HistoricalQuote> scHistory = StockPricesUtility.getHistory("ASTRAL", from,
-						to, Interval.MONTHLY, false);
+				List<yahoofinance.histquotes.HistoricalQuote> scHistory = StockPricesUtility.getHistory("DFFF", from,
+						to, Interval.DAILY, true);
 				if (scHistory != null)
 				{
 					System.out.println("Historical Quote : ON");
@@ -2402,6 +2403,31 @@ public class TestController
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		}
+
+		return "success";
+	}
+
+	@GetMapping("/athPool/{scCode}")
+	public String testATHPool(@PathVariable String scCode)
+	{
+
+		if (StringUtils.hasText(scCode))
+		{
+
+			Calendar from = UtilDurations.getTodaysCalendarDateOnly();
+			from.add(Calendar.YEAR, -1);
+
+			try
+			{
+				SC_CMP_52wkPenultimatePrice_Delta athPool = StockPricesUtility.getSCATHDataPool4Scrip(scCode, from);
+				System.out.println(athPool.toString());
+			} catch (Exception e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
 		}
 
 		return "success";

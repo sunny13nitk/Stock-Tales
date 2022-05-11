@@ -1,6 +1,7 @@
 package stocktales.historicalPrices.utility;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
@@ -26,6 +27,7 @@ import org.springframework.util.StringUtils;
 
 import com.sun.org.apache.xerces.internal.impl.xpath.regex.ParseException;
 
+import stocktales.BackTesting.ATH.model.pojo.SC_CMP_52wkPenultimatePrice_Delta;
 import stocktales.IDS.pojo.IDS_SMASpread;
 import stocktales.IDS.pojo.IDS_ScSMASpread;
 import stocktales.IDS.pojo.IDS_ScripUnits;
@@ -38,6 +40,7 @@ import stocktales.NFS.model.pojo.StockUnitsPPU;
 import stocktales.NFS.repo.intfPOJO.ScripUnits;
 import stocktales.basket.allocations.config.pojos.IntvPriceCAGR;
 import stocktales.basket.allocations.config.pojos.ScripCMPHistReturns;
+import stocktales.durations.UtilDurations;
 import stocktales.exceptions.StockQuoteException;
 import stocktales.historicalPrices.pojo.StockCurrQuote;
 import stocktales.historicalPrices.pojo.StockHistory;
@@ -114,7 +117,7 @@ public class StockPricesUtility
 					{
 						line = buf.readLine();
 
-						if (line != null && i >= 1)
+						if (line != null && i >= 0)
 						{
 							String[] attrbs = line.split("\\,");
 							if (attrbs.length > 0)
@@ -1914,6 +1917,72 @@ public class StockPricesUtility
 		}
 
 		return scSMASpread;
+	}
+
+	public static SC_CMP_52wkPenultimatePrice_Delta getSCATHDataPool4Scrip(String scCode, Calendar startDate)
+			throws Exception
+	{
+
+		SC_CMP_52wkPenultimatePrice_Delta athData = null;
+
+		if (StringUtils.hasText(scCode) && startDate != null)
+		{
+			try
+			{
+				Calendar to = UtilDurations.getTodaysCalendarDateOnly();
+				to.setTime(startDate.getTime());
+				to.add(Calendar.YEAR, -1);
+
+				List<HistoricalQuote> topN = null;
+
+				List<HistoricalQuote> hqS = StockPricesUtility.getHistory(scCode, to, startDate, Interval.DAILY, true);
+				if (hqS != null)
+				{
+					if (hqS.size() >= 100) // Minimum 100 Days data needed - Ignore Otherwise
+					{
+						// sort by Date Descending
+						hqS.sort(Comparator.comparing(HistoricalQuote::getDate).reversed());
+
+						athData = new SC_CMP_52wkPenultimatePrice_Delta();
+
+						athData.setScCode(scCode);
+
+						athData.setCmp(Precision.round(hqS.get(0).getAdjClose().doubleValue(), 2));
+						athData.setLastYrPrice(Precision.round(hqS.get(hqS.size() - 1).getAdjClose().doubleValue(), 2));
+						athData.setDelta(
+								UtilPercentages.getPercentageDelta(athData.getLastYrPrice(), athData.getCmp(), 1));
+
+						// top 20
+						topN = hqS.stream().limit(20).collect(Collectors.toList());
+						double sma20 = topN.stream().map(HistoricalQuote::getAdjClose)
+								.reduce(BigDecimal.ZERO, BigDecimal::add)
+								.divide(new BigDecimal(topN.size()), RoundingMode.CEILING).doubleValue();
+						athData.setSma20Delta(UtilPercentages.getPercentageDelta(sma20, athData.getCmp(), 1));
+
+						// top 50
+						topN = hqS.stream().limit(50).collect(Collectors.toList());
+						double sma50 = topN.stream().map(HistoricalQuote::getAdjClose)
+								.reduce(BigDecimal.ZERO, BigDecimal::add)
+								.divide(new BigDecimal(topN.size()), RoundingMode.CEILING).doubleValue();
+						athData.setSma50Delta(UtilPercentages.getPercentageDelta(sma50, athData.getCmp(), 1));
+
+						// top 100
+						topN = hqS.stream().limit(100).collect(Collectors.toList());
+						double sma100 = topN.stream().map(HistoricalQuote::getAdjClose)
+								.reduce(BigDecimal.ZERO, BigDecimal::add)
+								.divide(new BigDecimal(topN.size()), RoundingMode.CEILING).doubleValue();
+						athData.setSma100Delta(UtilPercentages.getPercentageDelta(sma100, athData.getCmp(), 1));
+
+					}
+				}
+			} catch (FileNotFoundException e)
+			{
+				// Invalid Scrip Code - Do nothing
+			}
+		}
+
+		return athData;
+
 	}
 
 }
