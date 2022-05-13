@@ -1,6 +1,8 @@
 package stocktales.controllers.ids;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -149,6 +151,18 @@ public class IDSController
 				model.addAttribute("depData", depChart);
 				model.addAttribute("isOverAlloc", pfDashBSrv.areOverAllocationsPresent());
 
+				/**
+				 * UPDATE daily Prices by or after 3:30 P.M
+				 */
+				Calendar C = new GregorianCalendar();
+				int hour = C.get(Calendar.HOUR_OF_DAY);
+				int minute = C.get(Calendar.MINUTE);
+
+				if (hour >= 15 && minute > 30)
+				{
+					hpDBSrv.updateDailyPrices();
+				}
+
 			} catch (Exception e)
 			{
 				// TODO Auto-generated catch block
@@ -157,6 +171,7 @@ public class IDSController
 		}
 
 		return "ids/IDShome";
+
 	}
 
 	@GetMapping("/upload")

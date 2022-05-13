@@ -1,6 +1,7 @@
 package stocktales.IDS.srv.impl;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -526,6 +527,66 @@ public class IDS_PFDashBoardUISrv implements stocktales.IDS.srv.intf.IDS_PFDashB
 							 */
 							this.refreshSchemaPostTxn();
 						}
+
+					} else
+					{
+						throw new PFTxnInvalidException("Quantity & Buy Price/Unit should be > 0 for Purchase Txn.");
+
+					}
+
+					break;
+
+				case PanicBuy:
+					if (pfTxnUI.getNumSharesTxn() > 0 && pfTxnUI.getPpuTxn() > 0)
+					{
+						List<HCI> txnList = new ArrayList<HCI>();
+						HCI pfTxn = new HCI();
+						pfTxn.setSccode(pfTxnUI.getScCode());
+						/*
+						 * Get Current SMA of the Scrip as per CMP
+						 */
+						if (this.getPFDashBoardContainer4mSession() != null)
+						{
+							if (this.getPFDashBoardContainer4mSession().getHoldings() != null)
+							{
+								if (this.getPFDashBoardContainer4mSession().getHoldings().size() > 0)
+								{
+									Optional<PFHoldingsPL> holdingSessO = this.getPFDashBoardContainer4mSession()
+											.getHoldings().stream()
+											.filter(f -> f.getScCode().equals(pfTxnUI.getScCode())).findFirst();
+									if (holdingSessO.isPresent())
+									{
+										if (holdingSessO.get().getSmaLvl() != null)
+										{
+											pfTxn.setSmarank(holdingSessO.get().getSmaLvl().ordinal());
+										} else
+										{
+											pfTxn.setSmarank(EnumSMABreach.sma1.ordinal()); // Default
+										}
+										rankFoundinSess = true;
+									}
+
+								}
+							}
+						}
+						if (!rankFoundinSess)
+						{
+							pfTxn.setSmarank(0);
+						}
+
+						pfTxn.setTxnppu(pfTxnUI.getPpuTxn());
+						pfTxn.setUnits(pfTxnUI.getNumSharesTxn());
+						pfTxn.setTxntype(EnumTxnType.Buy);
+						pfTxn.setDate(UtilDurations.getTodaysDateOnly());
+
+						/*
+						 * Not call the Validator in this Scenario- Panic BUY Adjust the Cash- May take
+						 * cur. Scrip balance in negative
+						 */
+						txnList.add(pfTxn);
+
+						corePFSrv.pushandSyncPFTxn(txnList);
+						refreshSchemaPostTxn();
 
 					} else
 					{
