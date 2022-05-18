@@ -15,6 +15,9 @@ public class SC_CMP_52wkPenultimatePrice_Delta
 	private double cmp;
 	private double lastYrPrice;
 	private double delta;
+	private double sma20;
+	private double sma50;
+	private double sma100;
 	private double sma20Delta;
 	private double sma50Delta;
 	private double sma100Delta;

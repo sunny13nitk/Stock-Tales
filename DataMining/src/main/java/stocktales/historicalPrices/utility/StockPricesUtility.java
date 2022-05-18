@@ -1957,6 +1957,7 @@ public class StockPricesUtility
 						double sma20 = topN.stream().map(HistoricalQuote::getAdjClose)
 								.reduce(BigDecimal.ZERO, BigDecimal::add)
 								.divide(new BigDecimal(topN.size()), RoundingMode.CEILING).doubleValue();
+						athData.setSma20(Precision.round(sma20, 2));
 						athData.setSma20Delta(UtilPercentages.getPercentageDelta(sma20, athData.getCmp(), 1));
 
 						// top 50
@@ -1964,6 +1965,7 @@ public class StockPricesUtility
 						double sma50 = topN.stream().map(HistoricalQuote::getAdjClose)
 								.reduce(BigDecimal.ZERO, BigDecimal::add)
 								.divide(new BigDecimal(topN.size()), RoundingMode.CEILING).doubleValue();
+						athData.setSma50(Precision.round(sma50, 2));
 						athData.setSma50Delta(UtilPercentages.getPercentageDelta(sma50, athData.getCmp(), 1));
 
 						// top 100
@@ -1971,6 +1973,7 @@ public class StockPricesUtility
 						double sma100 = topN.stream().map(HistoricalQuote::getAdjClose)
 								.reduce(BigDecimal.ZERO, BigDecimal::add)
 								.divide(new BigDecimal(topN.size()), RoundingMode.CEILING).doubleValue();
+						athData.setSma100(Precision.round(sma100, 2));
 						athData.setSma100Delta(UtilPercentages.getPercentageDelta(sma100, athData.getCmp(), 1));
 
 					}
