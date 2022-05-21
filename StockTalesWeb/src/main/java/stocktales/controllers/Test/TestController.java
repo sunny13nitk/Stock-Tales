@@ -30,7 +30,9 @@ import stocktales.BackTesting.IDS.pojo.BT_IP_IDS;
 import stocktales.BackTesting.IDS.pojo.BT_ScripAllocs;
 import stocktales.BackTesting.IDS.srv.intf.IBT_IDS_Srv;
 import stocktales.DataLake.model.entity.DL_ScripPrice;
+import stocktales.DataLake.model.entity.DL_ScripPriceATH;
 import stocktales.DataLake.model.pojo.UploadStats;
+import stocktales.DataLake.model.repo.RepoATHScripPrices;
 import stocktales.DataLake.model.repo.RepoScripPrices;
 import stocktales.DataLake.model.repo.intf.IDL_IDSStats;
 import stocktales.DataLake.srv.intf.DL_ATH_DataRefreshSrv;
@@ -262,6 +264,9 @@ public class TestController
 
 	@Autowired
 	private DL_ATH_DataRefreshSrv athDLSrv;
+
+	@Autowired
+	private RepoATHScripPrices repoATHDL;
 
 	@GetMapping("/edrcSrv/{scCode}")
 	public String testEDRCSrv(@PathVariable String scCode
@@ -2464,6 +2469,40 @@ public class TestController
 				}
 
 			}
+		}
+
+		return "success";
+	}
+
+	@GetMapping("/athDLTest")
+	public String athSave()
+	{
+		if (repoATHDL != null)
+		{
+
+			List<DL_ScripPriceATH> list = new ArrayList<DL_ScripPriceATH>();
+
+			DL_ScripPriceATH scP = new DL_ScripPriceATH();
+			scP.setSccode("ASTRAL");
+			scP.setDate(UtilDurations.getTodaysDateOnly());
+			scP.setCloseprice(2451.34);
+			list.add(scP);
+
+			DL_ScripPriceATH scP2 = new DL_ScripPriceATH();
+			scP2.setSccode("ASTRAL");
+			scP2.setDate(UtilDurations.getTodaysDateOnly());
+			scP2.setCloseprice(2675.34);
+			list.add(scP2);
+
+			try
+			{
+				repoATHDL.saveAll(list);
+			} catch (Exception e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
 		}
 
 		return "success";

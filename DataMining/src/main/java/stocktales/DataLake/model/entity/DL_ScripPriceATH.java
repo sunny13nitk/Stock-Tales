@@ -24,7 +24,7 @@ public class DL_ScripPriceATH
 {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seqGen")
-	@SequenceGenerator(name = "seqGen", sequenceName = "DLATH_seq", allocationSize = 1)
+	@SequenceGenerator(name = "seqGen", allocationSize = 1)
 	private long id;
 	private String sccode;
 	private Date date;
