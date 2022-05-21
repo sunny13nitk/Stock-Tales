@@ -93,6 +93,7 @@ public class IDSController
 	private IDS_ConfigLoader idsCfgSrv;
 
 	@Autowired
+	@Qualifier("IDSUploadSrv")
 	private DL_ScripPricesUploadSrv dlScSrv;
 
 	@Autowired

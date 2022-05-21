@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<div th:replace="fragments/header :: STHeader"></div>
+<link href="https://fonts.googleapis.com/css?family=Montserrat|Ubuntu"
+	rel="stylesheet">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script type="text/javascript"
+	src="https://www.gstatic.com/charts/loader.js"></script>
+
+<!-- Every 30 min REfresh -->
+<meta http-equiv="refresh" content="1800">
+</head>
+<body>
+
+
+	<!-- Header div - Start  -->
+	<div class="head-bar pos-absolute bg-transparent fg-darkteal text-bold">
+
+		<div class="cell-11">
+			<label
+				style="margin-left: 5px; font-weight: bold; font-size: 1.4em; color: #3B934B; font-family: 'Montserrat', sans-serif">
+				<img th:src="@{/images/NFSLogo.png}"
+				src="../../static/images/NFSLogo.png" width="45" height="40"
+				style="margin-left: 5px; margin-right: 10px"> NFS: Momentum
+				Investing - Quants
+			</label>
+
+
+		</div>
+		<div class="cell-1">
+			<a href="#" class="button steel rounded outline"
+				style="border: none;" th:href="@{/}" role="button"> <span
+				class="mif-home  mif-3x"></span>
+			</a>
+		</div>
+
+	</div>
+
+	<!-- Header div - End  -->
+
+	<!-- Content Row - Starts -->
+	<div class="grid" style="margin-top: 40px">
+		<div class="row">
+			<div class="cell-2">
+				<div th:replace="fragments/NFSMenu :: NFSSideMenu"></div>
+			</div>
+
+
+			<div class="cell-10">
+
+				<div class="row flex-align-center">
+					<div class="colspan-2" style="margin-left: 10px">
+						<h6 style="color: #778D54">
+							<span class="mif-database" style="margin-right: 5px"></span> Data
+							Hub Statistics
+						</h6>
+					</div>
+
+					<div class="colspan-9" style="margin-left: 10px">
+						<div class="remark success"
+							style="padding-top: 10px; margin: 2px; color: #567436; font-weight: bold">
+							Current Repository Statistics : <span
+								style="color: #8A26F3; margin-left: 10px; font-weight: bold;"
+								th:text="${numSchema}"> </span> <span
+								style="color: #8A26F3; font-weight: bold;"> - # Scrips
+								NSE</span> <span
+								style="color: #F32628; margin-left: 10px; font-weight: bold;"
+								th:text="${numDL}">- # Data Lake Scrips</span> <span
+								style="color: #F32628; font-weight: bold;">- # Data Lake
+								Scrips</span>
+						</div>
+
+					</div>
+
+
+
+				</div>
+
+
+				<!--Table Row - Starts  -->
+				<div class="row flex-align-center" style="margin-top: 20px">
+					<div class="colspan-10">
+						<table class="table compact striped table-border row-hover mt-4"
+							id="t-inspector" data-role="table" data-show-search="true"
+							data-show-rows-steps="false"
+							data-table-search-title="Search By Scrip Code :"
+							data-search-min-length="1" data-search-threshold="300"
+							data-rows="-1" data-search-fields="getSccode()"
+							data-horizontal-scroll="true"
+							data-info-wrapper=".my-info-wrapper" data-thousand-separator=","
+							data-pagination-wrapper=".my-pagination-wrapper">
+							<thead>
+								<tr>
+
+									<th data-name="getSccode()" class="sortable-column sort-asc">Scrip
+										Name</th>
+
+									<th data-name="getMindate()" class="sortable-column sort-asc"
+										data-cls-column=" text-center">From</th>
+
+									<th data-name="getMaxdate()" class="sortable-column sort-asc"
+										data-cls-column=" text-center">To</th>
+
+
+									<th data-name="getNumentries()"
+										class="sortable-column sort-asc" data-format="number"
+										data-cls-column=" text-center">Entries</th>
+
+								</tr>
+							</thead>
+							<tbody>
+
+
+								<tr th:each="stat : ${stats}">
+									<td th:text="${stat.getSccode()}"></td>
+
+
+									<td style="text-align: center"
+										th:text="${#dates.format(stat.getMindate(),'dd-MMM-yyyy')}"></td>
+									<td style="text-align: center"
+										th:text="${#dates.format(stat.getMaxdate(),'dd-MMM-yyyy')}"></td>
+									<td style="text-align: center"
+										th:text="${stat.getNumentries()}"></td>
+
+								</tr>
+
+							</tbody>
+						</table>
+
+						<p class="h5  text-center my-info-wrapper "></p>
+						<div class="d-flex flex-justify-center my-pagination-wrapper"></div>
+					</div>
+				</div>
+				<!--Table Row - Ends -->
+
+
+			</div>
+			<!-- Customize Button - Col End -->
+
+		</div>
+
+		<!-- Customize button at Top ROW - Ends-->
+
+
+
+	</div>
+
+
+
+
+	<!-- Metro 4 -->
+	<script src="https://cdn.metroui.org.ua/v4.3.2/js/metro.min.js"></script>
+</body>
+</html>

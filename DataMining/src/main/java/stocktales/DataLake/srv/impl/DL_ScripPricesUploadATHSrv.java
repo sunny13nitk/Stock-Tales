@@ -15,17 +15,17 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.opencsv.bean.CsvToBeanBuilder;
 
-import stocktales.DataLake.model.entity.DL_ScripPrice;
+import stocktales.DataLake.model.entity.DL_ScripPriceATH;
 import stocktales.DataLake.model.pojo.CSVScPrices;
-import stocktales.DataLake.model.repo.RepoScripPrices;
+import stocktales.DataLake.model.repo.RepoATHScripPrices;
 import stocktales.DataLake.model.repo.intf.IDates;
 
-@Service("IDSUploadSrv")
-public class DL_ScripPricesUploadSrv implements stocktales.DataLake.srv.intf.DL_ScripPricesUploadSrv
+@Service("ATHUploadSrv")
+public class DL_ScripPricesUploadATHSrv implements stocktales.DataLake.srv.intf.DL_ScripPricesUploadSrv
 {
 
 	@Autowired
-	private RepoScripPrices repoSCPrices;
+	private RepoATHScripPrices repoSCPrices;
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -183,14 +183,14 @@ public class DL_ScripPricesUploadSrv implements stocktales.DataLake.srv.intf.DL_
 			if (csvList.size() > 0)
 			{
 
-				List<DL_ScripPrice> scPrices = new ArrayList<DL_ScripPrice>();
+				List<DL_ScripPriceATH> scPrices = new ArrayList<DL_ScripPriceATH>();
 
 				if (daterangeExcl == null)
 				{
 					// Create the Collection & persist thereafter at once
 					for (CSVScPrices csvScPrices : csvList)
 					{
-						DL_ScripPrice scPrice = new DL_ScripPrice();
+						DL_ScripPriceATH scPrice = new DL_ScripPriceATH();
 						scPrice.setSccode(scCode);
 						scPrice.setDate(csvScPrices.getDate());
 						scPrice.setCloseprice(csvScPrices.getAdjclose());
@@ -222,7 +222,7 @@ public class DL_ScripPricesUploadSrv implements stocktales.DataLake.srv.intf.DL_
 						{
 							for (CSVScPrices csvScPrices : csvExclDateRange)
 							{
-								DL_ScripPrice scPrice = new DL_ScripPrice();
+								DL_ScripPriceATH scPrice = new DL_ScripPriceATH();
 								scPrice.setSccode(scCode);
 								scPrice.setDate(csvScPrices.getDate());
 								scPrice.setCloseprice(csvScPrices.getAdjclose());

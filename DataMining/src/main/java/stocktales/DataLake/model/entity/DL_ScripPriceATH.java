@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -14,21 +15,22 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "DLSP")
+@Table(name = "DLATH")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class DL_ScripPrice
+public class DL_ScripPriceATH
 {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seqGen")
+	@SequenceGenerator(name = "seqGen", sequenceName = "DLATH_seq", allocationSize = 1)
 	private long id;
 	private String sccode;
 	private Date date;
 	private double closeprice;
 
-	public DL_ScripPrice(String sccode, Date date, double closeprice)
+	public DL_ScripPriceATH(String sccode, Date date, double closeprice)
 	{
 		super();
 		this.sccode = sccode;

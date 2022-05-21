@@ -3,7 +3,9 @@ package stocktales.controllers.nfs;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -26,6 +28,9 @@ import lombok.Setter;
 import stocktales.ATH.model.pojo.ATHContainer;
 import stocktales.ATH.srv.intf.ATHProcessorSrv;
 import stocktales.ATH.ui.pojo.ATH_UI_Summary;
+import stocktales.DataLake.model.repo.RepoATHScripPrices;
+import stocktales.DataLake.model.repo.intf.IDL_IDSStats;
+import stocktales.DataLake.srv.intf.DL_ATH_DataRefreshSrv;
 import stocktales.NFS.model.config.NFSConfig;
 import stocktales.NFS.model.pojo.NFSContainer;
 import stocktales.NFS.model.pojo.NFSPFExitSS;
@@ -39,6 +44,7 @@ import stocktales.NFS.model.ui.NFSRunTmp_UISel;
 import stocktales.NFS.model.ui.NFSUISCMassUpdateList;
 import stocktales.NFS.model.ui.NFS_UIRebalProposalContainer;
 import stocktales.NFS.model.ui.NFS_UI_Summary;
+import stocktales.NFS.repo.RepoBseData;
 import stocktales.NFS.repo.RepoNFSPF;
 import stocktales.NFS.repo.RepoNFSTmp;
 import stocktales.NFS.srv.intf.INFSPFUISrv;
@@ -75,6 +81,12 @@ public class NFSController
 	private RepoNFSTmp repoNFSTmp;
 
 	@Autowired
+	private RepoBseData repoBseData;
+
+	@Autowired
+	private RepoATHScripPrices repoATHScPrices;
+
+	@Autowired
 	private INFSPFUISrv nfsUISrv;
 
 	@Autowired
@@ -85,6 +97,9 @@ public class NFSController
 
 	@Autowired
 	private NFSConfig nfsConfig;
+
+	@Autowired
+	private DL_ATH_DataRefreshSrv athDLSrv;
 
 	@Value("${nfs.minmAmntErr}")
 	private final String errMinAmnt = "";
@@ -163,6 +178,25 @@ public class NFSController
 		}
 
 		return "/nfs/massUpdate";
+
+	}
+
+	@GetMapping("/athDL")
+	private String resfreshDataLake(Model model)
+	{
+		if (athDLSrv != null && repoATHScPrices != null)
+		{
+
+			athDLSrv.refreshDataLake();
+
+			List<IDL_IDSStats> statsHub = repoATHScPrices.getGlobalDataHubStats();
+			model.addAttribute("stats", statsHub);
+			model.addAttribute("numSchema", repoBseData.count());
+			model.addAttribute("numDL", repoATHScPrices.getNumberofScrips());
+
+		}
+
+		return "/nfs/ATHDL";
 
 	}
 
@@ -461,6 +495,18 @@ public class NFSController
 
 							model.addAttribute("chartData", chartData);
 						}
+					}
+
+					/**
+					 * UPDATE daily Prices by or after 3:30 P.M
+					 */
+					Calendar C = new GregorianCalendar();
+					int hour = C.get(Calendar.HOUR_OF_DAY);
+					int minute = C.get(Calendar.MINUTE);
+
+					if (hour >= 15 && minute > 30)
+					{
+						// athDLSrv.performDeltaLoad();
 					}
 
 					// Check Any Exits in PF

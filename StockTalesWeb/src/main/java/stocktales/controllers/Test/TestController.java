@@ -30,8 +30,10 @@ import stocktales.BackTesting.IDS.pojo.BT_IP_IDS;
 import stocktales.BackTesting.IDS.pojo.BT_ScripAllocs;
 import stocktales.BackTesting.IDS.srv.intf.IBT_IDS_Srv;
 import stocktales.DataLake.model.entity.DL_ScripPrice;
+import stocktales.DataLake.model.pojo.UploadStats;
 import stocktales.DataLake.model.repo.RepoScripPrices;
 import stocktales.DataLake.model.repo.intf.IDL_IDSStats;
+import stocktales.DataLake.srv.intf.DL_ATH_DataRefreshSrv;
 import stocktales.DataLake.srv.intf.DL_HistoricalPricesSrv;
 import stocktales.IDS.enums.EnumSMABreach;
 import stocktales.IDS.enums.EnumSchemaDepAmntsUpdateMode;
@@ -257,6 +259,9 @@ public class TestController
 
 	@Autowired
 	private ATHProcessorSrv ATHSrv;
+
+	@Autowired
+	private DL_ATH_DataRefreshSrv athDLSrv;
 
 	@GetMapping("/edrcSrv/{scCode}")
 	public String testEDRCSrv(@PathVariable String scCode
@@ -2291,11 +2296,11 @@ public class TestController
 
 			Calendar from = UtilDurations.getTodaysCalendarDateOnly();
 			Calendar to = UtilDurations.getTodaysCalendarDateOnly();
-			from.add(Calendar.YEAR, -1);
+			from.add(Calendar.YEAR, -6);
 
 			try
 			{
-				List<yahoofinance.histquotes.HistoricalQuote> scHistory = StockPricesUtility.getHistory("DFFF", from,
+				List<yahoofinance.histquotes.HistoricalQuote> scHistory = StockPricesUtility.getHistory("3PLAND", from,
 						to, Interval.DAILY, true);
 				if (scHistory != null)
 				{
@@ -2428,6 +2433,37 @@ public class TestController
 				e.printStackTrace();
 			}
 
+		}
+
+		return "success";
+	}
+
+	@GetMapping("/athDL_InitialLoad")
+	public String athperformInitialLoad()
+	{
+		if (athDLSrv != null)
+		{
+			long start = System.currentTimeMillis();
+			long elapsedMins = 0;
+
+			CompletableFuture<UploadStats> stats = (CompletableFuture<UploadStats>) athDLSrv.refreshDataLake();
+			if (stats != null)
+			{
+				elapsedMins = (System.currentTimeMillis() - start) / 60000;
+				System.out.println("ATH Data Uploaded in total : " + elapsedMins + " mins.");
+				try
+				{
+					System.out.println("Scrips Uploaded :  " + stats.get().getNumScrips());
+					System.out.println("Entries Uploaded :  " + stats.get().getNumEntries());
+					System.out.println("Error Scrips :  " + stats.get().getNumErrors());
+
+				} catch (Exception e)
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
 		}
 
 		return "success";

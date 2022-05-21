@@ -3,6 +3,7 @@ package stocktales.historicalPrices.utility;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -15,11 +16,14 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.apache.commons.math3.util.Precision;
@@ -28,6 +32,7 @@ import org.springframework.util.StringUtils;
 import com.sun.org.apache.xerces.internal.impl.xpath.regex.ParseException;
 
 import stocktales.BackTesting.ATH.model.pojo.SC_CMP_52wkPenultimatePrice_Delta;
+import stocktales.DataLake.model.entity.DL_ScripPriceATH;
 import stocktales.IDS.pojo.IDS_SMASpread;
 import stocktales.IDS.pojo.IDS_ScSMASpread;
 import stocktales.IDS.pojo.IDS_ScripUnits;
@@ -133,12 +138,20 @@ public class StockPricesUtility
 								cal.clear();
 								cal.set(year, mon - 1, day); // Jan = 0
 
-								HistoricalQuote hQ = new HistoricalQuote(scripCode, cal, new BigDecimal(attrbs[1]),
-										new BigDecimal(attrbs[3]), new BigDecimal(attrbs[2]), new BigDecimal(attrbs[4]),
-										new BigDecimal(attrbs[5]), Long.parseLong(attrbs[6]));
-								if (hQ != null)
+								if (Arrays.toString(attrbs).indexOf("null") > -1)
 								{
-									scHistory.add(hQ);
+									// Ignore BAd Data Dates
+								} else
+								{
+
+									HistoricalQuote hQ = new HistoricalQuote(scripCode, cal, new BigDecimal(attrbs[1]),
+											new BigDecimal(attrbs[3]), new BigDecimal(attrbs[2]),
+											new BigDecimal(attrbs[4]), new BigDecimal(attrbs[5]),
+											Long.parseLong(attrbs[6]));
+									if (hQ != null)
+									{
+										scHistory.add(hQ);
+									}
 								}
 
 							}
@@ -158,6 +171,268 @@ public class StockPricesUtility
 
 		return scHistory;
 
+	}
+
+	public static List<DL_ScripPriceATH> getHistoricalClosePrices4Scrip(String scripCode, Calendar from, Calendar to,
+			Interval Interval, boolean inclCMP) throws Exception
+	{
+		List<DL_ScripPriceATH> scHistory = new ArrayList<DL_ScripPriceATH>();
+
+		if (StringUtils.hasText(scripCode))
+		{
+			String nseScCode = scripCode + ".NS";
+
+			String interval;
+
+			if (from != null && to != null && to.after(from))
+			{
+				long fromDate = datechange(from).getTime() / 1000;
+
+				long toDate = datechange(to).getTime() / 1000;
+
+				switch (Interval)
+				{
+				case DAILY:
+					interval = "1d";
+					break;
+
+				case MONTHLY:
+					interval = "1mo";
+					break;
+
+				case WEEKLY:
+					interval = "1wk";
+					break;
+
+				default:
+					interval = "1d";
+					break;
+				}
+
+				String link = "https://query1.finance.yahoo.com/v7/finance/download/" + nseScCode + "?period1="
+						+ fromDate + "&period2=" + toDate + "&interval=" + interval + "&events=history";
+
+				URL url = new URL(link);
+				URLConnection urlConn = url.openConnection();
+
+				if (urlConn != null)
+				{
+					InputStreamReader inStream = new InputStreamReader(urlConn.getInputStream());
+					BufferedReader buf = new BufferedReader(inStream);
+					String line = buf.readLine();
+					int i = 0;
+					while (line != null)
+					{
+						line = buf.readLine();
+
+						if (line != null && i >= 0)
+						{
+							String[] attrbs = line.split("\\,");
+							if (attrbs.length > 0)
+							{
+
+								String[] coords = attrbs[0].split("-");
+
+								Calendar cal = Calendar.getInstance();
+
+								int year = new Integer(coords[0]).intValue();
+								int mon = new Integer(coords[1]).intValue();
+								int day = new Integer(coords[2]).intValue();
+								cal.clear();
+								cal.set(year, mon - 1, day); // Jan = 0
+
+								if (Arrays.toString(attrbs).indexOf("null") > -1)
+								{
+									// Ignore BAd Data Dates
+								} else
+								{
+
+									DL_ScripPriceATH hQ = new DL_ScripPriceATH(scripCode, cal.getTime(),
+											Long.parseLong(attrbs[6]));
+									if (hQ != null)
+									{
+										scHistory.add(hQ);
+									}
+								}
+
+							}
+						}
+						i++;
+					}
+				}
+
+			}
+
+		}
+
+		if (inclCMP != true)
+		{
+			scHistory.remove(scHistory.size() - 1); // Take out Last Trade Price - CMP if Not needed
+		}
+
+		return scHistory;
+
+	}
+
+	public static List<DL_ScripPriceATH> getHistoricalClosePrices4ScripwithCookies(String scripCode, Calendar from,
+			Calendar to, Interval Interval, boolean inclCMP) throws Exception
+	{
+		List<DL_ScripPriceATH> scHistory = new ArrayList<DL_ScripPriceATH>();
+
+		if (StringUtils.hasText(scripCode))
+		{
+			String nseScCode = scripCode + ".NS";
+
+			String interval;
+
+			if (from != null && to != null && to.after(from))
+			{
+				long fromDate = datechange(from).getTime() / 1000;
+
+				long toDate = datechange(to).getTime() / 1000;
+
+				switch (Interval)
+				{
+				case DAILY:
+					interval = "1d";
+					break;
+
+				case MONTHLY:
+					interval = "1mo";
+					break;
+
+				case WEEKLY:
+					interval = "1wk";
+					break;
+
+				default:
+					interval = "1d";
+					break;
+				}
+
+				// Hit the below URL to get the cookies and the crumb value to access the
+				// finance API
+				String mainURL = "https://finance.yahoo.com/quote/" + nseScCode + "/history";
+				Map<String, List<String>> setCookies = setCookies(mainURL);
+
+				String link = "https://query1.finance.yahoo.com/v7/finance/download/" + nseScCode + "?period1="
+						+ fromDate + "&period2=" + toDate + "&interval=" + interval + "&events=history&crumb="
+						+ searchCrumb(new URL(mainURL).openConnection());
+
+				URL url = new URL(link);
+				URLConnection urlConn = url.openConnection();
+				// get the list of Set-Cookie cookies from response headers
+				List<String> cookies = setCookies.get("Set-Cookie");
+				if (cookies != null)
+				{
+					for (String c : cookies)
+						urlConn.setRequestProperty("Cookie", c);
+				}
+				if (urlConn != null)
+				{
+					InputStreamReader inStream = new InputStreamReader(urlConn.getInputStream());
+					BufferedReader buf = new BufferedReader(inStream);
+					String line = buf.readLine();
+					int i = 0;
+					while (line != null)
+					{
+						line = buf.readLine();
+
+						if (line != null && i >= 0)
+						{
+							String[] attrbs = line.split("\\,");
+							if (attrbs.length > 0)
+							{
+
+								String[] coords = attrbs[0].split("-");
+
+								Calendar cal = Calendar.getInstance();
+
+								int year = new Integer(coords[0]).intValue();
+								int mon = new Integer(coords[1]).intValue();
+								int day = new Integer(coords[2]).intValue();
+								cal.clear();
+								cal.set(year, mon - 1, day); // Jan = 0
+
+								if (Arrays.toString(attrbs).indexOf("null") > -1)
+								{
+									// Ignore BAd Data Dates
+								} else
+								{
+
+									DL_ScripPriceATH hQ = new DL_ScripPriceATH(scripCode, cal.getTime(),
+											Long.parseLong(attrbs[6]));
+									if (hQ != null)
+									{
+										scHistory.add(hQ);
+									}
+								}
+
+							}
+						}
+						i++;
+					}
+				}
+
+			}
+
+		}
+
+		if (inclCMP != true)
+		{
+			scHistory.remove(scHistory.size() - 1); // Take out Last Trade Price - CMP if Not needed
+		}
+
+		return scHistory;
+
+	}
+
+	// This method extracts the cookies from response headers and passes the same
+	// con object to searchCrumb()
+	// method to extract the crumb and set the crumb value in finalCrumb global
+	// variable
+	private static Map<String, List<String>> setCookies(String mainUrl) throws IOException
+	{
+		// "https://finance.yahoo.com/quote/SPY";
+		Map<String, List<String>> map = new HashMap<String, List<String>>();
+		URL url = new URL(mainUrl);
+		URLConnection con = url.openConnection();
+//		String finalCrumb = searchCrumb(con);
+		for (Map.Entry<String, List<String>> entry : con.getHeaderFields().entrySet())
+		{
+			if (entry.getKey() == null || !entry.getKey().equals("Set-Cookie"))
+				continue;
+			for (String s : entry.getValue())
+			{
+				map.put(entry.getKey(), entry.getValue());
+				System.out.println(map);
+			}
+		}
+
+		return map;
+
+	}
+
+	// This method extracts the crumb and is being called from setCookies() method
+	private static String searchCrumb(URLConnection con) throws IOException
+	{
+		String crumb = null;
+		InputStream inStream = con.getInputStream();
+		InputStreamReader irdr = new InputStreamReader(inStream);
+		BufferedReader rsv = new BufferedReader(irdr);
+
+		Pattern crumbPattern = Pattern.compile(".*\"CrumbStore\":\\{\"crumb\":\"([^\"]+)\"\\}.*");
+
+		String line = null;
+		while (crumb == null && (line = rsv.readLine()) != null)
+		{
+			Matcher matcher = crumbPattern.matcher(line);
+			if (matcher.matches())
+				crumb = matcher.group(1);
+		}
+		rsv.close();
+		System.out.println("Crumb is : " + crumb);
+		return crumb;
 	}
 
 	public static Date datechange(Calendar cal) throws ParseException, java.text.ParseException
