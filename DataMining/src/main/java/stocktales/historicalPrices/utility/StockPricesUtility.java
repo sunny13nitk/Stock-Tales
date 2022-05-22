@@ -248,7 +248,7 @@ public class StockPricesUtility
 								{
 
 									DL_ScripPriceATH hQ = new DL_ScripPriceATH(scripCode, cal.getTime(),
-											Long.parseLong(attrbs[6]));
+											new BigDecimal(attrbs[5]).doubleValue());
 									if (hQ != null)
 									{
 										scHistory.add(hQ);

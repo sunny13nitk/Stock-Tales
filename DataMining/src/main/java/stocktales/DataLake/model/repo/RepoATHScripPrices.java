@@ -36,7 +36,7 @@ public interface RepoATHScripPrices extends JpaRepository<DL_ScripPriceATH, Long
 	public List<IDL_IDSStats> getGlobalDataHubStats();
 
 	@Query("select COUNT( DISTINCT sccode ) from DL_ScripPriceATH ")
-	public List<IDL_IDSStats> getNumberofScrips();
+	public long getNumberofScrips();
 
 	@Query("select COUNT(id) from DL_ScripPriceATH where sccode = ?1")
 	public long getNumberofEntries4Scrip(String scCode);

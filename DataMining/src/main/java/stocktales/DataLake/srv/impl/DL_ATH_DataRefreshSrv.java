@@ -167,7 +167,7 @@ public class DL_ATH_DataRefreshSrv implements stocktales.DataLake.srv.intf.DL_AT
 					{
 						try
 						{
-							batchScrips = scPrices.subList(startIdx, batchSize - 1);
+							batchScrips = scPrices.subList(startIdx, (startIdx + batchSize));
 							startIdx += batchSize;
 						} catch (IndexOutOfBoundsException e)
 						{
