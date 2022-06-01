@@ -196,7 +196,7 @@ public class IDS_CorePFSrv implements stocktales.IDS.srv.intf.IDS_CorePFSrv
 		{
 			pfSMAPreview = new ArrayList<IDS_SMAPreview>();
 			int[] smaIntervals = new int[]
-			{ 23, 45, 75, 175 };
+			{ 40, 75, 120, 210 };
 
 			for (PFSchema pfSchema : repoPFSchema.findAll())
 			{
@@ -1033,8 +1033,17 @@ public class IDS_CorePFSrv implements stocktales.IDS.srv.intf.IDS_CorePFSrv
 						txnColl = xirrCont.getTransactions().stream()
 								.map(t -> new Transaction(t.getAmount(), t.getDate())).collect(Collectors.toList());
 
-						double xirr = Precision.round(new Xirr(txnColl).xirr() * 100, 1);
-						xirrCont.setXirr(xirr);
+						double xirr;
+						try
+						{
+							xirr = Precision.round(new Xirr(txnColl).xirr() * 100, 1);
+							xirrCont.setXirr(xirr);
+						} catch (Exception e)
+						{
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+
 					}
 				}
 			}

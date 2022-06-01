@@ -876,4 +876,26 @@ public class IDSController
 
 		return "redirect:/ids/datahub";
 	}
+
+	@PostMapping(value = "/uploadScrip", params = "action=scanreplace")
+	public String handlescripRefreshUploadScanEachDate(
+
+			@RequestParam("file") MultipartFile file, Model model)
+	{
+		if (file != null && dlScSrv != null)
+		{
+			try
+			{
+				dlScSrv.UploadScripPricesScanningEachDate(file);
+			} catch (Exception e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				// to be replaced with properties messages
+				model.addAttribute("formError", e.getMessage());
+			}
+		}
+
+		return "redirect:/ids/datahub";
+	}
 }
