@@ -21,6 +21,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.context.WebApplicationContext;
 
 import stocktales.DataLake.model.entity.DL_ScripPrice;
+import stocktales.DataLake.model.pojo.DLConstants;
 import stocktales.DataLake.model.repo.RepoScripPrices;
 import stocktales.DataLake.model.repo.intf.IDL_IDSStats;
 import stocktales.DataLake.model.repo.intf.IScMaxDate;
@@ -33,6 +34,7 @@ import stocktales.historicalPrices.pojo.HistoricalQuote;
 import stocktales.historicalPrices.pojo.StockHistory;
 import stocktales.historicalPrices.utility.StockPricesUtility;
 import yahoofinance.Stock;
+import yahoofinance.YahooFinance;
 
 /**
  * 
@@ -349,8 +351,9 @@ public class DL_HistoricalPricesSrv_IDS implements stocktales.DataLake.srv.intf.
 	@Transactional
 	public void updateDailyPrices() throws Exception
 	{
+		Stock curr = null;
 		// Get Latest Prices Maintain Dates from Data Lake for PF Schema Scrips
-		List<IScMaxDate> scMaxDatesList = repoSCPrices.getIDSDataHubLatestSripDate();
+		List<IScMaxDate> scMaxDatesList = repoSCPrices.getIDSDataHubLatestSripDateinclNifty50();
 		if (scMaxDatesList != null)
 		{
 			if (scMaxDatesList.size() > 0)
@@ -361,36 +364,47 @@ public class DL_HistoricalPricesSrv_IDS implements stocktales.DataLake.srv.intf.
 
 				for (IScMaxDate dlEntry : scMaxDatesList)
 				{
-					Stock curr = StockPricesUtility.getQuoteforScrip(dlEntry.getSccode());
-
-					Date lastTradedDate = UtilDurations.getDateOnly4mCalendar(curr.getQuote().getLastTradeTime());
-
-					if (lastTradedDate.equals(dlEntry.getMaxdate()))
+					if (dlEntry.getSccode().equals(DLConstants.nifty50))
 					{
-						// Same Day Entry Found - Check for Amount difference
-
-						double savedClosedPrice = repoSCPrices.getClosePricebyId(dlEntry.getId());
-
-						// If Amount Difference Found - Only then Trigger an Update
-						if (savedClosedPrice != Precision.round(curr.getQuote().getPrice().doubleValue(), 2))
-						{
-
-							repoSCPrices.updateClosePrice(dlEntry.getId(),
-									Precision.round(curr.getQuote().getPrice().doubleValue(), 2));
-						}
-
-					} else // No entry found for Last Traded day
+						curr = YahooFinance.get(DLConstants.nifty50);
+					} else
 					{
-						if (lastTradedDate.after(dlEntry.getMaxdate()))
-						{
-							// Last Entry in Data Lake before the last Traded Day Entry - INSERT
-							// Build the Collection
-							DL_ScripPrice insertEntity = new DL_ScripPrice();
-							insertEntity.setSccode(dlEntry.getSccode());
-							insertEntity.setCloseprice(Precision.round(curr.getQuote().getPrice().doubleValue(), 2));
-							insertEntity.setDate(curr.getQuote().getLastTradeTime().getTime());
+						curr = StockPricesUtility.getQuoteforScrip(dlEntry.getSccode());
+					}
 
-							scPricesInsert.add(insertEntity);
+					if (curr != null)
+					{
+
+						Date lastTradedDate = UtilDurations.getDateOnly4mCalendar(curr.getQuote().getLastTradeTime());
+
+						if (lastTradedDate.equals(dlEntry.getMaxdate()))
+						{
+							// Same Day Entry Found - Check for Amount difference
+
+							double savedClosedPrice = repoSCPrices.getClosePricebyId(dlEntry.getId());
+
+							// If Amount Difference Found - Only then Trigger an Update
+							if (savedClosedPrice != Precision.round(curr.getQuote().getPrice().doubleValue(), 2))
+							{
+
+								repoSCPrices.updateClosePrice(dlEntry.getId(),
+										Precision.round(curr.getQuote().getPrice().doubleValue(), 2));
+							}
+
+						} else // No entry found for Last Traded day
+						{
+							if (lastTradedDate.after(dlEntry.getMaxdate()))
+							{
+								// Last Entry in Data Lake before the last Traded Day Entry - INSERT
+								// Build the Collection
+								DL_ScripPrice insertEntity = new DL_ScripPrice();
+								insertEntity.setSccode(dlEntry.getSccode());
+								insertEntity
+										.setCloseprice(Precision.round(curr.getQuote().getPrice().doubleValue(), 2));
+								insertEntity.setDate(curr.getQuote().getLastTradeTime().getTime());
+
+								scPricesInsert.add(insertEntity);
+							}
 						}
 					}
 				}

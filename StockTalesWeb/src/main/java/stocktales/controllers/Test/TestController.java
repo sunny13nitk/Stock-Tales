@@ -2295,7 +2295,7 @@ public class TestController
 		try
 		{
 
-			curr = YahooFinance.get("ASTRAL.NS");
+			curr = YahooFinance.get("^NSEI");
 			System.out.println(curr.getQuote().getPrice());
 			System.out.println("Current Quote : ON");
 
@@ -2305,7 +2305,7 @@ public class TestController
 
 			try
 			{
-				List<yahoofinance.histquotes.HistoricalQuote> scHistory = StockPricesUtility.getHistory("3PLAND", from,
+				List<yahoofinance.histquotes.HistoricalQuote> scHistory = StockPricesUtility.getHistory("^NSEI", from,
 						to, Interval.DAILY, true);
 				if (scHistory != null)
 				{

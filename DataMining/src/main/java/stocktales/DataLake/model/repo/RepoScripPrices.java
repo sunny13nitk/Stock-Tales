@@ -32,6 +32,10 @@ public interface RepoScripPrices extends JpaRepository<DL_ScripPrice, Long>
 			+ " inner join PFSchema s ON d.sccode = s.sccode  GROUP BY d.sccode")
 	public List<IScMaxDate> getIDSDataHubLatestSripDate();
 
+	@Query("select DISTINCT(d.sccode) as sccode,  MAX(d.date) as maxdate, MAX(d.id) as id from DL_ScripPrice d"
+			+ " GROUP BY d.sccode")
+	public List<IScMaxDate> getIDSDataHubLatestSripDateinclNifty50();
+
 	@Query("select DISTINCT(sccode) as sccode,  MIN(date) as mindate, MAX(date) as maxdate, COUNT(id) as numentries from DL_ScripPrice GROUP BY sccode")
 	public List<IDL_IDSStats> getGlobalDataHubStats();
 

@@ -11,10 +11,8 @@ import stocktales.NFS.model.entity.NFSJournal;
 @Repository
 public interface RepoNFSJornal extends JpaRepository<NFSJournal, Integer>
 {
-	public List<NFSJournal> findAll(
-	);
-	
-	@Query("select SUM( realplamnt) as realPl from NFSJournal")
-	public double getRealzPl(
-	);
+	public List<NFSJournal> findAll();
+
+	@Query("select SUM( realpl) as realPl from NFSJournal")
+	public double getRealzPl();
 }
