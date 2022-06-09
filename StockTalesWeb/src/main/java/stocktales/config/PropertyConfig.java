@@ -75,10 +75,11 @@ public class PropertyConfig
 
 	@Bean
 	@Autowired // For PropertySourcesPlaceholderConfigurer
-	public SCPricesMode setPriceModeBean(@Value("${scpricesDBMode}") int scpriceMode)
+	public SCPricesMode setPriceModeBean(@Value("${scpricesDBMode}") int scpriceMode,
+			@Value("${scPricesDefaultYrsBack}") int yrsBack)
 
 	{
-		SCPricesMode scMode = new SCPricesMode(scpriceMode);
+		SCPricesMode scMode = new SCPricesMode(scpriceMode, yrsBack);
 
 		return scMode;
 	}

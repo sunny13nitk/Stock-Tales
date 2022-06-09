@@ -44,7 +44,7 @@ public class DataLakeAccessSrv implements IDataLakeAccessSrv
 				from.add(Calendar.DAY_OF_WEEK, 1);
 
 				// Filter
-				filteredPricesList = dataLake.stream().filter(x ->
+				filteredPricesList = dataLake.parallelStream().filter(x ->
 				{
 					if ((x.getDate().after(from.getTime()) && x.getDate().before(to.getTime())))
 					{
@@ -75,7 +75,7 @@ public class DataLakeAccessSrv implements IDataLakeAccessSrv
 				from.add(Calendar.DAY_OF_WEEK, 1);
 
 				// Filter
-				filteredPricesList = dataLake.stream().filter(x ->
+				filteredPricesList = dataLake.parallelStream().filter(x ->
 				{
 					if (x.getSccode().equals(scCode)
 							&& (x.getDate().after(from.getTime()) && x.getDate().before(to.getTime())))
@@ -168,6 +168,8 @@ public class DataLakeAccessSrv implements IDataLakeAccessSrv
 						athData.setSma100(Precision.round(sma100, 2));
 						athData.setSma100Delta(UtilPercentages.getPercentageDelta(sma100, athData.getCmp(), 1));
 
+						smaP = athData;
+
 					}
 				}
 			} catch (Exception e)
@@ -180,12 +182,96 @@ public class DataLakeAccessSrv implements IDataLakeAccessSrv
 
 	}
 
+	@Override
+	public List<SC_CMP_52wkPenultimatePrice_Delta> getLastYrPrice_SMA_DeltasByScripCodes(List<String> scCodes,
+			Calendar startDate)
+	{
+		List<SC_CMP_52wkPenultimatePrice_Delta> smaPs = null;
+		if (scCodes.size() > 0 && startDate.before(UtilDurations.getTodaysCalendarDateOnly()))
+		{
+			smaPs = new ArrayList<SC_CMP_52wkPenultimatePrice_Delta>();
+			/**
+			 * Temporary Buffer for Performance Improvement Holds all Scrips Data for Past 1
+			 * Year from Starting date This will Substitute Data Lake for this run
+			 */
+			List<DL_ScripPriceATH> hqSList = new ArrayList<DL_ScripPriceATH>();
+			try
+			{
+				Calendar from = UtilDurations.getTodaysCalendarDateOnly();
+				from.setTime(startDate.getTime());
+				from.add(Calendar.YEAR, -1);
+				hqSList = this.getPricesAllByDateRange(from, startDate);
+
+				// Scrip by Scrip
+				for (String scCode : scCodes)
+				{
+
+					// All Prices for Scrip in Past 1 year
+					List<DL_ScripPriceATH> hqS = hqSList.parallelStream().filter(x -> x.getSccode().equals(scCode))
+							.collect(Collectors.toList());
+
+					if (hqS.size() >= 100) // Minimum 100 Days data needed - Ignore Otherwise
+					{
+
+						List<DL_ScripPriceATH> topN = null;
+
+						// sort by Date Descending
+						hqS.sort(Comparator.comparing(DL_ScripPriceATH::getDate).reversed());
+
+						SC_CMP_52wkPenultimatePrice_Delta athData = new SC_CMP_52wkPenultimatePrice_Delta();
+
+						athData.setScCode(scCode);
+
+						athData.setCmp(Precision.round(hqS.get(0).getCloseprice(), 2));
+						athData.setLastYrPrice(Precision.round(hqS.get(hqS.size() - 1).getCloseprice(), 2));
+						athData.setDelta(
+								UtilPercentages.getPercentageDelta(athData.getLastYrPrice(), athData.getCmp(), 1));
+
+						// top 20
+						topN = hqS.stream().limit(20).collect(Collectors.toList());
+						double sma20 = topN.stream().mapToDouble(DL_ScripPriceATH::getCloseprice).average()
+								.getAsDouble();
+
+						athData.setSma20(Precision.round(sma20, 2));
+						athData.setSma20Delta(UtilPercentages.getPercentageDelta(sma20, athData.getCmp(), 1));
+
+						// top 50
+						topN = hqS.stream().limit(50).collect(Collectors.toList());
+						double sma50 = topN.stream().mapToDouble(DL_ScripPriceATH::getCloseprice).average()
+								.getAsDouble();
+						athData.setSma50(Precision.round(sma50, 2));
+						athData.setSma50Delta(UtilPercentages.getPercentageDelta(sma50, athData.getCmp(), 1));
+
+						// top 100
+						topN = hqS.stream().limit(100).collect(Collectors.toList());
+						double sma100 = topN.stream().mapToDouble(DL_ScripPriceATH::getCloseprice).average()
+								.getAsDouble();
+						athData.setSma100(Precision.round(sma100, 2));
+						athData.setSma100Delta(UtilPercentages.getPercentageDelta(sma100, athData.getCmp(), 1));
+
+						smaPs.add(athData);
+
+					}
+
+				}
+
+			} catch (Exception e)
+			{
+
+			}
+
+		}
+
+		return smaPs;
+	}
+
 	@PostConstruct
 	private void initializeDataLake()
 	{
 		if (repoSCPrices != null)
 		{
 			this.dataLake = repoSCPrices.findAll();
+			System.out.println("Data Lake Initilaized!");
 		}
 	}
 

@@ -2,6 +2,7 @@ package stocktales.controllers.Test;
 
 import java.io.IOException;
 import java.sql.Date;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import stocktales.ATH.model.pojo.ATHContainer;
 import stocktales.ATH.srv.intf.ATHProcessorSrv;
 import stocktales.BackTesting.ATH.model.pojo.SC_CMP_52wkPenultimatePrice_Delta;
+import stocktales.BackTesting.ATH.srv.intf.IBT_ATH_TopNProposalsGenerator;
 import stocktales.BackTesting.IDS.pojo.BT_EP_IDS;
 import stocktales.BackTesting.IDS.pojo.BT_IP_IDS;
 import stocktales.BackTesting.IDS.pojo.BT_ScripAllocs;
@@ -267,6 +269,9 @@ public class TestController
 
 	@Autowired
 	private RepoATHScripPrices repoATHDL;
+
+	@Autowired
+	private IBT_ATH_TopNProposalsGenerator athProposalSrv;
 
 	@GetMapping("/edrcSrv/{scCode}")
 	public String testEDRCSrv(@PathVariable String scCode
@@ -2498,6 +2503,57 @@ public class TestController
 			{
 				repoATHDL.saveAll(list);
 			} catch (Exception e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
+
+		return "success";
+	}
+
+	@GetMapping("/athProposals/{date}")
+	public String testATHProposals(@PathVariable String date)
+	{
+		if (StringUtils.hasText(date))
+		{
+
+			try
+			{
+				java.util.Date startDate = new SimpleDateFormat("dd-MM-yyyy").parse(date);
+				if (startDate != null && athProposalSrv != null)
+				{
+					Calendar cal = UtilDurations.getTodaysCalendarDateOnly();
+					cal.setTime(startDate);
+
+					try
+					{
+
+						long start = System.currentTimeMillis();
+						List<SC_CMP_52wkPenultimatePrice_Delta> priceDeltas = athProposalSrv.getProposals(cal);
+						if (priceDeltas != null)
+						{
+							if (priceDeltas.size() > 0)
+							{
+								System.out.println(
+										"Elapsed time: " + ((System.currentTimeMillis() - start)) / 1000 + "  secs...");
+								System.out.println("Proposals for Date : " + date);
+								for (SC_CMP_52wkPenultimatePrice_Delta proposal : priceDeltas)
+								{
+									System.out.println(proposal.getScCode() + " ----- 52wk H Delta ----  : "
+											+ proposal.getDelta());
+								}
+
+							}
+						}
+					} catch (Exception e)
+					{
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			} catch (ParseException e)
 			{
 				// TODO Auto-generated catch block
 				e.printStackTrace();

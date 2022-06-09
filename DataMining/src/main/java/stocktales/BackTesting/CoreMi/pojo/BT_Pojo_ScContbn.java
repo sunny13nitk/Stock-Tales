@@ -1,4 +1,4 @@
-package stocktales.basket.allocations.config.pojos;
+package stocktales.BackTesting.CoreMi.pojo;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,8 +9,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class SCPricesMode
+public class BT_Pojo_ScContbn
 {
-	private int scpricesDBMode;
-	private int scPricesDefaultYrsBack;
+	private String scCode;
+	private double contribution;
 }

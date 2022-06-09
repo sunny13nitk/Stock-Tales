@@ -6,6 +6,8 @@ import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
@@ -14,20 +16,24 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import stocktales.BackTesting.ATH.model.pojo.SC_CMP_52wkPenultimatePrice_Delta;
 import stocktales.BackTesting.ATH.srv.intf.IBT_ATH_TopNProposalsGenerator;
+import stocktales.DataLake.srv.intf.IDataLakeAccessSrv;
 import stocktales.NFS.model.config.NFSConfig;
 import stocktales.NFS.repo.RepoBseData;
 import stocktales.durations.UtilDurations;
-import stocktales.historicalPrices.utility.StockPricesUtility;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Service
+@Scope(value = org.springframework.web.context.WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class BT_ATH_TopNProposalsGenerator implements IBT_ATH_TopNProposalsGenerator
 {
 	@Autowired
 	private NFSConfig nfsConfig;
+
+	@Autowired
+	private IDataLakeAccessSrv dlAccessSrv;
 
 	@Autowired
 	private RepoBseData repoBseData;
@@ -44,9 +50,11 @@ public class BT_ATH_TopNProposalsGenerator implements IBT_ATH_TopNProposalsGener
 			{
 				if (repoBseData.count() > 0 && nfsConfig.getPfSize() > 0)
 				{
+					this.proposals.clear();
+
 					for (String scrip : repoBseData.findAllNseCodes())
 					{
-						SC_CMP_52wkPenultimatePrice_Delta detail = StockPricesUtility.getSCATHDataPool4Scrip(scrip,
+						SC_CMP_52wkPenultimatePrice_Delta detail = dlAccessSrv.getLastYrPrice_SMA_DeltaByScrip(scrip,
 								startDate);
 						if (detail != null)
 						{
@@ -54,6 +62,12 @@ public class BT_ATH_TopNProposalsGenerator implements IBT_ATH_TopNProposalsGener
 						}
 
 					}
+
+					/*
+					 * proposals =
+					 * dlAccessSrv.getLastYrPrice_SMA_DeltasByScripCodes(repoBseData.findAllNseCodes
+					 * (), startDate);
+					 */
 
 					if (proposals.size() > 0)
 					{
@@ -80,7 +94,7 @@ public class BT_ATH_TopNProposalsGenerator implements IBT_ATH_TopNProposalsGener
 		proposals.sort(Comparator.comparingDouble(SC_CMP_52wkPenultimatePrice_Delta::getDelta).reversed());
 
 		// Get Top N Only after Filter
-		proposals.subList(0, nfsConfig.getPfSize());
+		proposals = proposals.subList(0, nfsConfig.getPfSize());
 
 	}
 

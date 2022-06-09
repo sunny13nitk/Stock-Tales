@@ -18,4 +18,15 @@ public interface IDataLakeAccessSrv
 
 	public SC_CMP_52wkPenultimatePrice_Delta getLastYrPrice_SMA_DeltaByScrip(String scCode, Calendar startDate);
 
+	/**
+	 * Performance enhanced call to Scan for All Scrips at one go to determine
+	 * Proposals Later
+	 * 
+	 * @param scCodes   - List of Scrips
+	 * @param startDate - Date of Trigger
+	 * @return - List<SC_CMP_52wkPenultimatePrice_Delta>
+	 */
+	public List<SC_CMP_52wkPenultimatePrice_Delta> getLastYrPrice_SMA_DeltasByScripCodes(List<String> scCodes,
+			Calendar startDate);
+
 }

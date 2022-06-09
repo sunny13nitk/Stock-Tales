@@ -54,7 +54,6 @@ public class DL_HistoricalPricesSrv_IDS implements stocktales.DataLake.srv.intf.
 	@Autowired
 	private RepoScripPrices repoSCPrices;
 
-	private final int defaultPastDurationAmount = 1;
 	private final int defaultPastDurationUnit = Calendar.YEAR;
 
 	private List<DL_ScripPrice> pricesHistoryContainer = new ArrayList<DL_ScripPrice>();
@@ -90,9 +89,11 @@ public class DL_HistoricalPricesSrv_IDS implements stocktales.DataLake.srv.intf.
 
 		if (StringUtils.hasText(scCode) && this.pricesHistoryContainer.size() > 0)
 		{
+			Calendar from = UtilDurations.getTodaysCalendarDateOnly();
+			Calendar to = UtilDurations.getTodaysCalendarDateOnly();
+			from.add(Calendar.YEAR, -1);
 
-			result = this.pricesHistoryContainer.stream().filter(x -> x.getSccode().equals(scCode))
-					.collect(Collectors.toList());
+			result = this.getHistoricalPricesByScripBetweenDates(scCode, from.getTime(), to.getTime());
 		}
 
 		return result;
@@ -443,7 +444,7 @@ public class DL_HistoricalPricesSrv_IDS implements stocktales.DataLake.srv.intf.
 							Calendar to = UtilDurations.getTodaysCalendarDateOnly();
 
 							Calendar from = UtilDurations.getTodaysCalendarDateOnly();
-							from.add(defaultPastDurationUnit, defaultPastDurationAmount * -1);
+							from.add(defaultPastDurationUnit, scPricesMode.getScPricesDefaultYrsBack() * -1);
 
 							for (String scrip : scrips)
 							{
