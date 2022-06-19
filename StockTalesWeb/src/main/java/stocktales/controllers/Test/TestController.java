@@ -2366,7 +2366,7 @@ public class TestController
 		if (hpDBSrv != null && StringUtils.hasText(scCode))
 
 		{
-			List<DL_ScripPrice> scPrices = hpDBSrv.getHistoricalPricesByScripPast1Yr(scCode);
+			List<DL_ScripPrice> scPrices = hpDBSrv.getHistoricalPricesByScripPast5Yr(scCode);
 			if (scPrices != null)
 			{
 				if (scPrices.size() > 0)

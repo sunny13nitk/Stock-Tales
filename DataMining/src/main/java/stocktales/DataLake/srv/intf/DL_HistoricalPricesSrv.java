@@ -12,7 +12,7 @@ public interface DL_HistoricalPricesSrv
 {
 	public List<DL_ScripPrice> getHistoricalPricesByScripBetweenDates(String scCode, Date from, Date to);
 
-	public List<DL_ScripPrice> getHistoricalPricesByScripPast1Yr(String scCode);
+	public List<DL_ScripPrice> getHistoricalPricesByScripPast5Yr(String scCode);
 
 	public List<DL_ScripPrice> getPricesHistoryContainer();
 
@@ -27,8 +27,8 @@ public interface DL_HistoricalPricesSrv
 	public List<StockHistory> getStocksHistory4mContainer(Date from, Date to);
 
 	/**
-	 * Get Stock History Bypassing Session Buffer Directly from DB- Upto 5 years for
-	 * IDS
+	 * Get Stock History Bypassing Session Buffer Directly from DB- Upto 10 years
+	 * for IDS
 	 * 
 	 * @param from
 	 * @param to

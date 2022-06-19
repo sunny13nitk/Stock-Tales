@@ -83,7 +83,7 @@ public class DL_HistoricalPricesSrv_IDS implements stocktales.DataLake.srv.intf.
 	}
 
 	@Override
-	public List<DL_ScripPrice> getHistoricalPricesByScripPast1Yr(String scCode)
+	public List<DL_ScripPrice> getHistoricalPricesByScripPast5Yr(String scCode)
 	{
 		List<DL_ScripPrice> result = null;
 
@@ -91,7 +91,7 @@ public class DL_HistoricalPricesSrv_IDS implements stocktales.DataLake.srv.intf.
 		{
 			Calendar from = UtilDurations.getTodaysCalendarDateOnly();
 			Calendar to = UtilDurations.getTodaysCalendarDateOnly();
-			from.add(Calendar.YEAR, -1);
+			from.add(Calendar.YEAR, -5);
 
 			result = this.getHistoricalPricesByScripBetweenDates(scCode, from.getTime(), to.getTime());
 		}
@@ -206,7 +206,7 @@ public class DL_HistoricalPricesSrv_IDS implements stocktales.DataLake.srv.intf.
 			if (scrip != null && smaIntervals.length > 0)
 			{
 				// 1. Get the Prices Simply for the said Duration, amount frequency
-				List<DL_ScripPrice> scPrices = this.getHistoricalPricesByScripPast1Yr(scrip);
+				List<DL_ScripPrice> scPrices = this.getHistoricalPricesByScripPast5Yr(scrip);
 				if (scPrices != null)
 				{
 
