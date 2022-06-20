@@ -37,11 +37,13 @@ import stocktales.IDS.model.pf.entity.HC;
 import stocktales.IDS.model.pf.entity.HCI;
 import stocktales.IDS.model.pf.entity.PFSchema;
 import stocktales.IDS.model.pf.entity.PFVolProfile;
+import stocktales.IDS.model.pf.entity.PFVolProfileI;
 import stocktales.IDS.model.pf.repo.RepoHC;
 import stocktales.IDS.model.pf.repo.RepoHCI;
 import stocktales.IDS.model.pf.repo.RepoMoneyBag;
 import stocktales.IDS.model.pf.repo.RepoPFSchema;
 import stocktales.IDS.model.pf.repo.RepoPFVolProfile;
+import stocktales.IDS.model.pf.repo.RepoPFVolProfileI;
 import stocktales.IDS.pojo.DateAmount;
 import stocktales.IDS.pojo.IDS_SCAlloc;
 import stocktales.IDS.pojo.IDS_SCBuyProposal;
@@ -60,6 +62,7 @@ import stocktales.IDS.pojo.UI.IDS_BuyProposalBO;
 import stocktales.IDS.pojo.UI.IDS_PFTxn_UI;
 import stocktales.IDS.pojo.UI.IDS_PF_BuyPHeader;
 import stocktales.IDS.pojo.UI.IDS_Scrip_Details;
+import stocktales.IDS.pojo.UI.IDS_VP_Dates;
 import stocktales.IDS.srv.intf.IDS_DeploymentAmntSrv;
 import stocktales.IDS.srv.intf.IDS_MoneyBagSrv;
 import stocktales.IDS.srv.intf.IDS_VPSrv;
@@ -86,6 +89,9 @@ public class IDS_CorePFSrv implements stocktales.IDS.srv.intf.IDS_CorePFSrv
 {
 	@Autowired
 	private RepoPFVolProfile repoPFVP;
+
+	@Autowired
+	private RepoPFVolProfileI repoPFVPI;
 
 	@Autowired
 	@Qualifier("DL_HistoricalPricesSrv_IDS")
@@ -131,6 +137,7 @@ public class IDS_CorePFSrv implements stocktales.IDS.srv.intf.IDS_CorePFSrv
 	private static final double minbuymnt = 3000;
 
 	@Override
+	@Transactional
 	public List<IDS_VPDetails> refreshPFVolatilityProfiles() throws Exception
 	{
 		List<IDS_VPDetails> vpDetailsList = null;
@@ -154,6 +161,8 @@ public class IDS_CorePFSrv implements stocktales.IDS.srv.intf.IDS_CorePFSrv
 					if (vpDetailsList.size() > 0)
 					{
 						repoPFVP.deleteAll();
+						repoPFVPI.deleteAll();
+						List<PFVolProfileI> vpDetailsIList = new ArrayList<PFVolProfileI>();
 						for (IDS_VPDetails ids_VPDetails : vpDetailsList)
 						{
 							PFVolProfile pfvp = new PFVolProfile();
@@ -166,7 +175,18 @@ public class IDS_CorePFSrv implements stocktales.IDS.srv.intf.IDS_CorePFSrv
 							pfvp.setProfile(ids_VPDetails.getVolprofile());
 
 							repoPFVP.save(pfvp);
+
+							for (IDS_VP_Dates vpBreachItem : ids_VPDetails.getBrechDetails())
+							{
+								PFVolProfileI volPI = new PFVolProfileI();
+								volPI.setDatebreach(vpBreachItem.getDateBreach());
+								volPI.setPrice(vpBreachItem.getPriceBreach());
+								volPI.setSccode(ids_VPDetails.getSccode());
+								volPI.setSmalvl(vpBreachItem.getBreach());
+								vpDetailsIList.add(volPI);
+							}
 						}
+						repoPFVPI.saveAll(vpDetailsIList);
 					}
 				}
 			}

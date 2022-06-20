@@ -102,7 +102,7 @@ public class IDS_VPSrvImpl implements IDS_VPSrv
 					vpDetails = this.getVPDetailsforSMASpread(scCode, scSMASpread);
 				} else
 				{
-					vpDetails = new IDS_VPDetails(scCode, 0, 0, 0, 0, 0, EnumVolatilityProfile.Default);
+					vpDetails = new IDS_VPDetails(scCode, 0, 0, 0, 0, 0, EnumVolatilityProfile.Default, null);
 				}
 
 			}
@@ -131,7 +131,7 @@ public class IDS_VPSrvImpl implements IDS_VPSrv
 					vpDetails = this.getVPDetailsforSMASpread(scCode, scSMASpread);
 				} else
 				{
-					vpDetails = new IDS_VPDetails(scCode, 0, 0, 0, 0, 0, EnumVolatilityProfile.Default);
+					vpDetails = new IDS_VPDetails(scCode, 0, 0, 0, 0, 0, EnumVolatilityProfile.Default, null);
 				}
 
 			}
@@ -182,7 +182,8 @@ public class IDS_VPSrvImpl implements IDS_VPSrv
 									{
 										// Increment breach counter
 										vpDetails.setSma1breaches(vpDetails.getSma1breaches() + 1);
-										breachDates.add(new IDS_VP_Dates(EnumSMABreach.sma1, smaSpread.getDate()));
+										breachDates.add(new IDS_VP_Dates(EnumSMABreach.sma1, smaSpread.getDate(),
+												Precision.round(smaSpread.getClosePrice(), 2)));
 									}
 								}
 							} else // 1st Iteration
@@ -204,7 +205,8 @@ public class IDS_VPSrvImpl implements IDS_VPSrv
 									{
 										// Increment breach counter
 										vpDetails.setSma2breaches(vpDetails.getSma2breaches() + 1);
-										breachDates.add(new IDS_VP_Dates(EnumSMABreach.sma2, smaSpread.getDate()));
+										breachDates.add(new IDS_VP_Dates(EnumSMABreach.sma2, smaSpread.getDate(),
+												Precision.round(smaSpread.getClosePrice(), 2)));
 									}
 								}
 							} else // 1st Iteration
@@ -226,7 +228,8 @@ public class IDS_VPSrvImpl implements IDS_VPSrv
 									{
 										// Increment breach counter
 										vpDetails.setSma3breaches(vpDetails.getSma3breaches() + 1);
-										breachDates.add(new IDS_VP_Dates(EnumSMABreach.sma3, smaSpread.getDate()));
+										breachDates.add(new IDS_VP_Dates(EnumSMABreach.sma3, smaSpread.getDate(),
+												Precision.round(smaSpread.getClosePrice(), 2)));
 									}
 								}
 							} else // 1st Iteration
@@ -248,7 +251,8 @@ public class IDS_VPSrvImpl implements IDS_VPSrv
 									{
 										// Increment breach counter
 										vpDetails.setSma4breaches(vpDetails.getSma4breaches() + 1);
-										breachDates.add(new IDS_VP_Dates(EnumSMABreach.sma4, smaSpread.getDate()));
+										breachDates.add(new IDS_VP_Dates(EnumSMABreach.sma4, smaSpread.getDate(),
+												Precision.round(smaSpread.getClosePrice(), 2)));
 									}
 								}
 							} else // 1st Iteration
@@ -303,7 +307,7 @@ public class IDS_VPSrvImpl implements IDS_VPSrv
 									}
 
 									vpDetails.setVolscore(Precision.round(score, 3));
-
+									vpDetails.setBrechDetails(breachDates);
 								}
 							}
 						}

@@ -16,4 +16,5 @@ public class IDS_VP_Dates
 {
 	private EnumSMABreach breach;
 	private Date dateBreach;
+	private double priceBreach;
 }
