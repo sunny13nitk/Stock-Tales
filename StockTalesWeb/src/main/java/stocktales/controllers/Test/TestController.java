@@ -2564,4 +2564,17 @@ public class TestController
 		return "success";
 	}
 
+	@GetMapping("/pushTxns")
+	public String pushTxns()
+	{
+		List<HCI> txnstoPush = new ArrayList<HCI>();
+
+		txnstoPush.add(new HCI(0, "DIVISLAB", UtilDurations.getTodaysDateOnly(),
+				stocktales.usersPF.enums.EnumTxnType.Buy, 26, 4308.4, 0));
+
+		corePFSrv.pushandSyncPFTxn(txnstoPush);
+
+		return "success";
+	}
+
 }
