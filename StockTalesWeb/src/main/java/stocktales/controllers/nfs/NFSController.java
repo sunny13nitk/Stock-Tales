@@ -288,7 +288,13 @@ public class NFSController
 								viewName = "redirect:/nfs/showStats";
 							} else
 							{
-								viewName = "redirect:/nfs/pf/list";
+								if (repoNFSPF.count() > 0)
+								{
+									viewName = "redirect:/nfs/pf/list";
+								} else
+								{
+									viewName = "nfs/NoScrips";
+								}
 							}
 						}
 					} catch (Exception e)

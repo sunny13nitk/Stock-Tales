@@ -126,6 +126,7 @@ import stocktales.historicalPrices.pojo.StgyRelValuation;
 import stocktales.historicalPrices.pojo.StockHistory;
 import stocktales.historicalPrices.srv.intf.ITimeSeriesStgyValuationSrv;
 import stocktales.historicalPrices.utility.StockPricesUtility;
+import stocktales.maths.UtilPercentages;
 import stocktales.predicates.manager.PredicateManager;
 import stocktales.repository.SC10YearRepository;
 import stocktales.scripsEngine.uploadEngine.entities.EN_SC_10YData;
@@ -2575,6 +2576,21 @@ public class TestController
 		corePFSrv.pushandSyncPFTxn(txnstoPush);
 
 		return "success";
+	}
+
+	@GetMapping("/abs")
+	public String absMathTest()
+	{
+		double perDelta = UtilPercentages.getPercentageDelta(183, 40, 0);
+		System.out.println("Percentage Delta = " + perDelta);
+
+		if (Math.abs(perDelta) > 10)
+		{
+			System.out.println("Delta more than absolute 10 percent");
+		}
+
+		return "success";
+
 	}
 
 }

@@ -545,20 +545,39 @@ public class TimeSeriesStgyValuationsSrv implements ITimeSeriesStgyValuationSrv
 				{
 					int count = 1;
 					double baseVal = 0;
+					double prevValue = 0;
+					StgyRelValuation currVal = null;
+
 					for (DateStgySummary dateStgySummaryItem : dateStgySummary)
 					{
 						if (count == 1)
 						{
 							baseVal = dateStgySummaryItem.getTotalValue();
-							this.stgyRelValuations.add(new StgyRelValuation(dateStgySummaryItem.getDate(), 100));
+							currVal = new StgyRelValuation(dateStgySummaryItem.getDate(), 100);
+							this.stgyRelValuations.add(currVal);
+							prevValue = 100;
+
 						} else
 						{
-							this.stgyRelValuations.add(new StgyRelValuation(dateStgySummaryItem.getDate(),
-									UtilPercentages.getProportion(baseVal, dateStgySummaryItem.getTotalValue(), 0)));
+							currVal = new StgyRelValuation(dateStgySummaryItem.getDate(),
+									UtilPercentages.getProportion(baseVal, dateStgySummaryItem.getTotalValue(), 0));
+
+							// More than 10% delta in Daily NAV for any particular Day
+							if (Math.abs(UtilPercentages.getPercentageDelta(prevValue, currVal.getValue(), 0)) > 10)
+							{
+								// Skip This Iteration - Smooth Curve of REturns Calculation
+							} else
+							{
+								this.stgyRelValuations.add(currVal);
+								prevValue = currVal.getValue();
+							}
+
 						}
+
 						count++;
 
 					}
+
 				}
 			}
 		}

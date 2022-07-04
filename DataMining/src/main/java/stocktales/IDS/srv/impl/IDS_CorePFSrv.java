@@ -1149,6 +1149,8 @@ public class IDS_CorePFSrv implements stocktales.IDS.srv.intf.IDS_CorePFSrv
 		{
 			if (pfTxns.size() > 0)
 			{
+				// Remove Proposed but not Executed Transactions - Ones with Units as 0
+				pfTxns.removeIf(d -> d.getUnits() < 1); // Remove Txns. with No Units Involved
 
 				try
 				{
