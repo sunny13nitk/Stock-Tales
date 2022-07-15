@@ -2570,8 +2570,73 @@ public class TestController
 	{
 		List<HCI> txnstoPush = new ArrayList<HCI>();
 
-		txnstoPush.add(new HCI(0, "DIVISLAB", UtilDurations.getTodaysDateOnly(),
-				stocktales.usersPF.enums.EnumTxnType.Buy, 26, 4308.4, 0));
+		txnstoPush.add(new HCI(0, "ACRYSIL", UtilDurations.getTodaysDateOnly(),
+				stocktales.usersPF.enums.EnumTxnType.Buy, 44, 489.63, 0));
+
+		txnstoPush.add(new HCI(0, "AFFLE", UtilDurations.getTodaysDateOnly(), stocktales.usersPF.enums.EnumTxnType.Buy,
+				103, 1167.94, 0));
+
+		/*
+		 * txnstoPush.add(new HCI(0, "BAJFINANCE", UtilDurations.getTodaysDateOnly(),
+		 * stocktales.usersPF.enums.EnumTxnType.Buy, 120, 5936.73, 0));
+		 * 
+		 * txnstoPush.add(new HCI(0, "SRF", UtilDurations.getTodaysDateOnly(),
+		 * stocktales.usersPF.enums.EnumTxnType.Buy, 115, 2320.03, 0));
+		 * 
+		 * txnstoPush.add(new HCI(0, "TITAN", UtilDurations.getTodaysDateOnly(),
+		 * stocktales.usersPF.enums.EnumTxnType.Buy, 110, 2090.39, 0));
+		 * 
+		 * txnstoPush.add(new HCI(0, "ASTRAL", UtilDurations.getTodaysDateOnly(),
+		 * stocktales.usersPF.enums.EnumTxnType.Buy, 140, 1779.48, 0));
+		 * 
+		 * txnstoPush.add(new HCI(0, "APLAPOLLO", UtilDurations.getTodaysDateOnly(),
+		 * stocktales.usersPF.enums.EnumTxnType.Buy, 252, 956.69, 0));
+		 * 
+		 * txnstoPush.add(new HCI(0, "LAURUSLABS", UtilDurations.getTodaysDateOnly(),
+		 * stocktales.usersPF.enums.EnumTxnType.Buy, 320, 519.25, 0));
+		 * 
+		 * txnstoPush.add(new HCI(0, "DMART", UtilDurations.getTodaysDateOnly(),
+		 * stocktales.usersPF.enums.EnumTxnType.Buy, 36, 3695.88, 0));
+		 * 
+		 * txnstoPush.add(new HCI(0, "NIITLTD", UtilDurations.getTodaysDateOnly(),
+		 * stocktales.usersPF.enums.EnumTxnType.Buy, 227, 427.81, 0));
+		 * 
+		 * txnstoPush.add(new HCI(0, "VBL", UtilDurations.getTodaysDateOnly(),
+		 * stocktales.usersPF.enums.EnumTxnType.Buy, 98, 810.4, 0));
+		 * 
+		 * txnstoPush.add(new HCI(0, "MOLDTKPAC", UtilDurations.getTodaysDateOnly(),
+		 * stocktales.usersPF.enums.EnumTxnType.Buy, 55, 724.9, 0));
+		 * 
+		 * txnstoPush.add(new HCI(0, "LTI", UtilDurations.getTodaysDateOnly(),
+		 * stocktales.usersPF.enums.EnumTxnType.Buy, 21, 5598.36, 0));
+		 * 
+		 * txnstoPush.add(new HCI(0, "JUBLFOOD", UtilDurations.getTodaysDateOnly(),
+		 * stocktales.usersPF.enums.EnumTxnType.Buy, 60, 537.7, 0));
+		 * 
+		 * txnstoPush.add(new HCI(0, "NEOGEN", UtilDurations.getTodaysDateOnly(),
+		 * stocktales.usersPF.enums.EnumTxnType.Buy, 30, 1309.62, 0));
+		 * 
+		 * txnstoPush.add(new HCI(0, "TARSONS", UtilDurations.getTodaysDateOnly(),
+		 * stocktales.usersPF.enums.EnumTxnType.Buy, 120, 760.08, 0));
+		 * 
+		 * txnstoPush.add(new HCI(0, "ANGELONE", UtilDurations.getTodaysDateOnly(),
+		 * stocktales.usersPF.enums.EnumTxnType.Buy, 25, 1255.36, 0));
+		 * 
+		 * txnstoPush.add(new HCI(0, "HLEGLAS", UtilDurations.getTodaysDateOnly(),
+		 * stocktales.usersPF.enums.EnumTxnType.Buy, 29, 3316.43, 0));
+		 * 
+		 * txnstoPush.add(new HCI(0, "RAJRATAN", UtilDurations.getTodaysDateOnly(),
+		 * stocktales.usersPF.enums.EnumTxnType.Buy, 154, 703.74, 0));
+		 * 
+		 * txnstoPush.add(new HCI(0, "SONACOMS", UtilDurations.getTodaysDateOnly(),
+		 * stocktales.usersPF.enums.EnumTxnType.Buy, 305, 590.15, 0));
+		 * 
+		 * txnstoPush.add(new HCI(0, "FINEORG", UtilDurations.getTodaysDateOnly(),
+		 * stocktales.usersPF.enums.EnumTxnType.Buy, 21, 5139.14, 0));
+		 * 
+		 * txnstoPush.add(new HCI(0, "SAREGAMA", UtilDurations.getTodaysDateOnly(),
+		 * stocktales.usersPF.enums.EnumTxnType.Buy, 412, 401.86, 0));
+		 */
 
 		corePFSrv.pushandSyncPFTxn(txnstoPush);
 
