@@ -54,4 +54,6 @@ public interface RepoScripPrices extends JpaRepository<DL_ScripPrice, Long>
 	public void updateClosePrice(long id, double closePrice);
 
 	public List<DL_ScripPrice> findAllBySccodeAndDateBetweenOrderByDateDesc(String scCode, Date from, Date to);
+
+	public List<DL_ScripPrice> findAllBySccodeAndDateBetween(String scCode, Date from, Date to);
 }

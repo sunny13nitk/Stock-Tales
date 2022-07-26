@@ -48,7 +48,7 @@ public class IDS_VPSrvImpl implements IDS_VPSrv
 	private SCPricesMode scPriceModeDB;
 
 	private int[] smaIntervals = new int[]
-	{ 200, 280, 380, 560 };
+	{ 264, 396, 528, 660 };
 
 	@Override
 	public IDS_VPDetails getVolatilityProfileDetailsforScrip(String scCode) throws Exception

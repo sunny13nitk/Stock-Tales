@@ -3,6 +3,7 @@ package stocktales.IDS.srv.impl;
 import java.util.Locale;
 import java.util.Optional;
 
+import org.apache.commons.math3.util.Precision;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
@@ -66,7 +67,7 @@ public class IDS_PFTxn_ValidSrv implements IDS_PFTxn_Validator
 						{
 							// Scrip ke khud ke pass mei paisa hona chahiye - doosri baat
 							scDEpAmnt = repoPFSchema.getDeployableAmountforScrip(pfTxn.getSccode());
-							if (scDEpAmnt > 0 && scDEpAmnt >= txnAmnt)
+							if (scDEpAmnt > 0 && scDEpAmnt >= Precision.round(txnAmnt, 2))
 							{
 								isValid = true;
 							} else

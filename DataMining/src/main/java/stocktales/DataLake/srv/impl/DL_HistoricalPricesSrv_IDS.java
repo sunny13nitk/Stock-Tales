@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -166,8 +167,14 @@ public class DL_HistoricalPricesSrv_IDS implements stocktales.DataLake.srv.intf.
 						StockHistory sHist = new StockHistory();
 						sHist.setScCode(scrip);
 
-						List<DL_ScripPrice> scPrices = repoSCPrices.findAllBySccodeAndDateBetweenOrderByDateDesc(scrip,
-								from, to);
+						/*
+						 * List<DL_ScripPrice> scPrices =
+						 * repoSCPrices.findAllBySccodeAndDateBetweenOrderByDateDesc(scrip, from, to);
+						 */
+
+						List<DL_ScripPrice> scPrices = repoSCPrices.findAllBySccodeAndDateBetween(scrip, from, to);
+						Collections.reverse(scPrices);
+
 						if (scPrices != null)
 						{
 							if (scPrices.size() > 0)

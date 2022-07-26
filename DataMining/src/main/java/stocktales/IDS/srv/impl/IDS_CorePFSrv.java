@@ -216,7 +216,7 @@ public class IDS_CorePFSrv implements stocktales.IDS.srv.intf.IDS_CorePFSrv
 		{
 			pfSMAPreview = new ArrayList<IDS_SMAPreview>();
 			int[] smaIntervals = new int[]
-			{ 200, 280, 380, 560 };
+			{ 264, 396, 528, 660 };
 
 			for (PFSchema pfSchema : repoPFSchema.findAll())
 			{

@@ -2570,11 +2570,13 @@ public class TestController
 	{
 		List<HCI> txnstoPush = new ArrayList<HCI>();
 
-		txnstoPush.add(new HCI(0, "ACRYSIL", UtilDurations.getTodaysDateOnly(),
-				stocktales.usersPF.enums.EnumTxnType.Buy, 44, 489.63, 0));
+		txnstoPush.add(new HCI(0, "DIVISLAB", UtilDurations.getTodaysDateOnly(),
+				stocktales.usersPF.enums.EnumTxnType.Buy, 26, 4308.43, 0));
 
-		txnstoPush.add(new HCI(0, "AFFLE", UtilDurations.getTodaysDateOnly(), stocktales.usersPF.enums.EnumTxnType.Buy,
-				103, 1167.94, 0));
+		/*
+		 * txnstoPush.add(new HCI(0, "LTTS", UtilDurations.getTodaysDateOnly(),
+		 * stocktales.usersPF.enums.EnumTxnType.Buy, 28, 4369.9, 0));
+		 */
 
 		/*
 		 * txnstoPush.add(new HCI(0, "BAJFINANCE", UtilDurations.getTodaysDateOnly(),
